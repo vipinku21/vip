@@ -1,0 +1,33 @@
+{
+  "*": {
+    "installation_mode": "blocked",
+    "blocked_install_message": "Add-ons for Firefox are not allowed and restricted by Administrator."
+  },
+  "default-theme@mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "wikipedia@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "google@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "ddg@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "bing@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "uBlock0@raymondhill.net": {
+    "installation_mode": "allowed"
+  },
+  "dmpgopmhgecgfpbiphgfobeaeaodaidj@58374f4c-bd5f-42b4-be93-6faf5a7f0833.com": {
+    "installation_mode": "allowed"
+  },
+  "{eddf1c58-948d-4e0e-9c42-e611e9050a97}": {
+    "installation_mode": "allowed"
+  },
+  "{d634138d-c276-4fc8-924b-40a0ea21d284}": {
+    "installation_mode": "allowed"
+  }
+}

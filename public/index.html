@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage and format Chrome and Firefox browser extension installation policies locally. Easy whitelist and blacklist management.">
+  <title>Browser Extension Policy Manager</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="glass-bg-container">
+    <div class="gradient-sphere sphere-1"></div>
+    <div class="gradient-sphere sphere-2"></div>
+    <div class="gradient-sphere sphere-3"></div>
+  </div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-logo-section">
+        <div class="logo-icon-wrapper">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 8V16" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 12H16" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logo-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#a855f7"/>
+                <stop offset="1" stop-color="#3b82f6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <h1 id="app-title-header">Extension Policy Manager</h1>
+          <p class="subtitle">Securely configure browser add-on access lists</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator-dot online" id="status-dot"></span>
+        <span class="status-indicator-text" id="status-text">Connected to API</span>
+      </div>
+    </header>
+
+    <div class="stats-ribbon" id="stats-dashboard">
+      <div class="stat-card" id="stat-total">
+        <span class="stat-label">Total Rules</span>
+        <span class="stat-val" id="stat-total-count">0</span>
+      </div>
+      <div class="stat-card" id="stat-allowed">
+        <span class="stat-label">Allowed</span>
+        <span class="stat-val text-success" id="stat-allowed-count">0</span>
+      </div>
+      <div class="stat-card" id="stat-blocked">
+        <span class="stat-label">Blocked</span>
+        <span class="stat-val text-danger" id="stat-blocked-count">0</span>
+      </div>
+    </div>
+
+    <main class="dashboard-grid">
+      <!-- Left Column: Settings and Input -->
+      <section class="grid-column-left">
+        <div class="card glass-card form-card">
+          <h2 class="card-title">
+            <svg class="title-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Configure Rule
+          </h2>
+          
+          <form id="policy-form" class="policy-form-layout" novalidate>
+            <div class="form-group">
+              <label for="extension-id-input">Extension ID / Scope</label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="extension-id-input" 
+                  name="id" 
+                  placeholder="e.g. uBlock0@raymondhill.net or *" 
+                  required
+                  autocomplete="off"
+                >
+                <span class="focus-border"></span>
+              </div>
+              <span class="help-text">Use <code>*</code> to set the default global policy.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="installation-mode-select">Installation Mode</label>
+              <div class="select-wrapper">
+                <select id="installation-mode-select" name="installation_mode">
+                  <option value="allowed" selected>Allowed</option>
+                  <option value="blocked">Blocked</option>
+                </select>
+                <div class="select-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group hidden-message-field" id="message-field-group">
+              <label for="block-message-input">Custom Block Message (Optional)</label>
+              <div class="input-wrapper">
+                <textarea 
+                  id="block-message-input" 
+                  name="blocked_install_message" 
+                  placeholder="Enter a message to explain why this extension is restricted."
+                  rows="3"
+                ></textarea>
+                <span class="focus-border"></span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="save-rule-btn">
+              <span>Save Configuration</span>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="card glass-card live-json-card">
+          <div class="card-header-flex">
+            <h2 class="card-title">
+              <svg class="title-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              Live JSON Preview
+            </h2>
+            <button id="copy-json-btn" class="btn-icon-only" title="Copy formatted JSON to clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copy-icon">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="btn-text">Copy</span>
+            </button>
+          </div>
+          <div class="json-code-container">
+            <pre><code id="json-render-block">{}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Search and Table -->
+      <section class="grid-column-right">
+        <div class="card glass-card rules-list-card">
+          <div class="card-header-flex header-sticky-controls">
+            <h2 class="card-title">
+              <svg class="title-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              Active Policies
+            </h2>
+            <div class="search-bar-wrapper">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Filter by Extension ID..."
+                autocomplete="off"
+              >
+              <button id="clear-search-btn" class="clear-search-btn hidden">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="rules-table-container">
+            <table class="rules-table" id="rules-table-element">
+              <thead>
+                <tr>
+                  <th>Extension ID</th>
+                  <th>Status</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rules-table-body">
+                <!-- Dynamically populated rows go here -->
+                <tr class="empty-state-row">
+                  <td colspan="3">
+                    <div class="empty-state-wrapper">
+                      <div class="loader-spinner"></div>
+                      <p>Loading active policies...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="app-footer">
+      <p>&copy; 2026 Extension Policy Manager. Built with speed and local safety in mind.</p>
+    </footer>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-wrapper"></div>
+
+  <!-- JS Controller -->
+  <script src="app.js"></script>
+</body>
+</html>
