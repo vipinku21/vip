@@ -1,6 +1,44 @@
+// Default policies matching the original policy.json file
+const DEFAULT_POLICIES = {
+  "*": {
+    "installation_mode": "blocked",
+    "blocked_install_message": "Add-ons for Firefox are not allowed and restricted by Administrator."
+  },
+  "default-theme@mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "wikipedia@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "google@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "ddg@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "bing@search.mozilla.org": {
+    "installation_mode": "allowed"
+  },
+  "uBlock0@raymondhill.net": {
+    "installation_mode": "allowed"
+  },
+  "dmpgopmhgecgfpbiphgfobeaeaodaidj@58374f4c-bd5f-42b4-be93-6faf5a7f0833.com": {
+    "installation_mode": "allowed"
+  },
+  "{eddf1c58-948d-4e0e-9c42-e611e9050a97}": {
+    "installation_mode": "allowed"
+  },
+  "{d634138d-c276-4fc8-924b-40a0ea21d284}": {
+    "installation_mode": "allowed"
+  }
+};
+
+const STORAGE_KEY = 'browser_extension_policies';
+
 // State Management
 let policyState = {};
 let filterText = '';
+let fileHandle = null;
 
 // DOM Elements
 const policyForm = document.getElementById('policy-form');
@@ -12,6 +50,9 @@ const saveRuleBtn = document.getElementById('save-rule-btn');
 
 const jsonRenderBlock = document.getElementById('json-render-block');
 const copyJsonBtn = document.getElementById('copy-json-btn');
+const importJsonBtn = document.getElementById('import-json-btn');
+const downloadJsonBtn = document.getElementById('download-json-btn');
+const resetJsonBtn = document.getElementById('reset-json-btn');
 
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search-btn');
@@ -25,9 +66,105 @@ const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const toastWrapper = document.getElementById('toast-wrapper');
 
-// Initial Setup & Event Listeners
+// File Linking DOM Elements
+const fileLinkStatusBar = document.getElementById('file-link-status-bar');
+const linkStatusIcon = document.getElementById('link-status-icon');
+const linkStatusText = document.getElementById('link-status-text');
+const linkFileBtn = document.getElementById('link-file-btn');
+const linkBtnLabel = document.getElementById('link-btn-label');
+
+// Import Modal DOM Elements
+const importModal = document.getElementById('import-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const cancelImportBtn = document.getElementById('cancel-import-btn');
+const applyImportBtn = document.getElementById('apply-import-btn');
+const importTextarea = document.getElementById('import-textarea');
+const fileUploadInput = document.getElementById('file-upload-input');
+const fileNameDisplay = document.getElementById('file-name-display');
+const importErrorMsg = document.getElementById('import-error-msg');
+
+// ==========================================
+// INDEXEDDB FILE HANDLE PERSISTENCE
+// ==========================================
+const DB_NAME = 'PolicyManagerDB';
+const STORE_NAME = 'FileHandles';
+const KEY_NAME = 'policyFileHandle';
+
+function getDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onupgradeneeded = (e) => {
+      e.target.result.createObjectStore(STORE_NAME);
+    };
+    request.onsuccess = (e) => resolve(e.target.result);
+    request.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function storeHandle(handle) {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put(handle, KEY_NAME);
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.error("IndexedDB store handle failed:", err);
+  }
+}
+
+async function getStoredHandle() {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const req = tx.objectStore(STORE_NAME).get(KEY_NAME);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.error("IndexedDB retrieve handle failed:", err);
+    return null;
+  }
+}
+
+async function clearStoredHandle() {
+  try {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).delete(KEY_NAME);
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.error("IndexedDB delete handle failed:", err);
+  }
+}
+
+// ==========================================
+// FILE SYSTEM ACCESS PERMISSIONS
+// ==========================================
+async function verifyPermission(handle, withPrompt = false) {
+  const opts = { mode: 'readwrite' };
+  if ((await handle.queryPermission(opts)) === 'granted') {
+    return true;
+  }
+  if (withPrompt) {
+    if ((await handle.requestPermission(opts)) === 'granted') {
+      return true;
+    }
+  }
+  return false;
+}
+
+// ==========================================
+// INITIAL SETUP & EVENT LISTENERS
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  fetchPolicies();
+  checkStoredHandleOnLoad();
   
   // Toggle Block Message box on change
   installationModeSelect.addEventListener('change', toggleMessageField);
@@ -41,7 +178,240 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Copy JSON action
   copyJsonBtn.addEventListener('click', copyRawJson);
+
+  // File download and reset
+  downloadJsonBtn.addEventListener('click', downloadPolicyJson);
+  resetJsonBtn.addEventListener('click', handleResetPolicies);
+
+  // File Link Button Listener
+  linkFileBtn.addEventListener('click', handleLinkBtnClick);
+
+  // Modal Action Listeners
+  importJsonBtn.addEventListener('click', openImportModal);
+  closeModalBtn.addEventListener('click', closeImportModal);
+  cancelImportBtn.addEventListener('click', closeImportModal);
+  applyImportBtn.addEventListener('click', applyImportedJson);
+  
+  // Close modal on background click
+  importModal.addEventListener('click', (e) => {
+    if (e.target === importModal) {
+      closeImportModal();
+    }
+  });
+
+  // File Upload listener
+  fileUploadInput.addEventListener('change', handleFileUpload);
 });
+
+// Check if File Handle API is supported
+const isFileAccessSupported = () => {
+  return 'showOpenFilePicker' in window;
+};
+
+// Check for stored file handle on load
+async function checkStoredHandleOnLoad() {
+  if (!isFileAccessSupported()) {
+    showToast('File System Access API is not supported in this browser. Running in local memory.', 'error');
+    fileLinkStatusBar.style.display = 'none'; // Hide status bar if unsupported
+    initLocalStorageFallback();
+    return;
+  }
+
+  try {
+    const handle = await getStoredHandle();
+    if (handle) {
+      fileHandle = handle;
+      const hasPerm = await verifyPermission(handle, false);
+      if (hasPerm) {
+        await readLinkedFile();
+      } else {
+        // Awaiting user activation to prompt for permission
+        fileLinkStatusBar.className = 'file-link-bar unlinked';
+        linkStatusIcon.textContent = '🔒';
+        linkStatusText.innerHTML = `Linked to: <code>${handle.name}</code>. Click button to authorize writing.`;
+        linkBtnLabel.textContent = 'Authorize Write';
+        
+        statusDot.className = 'status-indicator-dot unlinked';
+        statusText.textContent = 'Awaiting Authorization';
+        
+        initLocalStorageFallback();
+      }
+    } else {
+      updateFileBarUI(false);
+      initLocalStorageFallback();
+    }
+  } catch (err) {
+    console.error("Error checking stored handle:", err);
+    updateFileBarUI(false);
+    initLocalStorageFallback();
+  }
+}
+
+// Fallback to local storage
+function initLocalStorageFallback() {
+  try {
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      policyState = JSON.parse(storedData);
+    } else {
+      policyState = { ...DEFAULT_POLICIES };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState));
+    }
+    updateDashboard();
+  } catch (error) {
+    console.error('Error loading fallback:', error);
+    policyState = { ...DEFAULT_POLICIES };
+    updateDashboard();
+  }
+}
+
+// Update the File Link status banner interface
+function updateFileBarUI(linked, filename = '') {
+  if (linked) {
+    fileLinkStatusBar.className = 'file-link-bar linked';
+    linkStatusIcon.textContent = '✅';
+    linkStatusText.innerHTML = `Linked directly to: <code>${filename}</code>. Changes will save automatically.`;
+    linkBtnLabel.textContent = 'Unlink File';
+    
+    statusDot.className = 'status-indicator-dot linked';
+    statusText.textContent = 'Connected to policy.json';
+  } else {
+    fileLinkStatusBar.className = 'file-link-bar unlinked';
+    linkStatusIcon.textContent = '⚠️';
+    linkStatusText.textContent = 'Not linked to a local policy file. Changes will only save in browser memory.';
+    linkBtnLabel.textContent = 'Link policy.json';
+    
+    statusDot.className = 'status-indicator-dot unlinked';
+    statusText.textContent = 'Local Sandbox (Unlinked)';
+  }
+}
+
+// Click listener for Link/Unlink/Authorize button
+async function handleLinkBtnClick() {
+  if (fileHandle) {
+    // If we have a file handle but not granted permission, click authorizes it
+    const hasPerm = await verifyPermission(fileHandle, false);
+    if (!hasPerm) {
+      // Authorize
+      try {
+        const granted = await verifyPermission(fileHandle, true);
+        if (granted) {
+          await readLinkedFile();
+        } else {
+          showToast('Write authorization denied.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Authorization request failed.', 'error');
+      }
+    } else {
+      // Unlink
+      unlinkFile();
+    }
+  } else {
+    // Select and link file
+    linkFile();
+  }
+}
+
+// Select a local JSON file and establish handle
+async function linkFile() {
+  try {
+    const [handle] = await window.showOpenFilePicker({
+      types: [
+        {
+          description: 'JSON Files',
+          accept: {
+            'application/json': ['.json']
+          }
+        }
+      ],
+      multiple: false
+    });
+    
+    fileHandle = handle;
+    await storeHandle(handle);
+    
+    const granted = await verifyPermission(handle, true);
+    if (granted) {
+      await readLinkedFile();
+    } else {
+      showToast('Write permission denied. Running in memory.', 'error');
+      fileHandle = null;
+      await clearStoredHandle();
+      updateFileBarUI(false);
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      console.error(err);
+      showToast('Failed to select file.', 'error');
+    }
+  }
+}
+
+// Unlink current file handle
+async function unlinkFile() {
+  fileHandle = null;
+  await clearStoredHandle();
+  updateFileBarUI(false);
+  showToast('File unlinked. Now saving in browser memory.');
+  initLocalStorageFallback();
+}
+
+// Read policy JSON data directly from the linked file handle
+async function readLinkedFile() {
+  if (!fileHandle) return;
+  try {
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    
+    if (text.trim() === '') {
+      policyState = {};
+    } else {
+      policyState = JSON.parse(text);
+    }
+    
+    updateFileBarUI(true, file.name);
+    updateDashboard();
+    showToast(`Loaded data from: ${file.name}`);
+  } catch (err) {
+    console.error(err);
+    showToast('Failed to parse linked JSON file. Check formatting.', 'error');
+    
+    // Maintain local storage fallback but keep handle in case they want to fix it
+    updateFileBarUI(true, fileHandle.name);
+    initLocalStorageFallback();
+  }
+}
+
+// Save policy JSON data directly to the linked file handle (or LocalStorage if unlinked)
+async function savePolicyData() {
+  if (!fileHandle) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
+    } catch (e) {
+      console.error(e);
+    }
+    return;
+  }
+
+  try {
+    const hasPerm = await verifyPermission(fileHandle, false);
+    if (!hasPerm) {
+      showToast('Awaiting authorization to save changes. Click Authorize in Link Bar.', 'error');
+      return;
+    }
+    
+    const writable = await fileHandle.createWritable();
+    const formattedJson = JSON.stringify(policyState, null, 2);
+    await writable.write(formattedJson);
+    await writable.close();
+    showToast('Changes updated directly in policy.json!');
+  } catch (err) {
+    console.error(err);
+    showToast('Failed to write changes directly to disk file.', 'error');
+  }
+}
 
 // Toast notification helper
 function showToast(message, type = 'success') {
@@ -79,35 +449,6 @@ function toggleMessageField() {
   }
 }
 
-// Set API Connection Status indicators
-function setConnectionStatus(online) {
-  if (online) {
-    statusDot.className = 'status-indicator-dot online';
-    statusText.textContent = 'Connected to API';
-  } else {
-    statusDot.className = 'status-indicator-dot offline';
-    statusText.textContent = 'Disconnected / Offline';
-  }
-}
-
-// Fetch Policies from Backend
-async function fetchPolicies() {
-  try {
-    const response = await fetch('/api/policy');
-    if (!response.ok) {
-      throw new Error('API server returned an error');
-    }
-    policyState = await response.json();
-    setConnectionStatus(true);
-    updateDashboard();
-  } catch (error) {
-    console.error('Error fetching policies:', error);
-    setConnectionStatus(false);
-    showToast('Failed to fetch policies. Server may be offline.', 'error');
-    renderEmptyState('Failed to connect to backend server. Make sure server is running.');
-  }
-}
-
 // Format and style JSON object with CSS classes
 function highlightJson(jsonObj) {
   const jsonString = JSON.stringify(jsonObj, null, 2);
@@ -137,14 +478,13 @@ function highlightJson(jsonObj) {
 
 // Update the full layout dashboard components
 function updateDashboard() {
-  // Update numbers
   const keys = Object.keys(policyState);
   const total = keys.length;
   let allowed = 0;
   let blocked = 0;
   
   keys.forEach(key => {
-    if (policyState[key].installation_mode === 'allowed') {
+    if (policyState[key] && policyState[key].installation_mode === 'allowed') {
       allowed++;
     } else {
       blocked++;
@@ -155,10 +495,7 @@ function updateDashboard() {
   statAllowedCount.textContent = allowed;
   statBlockedCount.textContent = blocked;
   
-  // Render syntax JSON
   jsonRenderBlock.innerHTML = highlightJson(policyState);
-  
-  // Render search results / table items
   renderTable();
 }
 
@@ -186,7 +523,6 @@ function renderTable() {
     
     const row = document.createElement('tr');
     
-    // Extension ID cell (with click copy action)
     const idCell = document.createElement('td');
     idCell.className = 'extension-id-cell';
     idCell.title = 'Click to copy ID';
@@ -194,7 +530,6 @@ function renderTable() {
       <span class="copyable-id" onclick="copyText('${id}')">${id}</span>
     `;
     
-    // Status Badge Cell
     const statusCell = document.createElement('td');
     const badgeClass = isAllowed ? 'badge badge-allowed' : 'badge badge-blocked';
     const messageTooltip = policy.blocked_install_message ? ` title="${policy.blocked_install_message}"` : '';
@@ -205,11 +540,9 @@ function renderTable() {
       </span>
     `;
     
-    // Actions Cell (Edit + Delete)
     const actionsCell = document.createElement('td');
     actionsCell.className = 'action-buttons-cell text-right';
     
-    // Edit Action Button
     const editBtn = document.createElement('button');
     editBtn.className = 'btn-action';
     editBtn.title = 'Edit configuration';
@@ -221,14 +554,13 @@ function renderTable() {
     `;
     editBtn.onclick = () => fillFormForEdit(id, policy);
     
-    // Delete Action Button
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'btn-action btn-action-delete';
     deleteBtn.title = 'Delete policy';
     deleteBtn.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="3 6 5 6 21 6"></polyline>
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <path d="M19 6v14a2 2 0 0 1-2-2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
       </svg>
     `;
     deleteBtn.onclick = () => deletePolicy(id);
@@ -273,7 +605,6 @@ function copyRawJson() {
   navigator.clipboard.writeText(jsonStr).then(() => {
     showToast('JSON Configuration copied to clipboard!');
     
-    // Toggle copy button UI success temporarily
     const originalContent = copyJsonBtn.innerHTML;
     copyJsonBtn.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -295,6 +626,119 @@ function copyRawJson() {
   });
 }
 
+// Download formatted policy.json file
+function downloadPolicyJson() {
+  try {
+    const dataStr = JSON.stringify(policyState, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.href = url;
+    downloadAnchor.download = 'policy.json';
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    
+    document.body.removeChild(downloadAnchor);
+    URL.revokeObjectURL(url);
+    
+    showToast('policy.json downloaded successfully!');
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    showToast('Failed to export policy file.', 'error');
+  }
+}
+
+// Reset rules to the pre-packaged setup
+async function handleResetPolicies() {
+  if (confirm('Are you sure you want to revert to the default 10 extension policies? This will overwrite your current configuration.')) {
+    policyState = { ...DEFAULT_POLICIES };
+    await savePolicyData();
+    updateDashboard();
+    showToast('Configuration reverted to defaults.');
+  }
+}
+
+// Open the Import modal overlay
+function openImportModal() {
+  importTextarea.value = JSON.stringify(policyState, null, 2);
+  fileUploadInput.value = '';
+  fileNameDisplay.textContent = 'No file chosen';
+  importErrorMsg.textContent = '';
+  importErrorMsg.classList.add('hidden');
+  importModal.classList.add('active');
+  importTextarea.focus();
+}
+
+// Close the Import modal overlay
+function closeImportModal() {
+  importModal.classList.remove('active');
+}
+
+// Handle File upload inside the Import modal
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  fileNameDisplay.textContent = file.name;
+  importErrorMsg.classList.add('hidden');
+  
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    importTextarea.value = evt.target.result;
+  };
+  reader.onerror = function() {
+    importErrorMsg.textContent = 'Failed to read uploaded file.';
+    importErrorMsg.classList.remove('hidden');
+  };
+  reader.readAsText(file);
+}
+
+// Validate and apply imported JSON configuration
+async function applyImportedJson() {
+  const inputStr = importTextarea.value.trim();
+  
+  if (!inputStr) {
+    importErrorMsg.textContent = 'JSON code area cannot be empty.';
+    importErrorMsg.classList.remove('hidden');
+    return;
+  }
+  
+  try {
+    const parsedData = JSON.parse(inputStr);
+    
+    if (typeof parsedData !== 'object' || parsedData === null || Array.isArray(parsedData)) {
+      throw new Error('Root level element must be a valid JSON Object.');
+    }
+    
+    for (const key in parsedData) {
+      const config = parsedData[key];
+      if (typeof config !== 'object' || config === null) {
+        throw new Error(`Rule for key "${key}" must be an object.`);
+      }
+      
+      const mode = config.installation_mode;
+      if (mode !== 'allowed' && mode !== 'blocked') {
+        throw new Error(`Rule "${key}" has invalid installation_mode. Must be "allowed" or "blocked".`);
+      }
+      
+      if (config.blocked_install_message && typeof config.blocked_install_message !== 'string') {
+        throw new Error(`Rule "${key}" has an invalid blocked_install_message (must be string).`);
+      }
+    }
+    
+    policyState = parsedData;
+    await savePolicyData();
+    updateDashboard();
+    
+    closeImportModal();
+    showToast('Import completed successfully!');
+  } catch (err) {
+    importErrorMsg.textContent = `JSON Syntax Error:\n${err.message}`;
+    importErrorMsg.classList.remove('hidden');
+  }
+}
+
 // Fill Form inputs with details for Edit
 function fillFormForEdit(id, policy) {
   extensionIdInput.value = id;
@@ -308,7 +752,6 @@ function fillFormForEdit(id, policy) {
     blockMessageInput.value = '';
   }
   
-  // Highlight Form
   policyForm.closest('.card').style.boxShadow = '0 0 20px var(--color-primary-glow)';
   setTimeout(() => {
     policyForm.closest('.card').style.boxShadow = '';
@@ -317,7 +760,7 @@ function fillFormForEdit(id, policy) {
   extensionIdInput.focus();
 }
 
-// Handle Form Submission
+// Handle Form Submission (Save/Update rule)
 async function handleFormSubmit(e) {
   e.preventDefault();
   
@@ -331,79 +774,38 @@ async function handleFormSubmit(e) {
     return;
   }
   
-  // Prepare payload
-  const payload = {
-    id,
+  const config = {
     installation_mode
   };
   
   if (installation_mode === 'blocked' && blocked_install_message) {
-    payload.blocked_install_message = blocked_install_message;
+    config.blocked_install_message = blocked_install_message;
   }
   
-  try {
-    saveRuleBtn.disabled = true;
-    saveRuleBtn.querySelector('span').textContent = 'Saving...';
-    
-    const response = await fetch('/api/policy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    
-    const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.error || 'Server error occurred');
-    }
-    
-    showToast(result.message || 'Policy saved successfully.');
-    
-    // Update local state and UI
-    policyState = result.data;
-    updateDashboard();
-    
-    // Reset Form fields
-    policyForm.reset();
-    messageFieldGroup.classList.remove('visible');
-    
-  } catch (error) {
-    console.error('Error saving policy:', error);
-    showToast(error.message || 'Failed to save configuration rule.', 'error');
-  } finally {
-    saveRuleBtn.disabled = false;
-    saveRuleBtn.querySelector('span').textContent = 'Save Configuration';
-  }
+  policyState[id] = config;
+  
+  await savePolicyData();
+  updateDashboard();
+  
+  policyForm.reset();
+  messageFieldGroup.classList.remove('visible');
+  
+  showToast(`Saved configuration for "${id}" successfully.`);
 }
 
-// Delete Policy via API
+// Delete Policy from memory
 async function deletePolicy(id) {
   if (!confirm(`Are you sure you want to delete the configuration for "${id}"?`)) {
     return;
   }
   
-  try {
-    const response = await fetch(`/api/policy/${encodeURIComponent(id)}`, {
-      method: 'DELETE'
-    });
-    
-    const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.error || 'Server error occurred');
-    }
-    
-    showToast(result.message || 'Policy removed successfully.');
-    
-    // Update local state and UI
-    policyState = result.data;
+  if (id in policyState) {
+    delete policyState[id];
+    await savePolicyData();
     updateDashboard();
-    
-  } catch (error) {
-    console.error('Error deleting policy:', error);
-    showToast(error.message || 'Failed to delete configuration rule.', 'error');
+    showToast(`Policy for "${id}" removed successfully.`);
+  } else {
+    showToast(`Policy for "${id}" not found in current configuration.`, 'error');
   }
 }
 

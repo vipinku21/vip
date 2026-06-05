@@ -43,10 +43,25 @@
         </div>
       </div>
       <div class="header-status">
-        <span class="status-indicator-dot online" id="status-dot"></span>
-        <span class="status-indicator-text" id="status-text">Connected to API</span>
+        <span class="status-indicator-dot local" id="status-dot"></span>
+        <span class="status-indicator-text" id="status-text">Local Sandbox Mode</span>
       </div>
     </header>
+
+    <!-- File Linking Bar -->
+    <div class="file-link-bar unlinked" id="file-link-status-bar">
+      <div class="link-status-content">
+        <span class="link-status-icon" id="link-status-icon">⚠️</span>
+        <span class="link-status-text" id="link-status-text">Not linked to a local policy file. Changes will only save in browser memory.</span>
+      </div>
+      <button class="btn-link-action" id="link-file-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1rem; height: 1rem;">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </svg>
+        <span id="link-btn-label">Link policy.json</span>
+      </button>
+    </div>
 
     <div class="stats-ribbon" id="stats-dashboard">
       <div class="stat-card" id="stat-total">
@@ -139,13 +154,37 @@
               </svg>
               Live JSON Preview
             </h2>
-            <button id="copy-json-btn" class="btn-icon-only" title="Copy formatted JSON to clipboard">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copy-icon">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span class="btn-text">Copy</span>
-            </button>
+            <div class="header-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button id="import-json-btn" class="btn-icon-only" title="Import JSON configuration">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span>Import</span>
+              </button>
+              <button id="download-json-btn" class="btn-icon-only" title="Download policy.json file">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download</span>
+              </button>
+              <button id="copy-json-btn" class="btn-icon-only" title="Copy formatted JSON to clipboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copy-icon">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span class="btn-text">Copy</span>
+              </button>
+              <button id="reset-json-btn" class="btn-icon-only btn-danger-hover" title="Reset to default policies">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                <span>Reset</span>
+              </button>
+            </div>
           </div>
           <div class="json-code-container">
             <pre><code id="json-render-block">{}</code></pre>
@@ -216,6 +255,56 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toast-wrapper"></div>
+
+  <!-- Import JSON Modal -->
+  <div class="modal-overlay" id="import-modal">
+    <div class="modal-card glass-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <svg class="title-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Import JSON Configuration
+        </h3>
+        <button class="modal-close-btn" id="close-modal-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Paste your raw JSON policy data below or upload an existing <code>policy.json</code> file.</p>
+        
+        <div class="file-upload-section">
+          <label for="file-upload-input" class="btn-upload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.1rem; height: 1.1rem;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <polyline points="9 15 12 12 15 15"></polyline>
+            </svg>
+            <span>Choose policy.json File</span>
+          </label>
+          <input type="file" id="file-upload-input" accept=".json" style="display: none;">
+          <span id="file-name-display" class="file-name-text">No file chosen</span>
+        </div>
+
+        <div class="form-group">
+          <label for="import-textarea">Raw JSON Code</label>
+          <textarea 
+            id="import-textarea" 
+            placeholder='{&#10;  "*": {&#10;    "installation_mode": "blocked",&#10;    "blocked_install_message": "Restricted"&#10;  }&#10;}'
+            rows="10"
+            class="code-textarea"
+            style="font-family: var(--font-mono); font-size: 0.85rem; background: rgba(10, 15, 30, 0.7);"
+          ></textarea>
+        </div>
+        <div id="import-error-msg" class="import-error-container hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-import-btn">Cancel</button>
+        <button class="btn btn-primary" id="apply-import-btn">Apply & Save</button>
+      </div>
+    </div>
+  </div>
 
   <!-- JS Controller -->
   <script src="app.js"></script>

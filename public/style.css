@@ -883,3 +883,295 @@ select:focus + .select-arrow {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255,255,255,0.25);
 }
+
+/* Local Sandbox Indicator */
+.status-indicator-dot.local {
+  background-color: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary);
+  animation: pulse-dot 2s infinite;
+}
+
+/* Reset Button Hover Variant */
+.btn-danger-hover:hover {
+  color: var(--color-danger) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  background: var(--color-danger-bg) !important;
+}
+
+/* Modal Overlay styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 8, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal Card Glassmorphism */
+.modal-card {
+  width: 90%;
+  max-width: 650px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  transform: translateY(-20px) scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-overlay.active .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-text-primary);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.75rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  color: var(--color-text-primary);
+  transform: scale(1.1);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.modal-description {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* File Upload Controls */
+.file-upload-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px dashed var(--border-glass);
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.btn-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: hsla(222, 47%, 15%, 0.8);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-upload:hover {
+  color: var(--color-text-primary);
+  border-color: rgba(255,255,255,0.25);
+  background: hsla(222, 47%, 20%, 0.8);
+}
+
+.file-name-text {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Error Banner inside Modal */
+.import-error-container {
+  padding: 0.75rem 1rem;
+  background-color: var(--color-danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-left: 3px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.import-error-container.hidden {
+  display: none;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid var(--border-glass);
+  padding-top: 1.25rem;
+}
+
+.btn-secondary {
+  background: hsla(222, 47%, 15%, 0.8);
+  border: 1px solid var(--border-glass);
+  color: var(--color-text-secondary);
+  width: auto;
+}
+
+.btn-secondary:hover {
+  color: var(--color-text-primary);
+  border-color: rgba(255,255,255,0.25);
+  background: hsla(222, 47%, 20%, 0.8);
+}
+
+/* File Link Bar Layout & Styles */
+.file-link-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  border: 1px solid var(--border-glass);
+  margin-bottom: 0.5rem;
+}
+
+.file-link-bar.unlinked {
+  background: hsla(35, 90%, 50%, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.05);
+}
+
+.file-link-bar.linked {
+  background: hsla(142, 76%, 45%, 0.08);
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.05);
+}
+
+.link-status-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.link-status-icon {
+  font-size: 1.1rem;
+}
+
+.link-status-text {
+  color: var(--color-text-secondary);
+}
+
+.file-link-bar.unlinked .link-status-text {
+  color: hsl(35, 90%, 75%);
+}
+
+.file-link-bar.linked .link-status-text {
+  color: hsl(142, 76%, 75%);
+}
+
+.btn-link-action {
+  background: hsla(222, 47%, 15%, 0.8);
+  border: 1px solid var(--border-glass);
+  color: var(--color-text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.file-link-bar.unlinked .btn-link-action {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: hsl(35, 90%, 85%);
+  background: hsla(35, 90%, 50%, 0.15);
+}
+
+.file-link-bar.unlinked .btn-link-action:hover {
+  background: hsla(35, 90%, 50%, 0.25);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.file-link-bar.linked .btn-link-action {
+  border-color: rgba(34, 197, 94, 0.35);
+  color: hsl(142, 76%, 85%);
+  background: hsla(142, 76%, 45%, 0.15);
+}
+
+.file-link-bar.linked .btn-link-action:hover {
+  background: hsla(142, 76%, 45%, 0.25);
+  border-color: rgba(34, 197, 94, 0.6);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-link-action:active {
+  transform: translateY(1px);
+}
+
+.status-indicator-dot.linked {
+  background-color: var(--color-success);
+  box-shadow: 0 0 8px var(--color-success);
+  animation: pulse-dot 2s infinite;
+}
+
+.status-indicator-dot.unlinked {
+  background-color: hsl(35, 90%, 55%);
+  box-shadow: 0 0 8px hsl(35, 90%, 55%);
+  animation: pulse-dot 2s infinite;
+}
+
+
