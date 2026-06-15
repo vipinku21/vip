@@ -2,15 +2,8 @@
   "name": "extension-policy-manager",
   "version": "1.0.0",
   "description": "Premium browser extension policy manager and formatter",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.19.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "start": "npx http-server .",
+    "serve": "npx http-server ."
   }
 }

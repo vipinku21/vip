@@ -33,6 +33,8 @@ const DEFAULT_POLICIES = {
   }
 };
 
+const STORAGE_KEY = 'browser_extension_policies';
+
 // State Management
 let policyState = {};
 let filterText = '';
@@ -77,7 +79,7 @@ const importErrorMsg = document.getElementById('import-error-msg');
 // INITIAL SETUP & EVENT LISTENERS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  fetchPolicies();
+  initPolicyData();
   
   // Toggle Block Message box on change
   installationModeSelect.addEventListener('change', toggleMessageField);
@@ -113,69 +115,55 @@ document.addEventListener('DOMContentLoaded', () => {
   fileUploadInput.addEventListener('change', handleFileUpload);
 });
 
-// Fetch policies from Node server backend
-async function fetchPolicies() {
+// Initialize policy data automatically from local policy.json or localStorage backup
+async function initPolicyData() {
   try {
-    const response = await fetch('/api/policy');
-    if (!response.ok) {
-      throw new Error('API server returned an error');
+    // If the user already made edits in their browser, load those
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      policyState = JSON.parse(storedData);
+      showToast('Loaded saved configuration from browser storage.');
+      setConnectionStatus(true);
+      updateDashboard();
+      return;
     }
-    policyState = await response.json();
-    
-    // Check if empty, fallback to templates
-    if (Object.keys(policyState).length === 0) {
-      policyState = { ...DEFAULT_POLICIES };
-      await savePolicyData(true); // silent save
+
+    // Otherwise, fetch the default policy.json from the repository
+    const response = await fetch('./policy.json');
+    if (response.ok) {
+      policyState = await response.json();
+      savePolicyData();
+      showToast('Loaded active policy.json file.');
+      setConnectionStatus(true);
+    } else {
+      throw new Error('Could not find policy.json file');
     }
-    
-    setConnectionStatus(true);
-    updateDashboard();
-  } catch (error) {
-    console.error('Error fetching policies:', error);
-    setConnectionStatus(false);
-    showToast('Failed to fetch policies from server.', 'error');
-    
-    // In-memory fallback so page doesn't crash
+  } catch (err) {
+    console.warn("Failed to load policy.json. Falling back to templates:", err);
     policyState = { ...DEFAULT_POLICIES };
-    updateDashboard();
+    savePolicyData();
+    setConnectionStatus(true);
   }
+  updateDashboard();
 }
 
-// Save policy modifications to Node server backend
-async function savePolicyData(silent = false) {
+// Save policies to browser localStorage
+function savePolicyData() {
   try {
-    const response = await fetch('/api/policy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(policyState)
-    });
-    
-    if (!response.ok) {
-      const result = await response.json();
-      throw new Error(result.error || 'Server error occurred');
-    }
-    
-    if (!silent) {
-      showToast('Changes saved successfully to policy.json on server.');
-    }
-    setConnectionStatus(true);
-  } catch (error) {
-    console.error('Error saving policy data:', error);
-    showToast('Failed to save changes to server.', 'error');
-    setConnectionStatus(false);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
+  } catch (e) {
+    console.error('Failed to save to localStorage:', e);
   }
 }
 
 // Set UI status indicator state
-function setConnectionStatus(connected) {
-  if (connected) {
+function setConnectionStatus(ok) {
+  if (ok) {
     statusDot.className = 'status-indicator-dot online';
-    statusText.textContent = 'Connected to Server';
+    statusText.textContent = 'Active (Serverless)';
   } else {
     statusDot.className = 'status-indicator-dot offline';
-    statusText.textContent = 'Disconnected / Offline';
+    statusText.textContent = 'Error Loading file';
   }
 }
 
@@ -412,13 +400,25 @@ function downloadPolicyJson() {
   }
 }
 
-// Reset rules to the pre-packaged setup
+// Reset rules to the pre-packaged setup or reload policy.json from the repository
 async function handleResetPolicies() {
-  if (confirm('Are you sure you want to revert to the default 10 extension policies? This will overwrite your current configuration.')) {
-    policyState = { ...DEFAULT_POLICIES };
-    await savePolicyData();
-    updateDashboard();
-    showToast('Configuration reverted to defaults.');
+  if (confirm('Are you sure you want to reset all custom edits and reload the original policy.json file from the repository?')) {
+    try {
+      const response = await fetch('./policy.json');
+      if (response.ok) {
+        policyState = await response.json();
+        savePolicyData();
+        updateDashboard();
+        showToast('Reset configuration to the repository file.');
+      } else {
+        throw new Error();
+      }
+    } catch (e) {
+      policyState = { ...DEFAULT_POLICIES };
+      savePolicyData();
+      updateDashboard();
+      showToast('Reverted configuration to default templates.');
+    }
   }
 }
 
@@ -491,7 +491,7 @@ async function applyImportedJson() {
     }
     
     policyState = parsedData;
-    await savePolicyData();
+    savePolicyData();
     updateDashboard();
     
     closeImportModal();
@@ -547,7 +547,7 @@ async function handleFormSubmit(e) {
   
   policyState[id] = config;
   
-  await savePolicyData();
+  savePolicyData();
   updateDashboard();
   
   policyForm.reset();
@@ -564,7 +564,7 @@ async function deletePolicy(id) {
   
   if (id in policyState) {
     delete policyState[id];
-    await savePolicyData();
+    savePolicyData();
     updateDashboard();
     showToast(`Policy for "${id}" removed successfully.`);
   } else {
