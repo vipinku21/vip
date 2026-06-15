@@ -67,7 +67,7 @@ const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const toastWrapper = document.getElementById('toast-wrapper');
 
-// GitHub Settings DOM Elements
+// GitHub / GitLab Settings DOM Elements
 const githubTokenInput = document.getElementById('github-token-input');
 const githubRepoInput = document.getElementById('github-repo-input');
 const githubBranchInput = document.getElementById('github-branch-input');
@@ -76,6 +76,10 @@ const githubFormContent = document.getElementById('github-form-content');
 const githubConnectedContent = document.getElementById('github-connected-content');
 const githubConnectionDetails = document.getElementById('github-connection-details');
 const disconnectGithubBtn = document.getElementById('disconnect-github-btn');
+const githubProviderSelect = document.getElementById('integration-provider-select');
+const githubHostInput = document.getElementById('github-host-input');
+const gitlabHostGroup = document.getElementById('gitlab-host-group');
+const connectedProviderTitle = document.getElementById('connected-provider-title');
 
 // Import Modal DOM Elements
 const importModal = document.getElementById('import-modal');
@@ -114,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // GitHub Settings save & disconnect
   saveGithubBtn.addEventListener('click', handleSaveGithubSettings);
   disconnectGithubBtn.addEventListener('click', handleDisconnectGithub);
+  githubProviderSelect.addEventListener('change', toggleHostField);
 
   // Modal Action Listeners
   importJsonBtn.addEventListener('click', openImportModal);
@@ -135,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // Helper to parse repo input and resolve to 'owner/repo'
 function parseRepoInput(input) {
   let cleaned = input.trim();
-  // Remove git@github.com: prefix
-  cleaned = cleaned.replace(/^git@github\.com:/i, '');
-  // Remove https://github.com/ or http://github.com/ or github.com/ prefix
-  cleaned = cleaned.replace(/^(https?:\/\/)?(www\.)?github\.com\//i, '');
+  // Remove git@github.com: or git@gitlab.com: prefix
+  cleaned = cleaned.replace(/^git@(github|gitlab)\.com:/i, '');
+  // Remove https://github.com/ or https://gitlab.com/ prefix
+  cleaned = cleaned.replace(/^(https?:\/\/)?(www\.)?(github|gitlab)\.com\//i, '');
   // Remove .git suffix
   cleaned = cleaned.replace(/\.git$/i, '');
   // Remove leading/trailing slashes
@@ -154,28 +159,44 @@ function parseTokenInput(input) {
   return cleaned;
 }
 
-// Load GitHub settings from localStorage on load
+// Toggle GitLab Instance URL field visibility
+function toggleHostField() {
+  if (githubProviderSelect.value === 'gitlab') {
+    gitlabHostGroup.style.display = 'block';
+  } else {
+    gitlabHostGroup.style.display = 'none';
+  }
+}
+
+// Load Git settings from localStorage on load
 function loadGithubSettings() {
   try {
     const settingsStr = localStorage.getItem(GITHUB_SETTINGS_KEY);
     if (settingsStr) {
       const settings = JSON.parse(settingsStr);
+      githubProviderSelect.value = settings.provider || 'github';
       githubTokenInput.value = settings.token || '';
       githubRepoInput.value = settings.repo || 'vipinku21/vip';
       githubBranchInput.value = settings.branch || 'main';
+      githubHostInput.value = settings.host || 'https://gitlab.com';
     } else {
+      githubProviderSelect.value = 'github';
       githubRepoInput.value = 'vipinku21/vip';
       githubBranchInput.value = 'main';
+      githubHostInput.value = 'https://gitlab.com';
     }
+    toggleHostField();
   } catch (err) {
-    console.error("Error loading GitHub settings:", err);
+    console.error("Error loading Git settings:", err);
   }
 }
 
-// Get current active GitHub settings and update UI with sanitized inputs
+// Get current active Git settings and update UI with sanitized inputs
 function getGithubConfig() {
+  const provider = githubProviderSelect.value;
   const rawToken = githubTokenInput.value.trim();
   const rawRepo = githubRepoInput.value.trim();
+  const host = githubHostInput.value.trim();
   
   const token = parseTokenInput(rawToken);
   const repo = parseRepoInput(rawRepo);
@@ -184,20 +205,21 @@ function getGithubConfig() {
   // Feed cleaned values back to UI inputs so the user sees the sanitized form
   if (githubTokenInput.value !== token) githubTokenInput.value = token;
   if (githubRepoInput.value !== repo) githubRepoInput.value = repo;
+  if (githubHostInput.value !== host) githubHostInput.value = host;
   
-  return { token, repo, branch };
+  return { provider, token, repo, branch, host };
 }
 
 // Initialize policy data automatically
 async function initPolicyData() {
   const config = getGithubConfig();
   
-  // If we have a token, pull the absolute latest from the GitHub API
+  // If we have a token, pull the absolute latest from the Git API
   if (config.token && config.repo) {
     statusDot.className = 'status-indicator-dot github';
-    statusText.textContent = `Connected to GitHub (${config.repo})`;
+    statusText.textContent = `Connected to ${config.provider === 'gitlab' ? 'GitLab' : 'GitHub'} (${config.repo})`;
     
-    const loaded = await loadFromGitHub(config);
+    const loaded = await loadFromGit(config);
     if (loaded) {
       updateGithubUIState(true);
       return;
@@ -241,48 +263,59 @@ async function initPolicyData() {
   
   if (!config.token) {
     statusDot.className = 'status-indicator-dot unlinked';
-    statusText.textContent = 'Awaiting GitHub Settings';
+    statusText.textContent = 'Awaiting Git Settings';
   }
   
   updateDashboard();
 }
 
-// Fetch policy.json from the GitHub API
-async function loadFromGitHub(config) {
+// Fetch policy.json from the Git API (GitHub / GitLab)
+async function loadFromGit(config) {
+  const isGitLab = config.provider === 'gitlab';
+  const baseUrl = isGitLab ? `${config.host || 'https://gitlab.com'}/api/v4` : 'https://api.github.com';
+  const repoPath = isGitLab ? encodeURIComponent(config.repo) : config.repo;
+  
+  const fetchUrl = isGitLab 
+    ? `${baseUrl}/projects/${repoPath}/repository/files/policy.json?ref=${config.branch}`
+    : `${baseUrl}/repos/${repoPath}/contents/policy.json?ref=${config.branch}`;
+    
+  const headers = {};
+  if (isGitLab) {
+    headers['PRIVATE-TOKEN'] = config.token;
+  } else {
+    headers['Authorization'] = `Bearer ${config.token}`;
+    headers['Accept'] = 'application/vnd.github.v3+json';
+  }
+
   try {
-    const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
-      headers: {
-        'Authorization': `Bearer ${config.token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
+    const res = await fetch(fetchUrl, { headers });
 
     if (res.ok) {
       const fileInfo = await res.json();
       // Decode base64
       const decodedContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\s/g, ''))));
       policyState = JSON.parse(decodedContent);
-      loadedFileSha = fileInfo.sha; // Track the current file version SHA
+      loadedFileSha = isGitLab ? fileInfo.last_commit_id : fileInfo.sha; // Track the current file version SHA
       updateDashboard();
-      showToast('Successfully fetched latest policy.json from GitHub.');
+      showToast(`Successfully fetched latest policy.json from ${isGitLab ? 'GitLab' : 'GitHub'}.`);
       return true;
     } else if (res.status === 401) {
-      showToast('Unauthorized: GitHub token is invalid or expired.', 'error');
+      showToast(`Unauthorized: ${isGitLab ? 'GitLab' : 'GitHub'} token is invalid or expired.`, 'error');
     } else if (res.status === 403) {
-      showToast('Access forbidden: Check your token scopes or API rate limits.', 'error');
+      showToast(`Access forbidden: Check token scopes/permissions or API limits.`, 'error');
     } else if (res.status === 404) {
       showToast('policy.json not found in repository. Using template rules.', 'error');
     } else {
-      showToast(`GitHub API returned error code ${res.status}`, 'error');
+      showToast(`${isGitLab ? 'GitLab' : 'GitHub'} API returned error code ${res.status}`, 'error');
     }
   } catch (err) {
-    console.error("Error loading from GitHub:", err);
-    showToast(`Failed to connect to GitHub API: ${err.message || err}`, 'error');
+    console.error(`Error loading from ${isGitLab ? 'GitLab' : 'GitHub'}:`, err);
+    showToast(`Failed to connect to Git API: ${err.message || err}`, 'error');
   }
   return false;
 }
 
-// Save policies to GitHub repository (or LocalStorage backup if unlinked)
+// Save policies to Git repository (or LocalStorage backup if unlinked)
 async function savePolicyData() {
   const config = getGithubConfig();
   
@@ -290,38 +323,49 @@ async function savePolicyData() {
   if (!config.token || !config.repo) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
-      showToast('No GitHub connection. Saved in browser memory.');
+      showToast('No active Git connection. Saved in browser memory.');
     } catch (e) {
       console.error(e);
     }
     return;
   }
 
+  const isGitLab = config.provider === 'gitlab';
+  const baseUrl = isGitLab ? `${config.host || 'https://gitlab.com'}/api/v4` : 'https://api.github.com';
+  const repoPath = isGitLab ? encodeURIComponent(config.repo) : config.repo;
+
   try {
     saveRuleBtn.disabled = true;
     const saveBtnLabel = saveRuleBtn.querySelector('span');
     const originalLabel = saveBtnLabel.textContent;
-    saveBtnLabel.textContent = 'Pushing to GitHub...';
+    saveBtnLabel.textContent = `Pushing to ${isGitLab ? 'GitLab' : 'GitHub'}...`;
 
-    // 1. Fetch the file SHA first (required to overwrite)
-    let fileSha = null;
+    // 1. Fetch the file SHA/commit_id first (required to check conflicts)
+    let currentSha = null;
     try {
-      const getFileRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
-        headers: {
-          'Authorization': `Bearer ${config.token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
+      const getFileUrl = isGitLab
+        ? `${baseUrl}/projects/${repoPath}/repository/files/policy.json?ref=${config.branch}`
+        : `${baseUrl}/repos/${repoPath}/contents/policy.json?ref=${config.branch}`;
+        
+      const getHeaders = {};
+      if (isGitLab) {
+        getHeaders['PRIVATE-TOKEN'] = config.token;
+      } else {
+        getHeaders['Authorization'] = `Bearer ${config.token}`;
+        getHeaders['Accept'] = 'application/vnd.github.v3+json';
+      }
+
+      const getFileRes = await fetch(getFileUrl, { headers: getHeaders });
       if (getFileRes.ok) {
         const fileInfo = await getFileRes.json();
-        fileSha = fileInfo.sha;
+        currentSha = isGitLab ? fileInfo.last_commit_id : fileInfo.sha;
       }
     } catch (e) {
-      console.warn("Could not fetch file SHA (might be creating new file):", e);
+      console.warn("Could not fetch file version info (might be creating new file):", e);
     }
 
-    // Version Conflict Detection: Compare current remote SHA with loadedFileSha
-    if (loadedFileSha && fileSha && fileSha !== loadedFileSha) {
+    // Version Conflict Detection: Compare current remote version with loadedFileSha
+    if (loadedFileSha && currentSha && currentSha !== loadedFileSha) {
       showToast('Save Blocked: Another teammate has updated the policies in the repository. Please reload the page to get their latest updates before saving your changes.', 'error');
       saveRuleBtn.disabled = false;
       saveBtnLabel.textContent = originalLabel;
@@ -332,46 +376,70 @@ async function savePolicyData() {
     const jsonStr = JSON.stringify(policyState, null, 2);
     const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
-    // 3. Commit back to GitHub
-    const commitBody = {
-      message: 'Update policy.json via Web Editor',
-      content: base64Content,
-      branch: config.branch
-    };
-    if (fileSha) {
-      commitBody.sha = fileSha;
-    }
-
-    const pushRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json`, {
-      method: 'PUT',
-      headers: {
+    // 3. Commit back to Git provider
+    let commitUrl, method, commitHeaders, commitBody;
+    
+    if (isGitLab) {
+      commitUrl = `${baseUrl}/projects/${repoPath}/repository/files/policy.json`;
+      method = 'PUT';
+      commitHeaders = {
+        'PRIVATE-TOKEN': config.token,
+        'Content-Type': 'application/json'
+      };
+      commitBody = {
+        branch: config.branch,
+        commit_message: 'Update policy.json via Web Editor',
+        content: base64Content,
+        encoding: 'base64'
+      };
+      if (currentSha) {
+        commitBody.last_commit_id = currentSha;
+      }
+    } else {
+      commitUrl = `${baseUrl}/repos/${repoPath}/contents/policy.json`;
+      method = 'PUT';
+      commitHeaders = {
         'Authorization': `Bearer ${config.token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json'
-      },
+      };
+      commitBody = {
+        message: 'Update policy.json via Web Editor',
+        content: base64Content,
+        branch: config.branch
+      };
+      if (currentSha) {
+        commitBody.sha = currentSha;
+      }
+    }
+
+    const pushRes = await fetch(commitUrl, {
+      method: method,
+      headers: commitHeaders,
       body: JSON.stringify(commitBody)
     });
 
     if (pushRes.ok) {
       const pushData = await pushRes.json();
-      loadedFileSha = pushData.content.sha; // Update the loaded version hash to avoid false conflicts
-      showToast('Successfully committed changes directly to GitHub!');
+      // Update our loaded file SHA version from response to prevent future false conflicts
+      loadedFileSha = isGitLab ? pushData.last_commit_id : pushData.content.sha;
+      showToast(`Successfully committed changes directly to ${isGitLab ? 'GitLab' : 'GitHub'}!`);
       
       // Also backup locally just in case
       localStorage.setItem(STORAGE_KEY, jsonStr);
     } else {
-      let errMsg = 'GitHub push failed';
+      let errMsg = 'Git push failed';
       try {
         const errData = await pushRes.json();
         errMsg = errData.message || errMsg;
       } catch (jsonErr) {}
       
       if (pushRes.status === 401) {
-        throw new Error('Unauthorized: Invalid or expired GitHub token.');
+        throw new Error('Unauthorized: Invalid or expired Git token.');
       } else if (pushRes.status === 403) {
         throw new Error('Forbidden: Lacking write permissions or rate-limited.');
       } else if (pushRes.status === 404) {
-        throw new Error('Repository or branch not found.');
+        throw new Error('Repository, branch, or file not found.');
       } else {
         throw new Error(`${errMsg} (Status: ${pushRes.status})`);
       }
@@ -380,23 +448,26 @@ async function savePolicyData() {
     saveRuleBtn.disabled = false;
     saveBtnLabel.textContent = originalLabel;
   } catch (err) {
-    console.error("GitHub Commit Error:", err);
-    showToast(`Failed to update GitHub: ${err.message}`, 'error');
+    console.error("Git Commit Error:", err);
+    showToast(`Failed to update Git repository: ${err.message}`, 'error');
     saveRuleBtn.disabled = false;
     saveRuleBtn.querySelector('span').textContent = 'Save Configuration';
   }
 }
 
-// Handle GitHub integration settings validation and save
+// Handle Git integration settings validation and save
 async function handleSaveGithubSettings() {
   const config = getGithubConfig();
-  
+  const isGitLab = config.provider === 'gitlab';
+  const baseUrl = isGitLab ? `${config.host || 'https://gitlab.com'}/api/v4` : 'https://api.github.com';
+  const repoPath = isGitLab ? encodeURIComponent(config.repo) : config.repo;
+
   if (!config.token) {
-    showToast('Please enter a GitHub Access Token.', 'error');
+    showToast('Please enter an Access Token.', 'error');
     return;
   }
   if (!config.repo || !config.repo.includes('/')) {
-    showToast('Please enter a valid repository (e.g. owner/repo).', 'error');
+    showToast('Please enter a valid Repository / Project Path (e.g. owner/repo).', 'error');
     return;
   }
 
@@ -405,31 +476,56 @@ async function handleSaveGithubSettings() {
     saveGithubBtn.querySelector('span').textContent = 'Verifying connection...';
 
     // Verify token permissions by loading the repo properties
-    const res = await fetch(`https://api.github.com/repos/${config.repo}`, {
-      headers: {
-        'Authorization': `Bearer ${config.token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
+    const fetchUrl = isGitLab 
+      ? `${baseUrl}/projects/${repoPath}`
+      : `${baseUrl}/repos/${repoPath}`;
+      
+    const headers = {};
+    if (isGitLab) {
+      headers['PRIVATE-TOKEN'] = config.token;
+    } else {
+      headers['Authorization'] = `Bearer ${config.token}`;
+      headers['Accept'] = 'application/vnd.github.v3+json';
+    }
+
+    const res = await fetch(fetchUrl, { headers });
 
     if (res.ok) {
       const repoInfo = await res.json();
       
       // Verify if the token actually has push (write) permissions to this repository
-      const hasPushAccess = repoInfo.permissions && repoInfo.permissions.push;
+      let hasPushAccess = false;
+      if (isGitLab) {
+        const projAccess = repoInfo.permissions && repoInfo.permissions.project_access;
+        const groupAccess = repoInfo.permissions && repoInfo.permissions.group_access;
+        const accessLevel = Math.max(
+          (projAccess && projAccess.access_level) || 0,
+          (groupAccess && groupAccess.access_level) || 0
+        );
+        // Developer role has access_level >= 30, Maintainer has >= 40
+        if (repoInfo.permissions) {
+          hasPushAccess = accessLevel >= 30;
+        } else {
+          hasPushAccess = true; // Fallback: public project metadata returns ok but no permissions block
+        }
+      } else {
+        hasPushAccess = repoInfo.permissions && repoInfo.permissions.push;
+      }
       
       if (!hasPushAccess) {
-        showToast('Verification failed: Your token is valid, but it lacks WRITE (push) permissions. For Fine-Grained tokens, ensure "Contents: Read & Write" is selected under Repository Permissions. For Classic tokens, ensure the "repo" scope is checked.', 'error');
+        showToast(`Verification failed: Your token is valid, but it lacks WRITE permissions. For GitLab, ensure your token has "api" scope. For GitHub, ensure "repo" or "Contents: Read & Write" is checked.`, 'error');
         return;
       }
 
-      // Check for OAuth scopes for classic tokens to warn the user if repo scope is missing
-      const scopes = res.headers.get('X-OAuth-Scopes');
+      // Check for OAuth scopes for classic tokens to warn the user if repo scope is missing (GitHub only)
       let scopeWarning = '';
-      if (scopes !== null) {
-        const scopeArray = scopes.split(',').map(s => s.trim());
-        if (!scopeArray.includes('repo')) {
-          scopeWarning = 'Warning: Token is missing the "repo" scope needed to edit files.';
+      if (!isGitLab) {
+        const scopes = res.headers.get('X-OAuth-Scopes');
+        if (scopes !== null) {
+          const scopeArray = scopes.split(',').map(s => s.trim());
+          if (!scopeArray.includes('repo')) {
+            scopeWarning = 'Warning: Token is missing the "repo" scope needed to edit files.';
+          }
         }
       }
 
@@ -439,29 +535,29 @@ async function handleSaveGithubSettings() {
       if (scopeWarning) {
         showToast(`Connected, but authorization warning: ${scopeWarning}`, 'error');
       } else {
-        showToast('GitHub credentials verified! Connected successfully with write access.', 'success');
+        showToast(`Git credentials verified! Connected successfully to ${isGitLab ? 'GitLab' : 'GitHub'} with write access.`, 'success');
       }
       
       statusDot.className = 'status-indicator-dot github';
-      statusText.textContent = `Connected to GitHub (${config.repo})`;
+      statusText.textContent = `Connected to ${isGitLab ? 'GitLab' : 'GitHub'} (${config.repo})`;
       
       // Refresh policy.json values
-      await loadFromGitHub(config);
+      await loadFromGit(config);
       updateGithubUIState(true);
     } else {
       let errMsg = 'Invalid Token or Repository';
       try {
         const errInfo = await res.json();
-        errMsg = errInfo.message || errMsg;
+        errMsg = errInfo.message || errInfo.error || errMsg;
       } catch (jsonErr) {}
       
       let hint = '';
       if (res.status === 401) {
-        hint = 'Bad Credentials: Check that your token is typed correctly, not expired, and has access.';
+        hint = `Bad Credentials: Check that your token is typed correctly, not expired, and has ${isGitLab ? 'api' : 'repo'} scope.`;
       } else if (res.status === 404) {
-        hint = 'Not Found: Verify the repository name is correct. If the repository is private, verify your token has "repo" (classic) or "Contents: Read & Write" (fine-grained) access.';
+        hint = `Not Found: Verify the project path and instance URL are correct. If private, verify your token has access.`;
       } else if (res.status === 403) {
-        hint = 'Forbidden: Access blocked. You might have hit GitHub\'s rate limits or the token lacks permission.';
+        hint = `Forbidden: Access blocked. You might have hit rate limits or the token lacks permission.`;
       } else {
         hint = `Error code: ${res.status}`;
       }
@@ -909,6 +1005,7 @@ function updateGithubUIState(connected) {
   if (connected && config.token && config.repo) {
     githubFormContent.style.display = 'none';
     githubConnectedContent.style.display = 'flex';
+    connectedProviderTitle.textContent = `Connected to ${config.provider === 'gitlab' ? 'GitLab' : 'GitHub'}`;
     githubConnectionDetails.innerHTML = `Repository: <strong>${config.repo}</strong><br>Branch: <strong>${config.branch}</strong>`;
   } else {
     githubFormContent.style.display = 'flex';
@@ -916,18 +1013,20 @@ function updateGithubUIState(connected) {
   }
 }
 
-// Disconnect GitHub and clear localStorage credentials
+// Disconnect Git and clear localStorage credentials
 function handleDisconnectGithub() {
-  if (confirm('Are you sure you want to disconnect your GitHub integration? This will remove the token from your browser memory.')) {
+  if (confirm('Are you sure you want to disconnect your Git integration? This will remove the token from your browser memory.')) {
     localStorage.removeItem(GITHUB_SETTINGS_KEY);
+    githubProviderSelect.value = 'github';
     githubTokenInput.value = '';
     githubRepoInput.value = 'vipinku21/vip';
     githubBranchInput.value = 'main';
+    githubHostInput.value = 'https://gitlab.com';
     loadedFileSha = null;
     updateGithubUIState(false);
     
     statusDot.className = 'status-indicator-dot unlinked';
-    statusText.textContent = 'Awaiting GitHub Settings';
+    statusText.textContent = 'Awaiting Git Settings';
     
     // Reload local/fallback policy rules
     initPolicyData();

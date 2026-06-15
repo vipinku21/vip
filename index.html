@@ -44,7 +44,7 @@
       </div>
       <div class="header-status">
         <span class="status-indicator-dot unlinked" id="status-dot"></span>
-        <span class="status-indicator-text" id="status-text">Awaiting GitHub Settings</span>
+        <span class="status-indicator-text" id="status-text">Awaiting Git Settings</span>
       </div>
     </header>
 
@@ -135,20 +135,43 @@
             <svg class="title-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
             </svg>
-            GitHub Integration
+            Git Integration
           </h2>
           <div id="github-form-content" class="github-form" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="form-group-row" style="display: flex; gap: 0.75rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="integration-provider-select">Git Provider</label>
+                <div class="select-wrapper">
+                  <select id="integration-provider-select">
+                    <option value="github" selected>GitHub</option>
+                    <option value="gitlab">GitLab</option>
+                  </select>
+                  <div class="select-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" id="gitlab-host-group" style="display: none; flex: 1.5;">
+                <label for="github-host-input">GitLab Instance URL</label>
+                <div class="input-wrapper">
+                  <input type="text" id="github-host-input" value="https://gitlab.com" placeholder="https://gitlab.com">
+                  <span class="focus-border"></span>
+                </div>
+              </div>
+            </div>
             <div class="form-group">
-              <label for="github-token-input">Personal Access Token (PAT)</label>
+              <label for="github-token-input">Access Token</label>
               <div class="input-wrapper">
-                <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+                <input type="password" id="github-token-input" placeholder="Token" autocomplete="off">
                 <span class="focus-border"></span>
               </div>
-              <span class="help-text">Saved locally. <strong>Classic Token</strong> requires <code>repo</code> scope. <strong>Fine-Grained Token</strong> requires <strong>Contents: Read &amp; Write</strong> access.</span>
+              <span class="help-text"><strong>GitHub:</strong> Requires <code>repo</code> scope (classic) or <code>Contents (Write)</code>. <strong>GitLab:</strong> Requires <code>api</code> scope.</span>
             </div>
             <div class="form-group-row" style="display: flex; gap: 0.75rem;">
               <div class="form-group" style="flex: 2;">
-                <label for="github-repo-input">Repository</label>
+                <label for="github-repo-input">Repository / Project Path</label>
                 <input type="text" id="github-repo-input" value="vipinku21/vip" placeholder="owner/repo">
               </div>
               <div class="form-group" style="flex: 1;">
@@ -167,7 +190,7 @@
               </svg>
             </div>
             <div>
-              <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff;">Connected to GitHub</h3>
+              <h3 id="connected-provider-title" style="font-size: 1.15rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff;">Connected to Git</h3>
               <p id="github-connection-details" style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.4;"></p>
             </div>
             <button id="disconnect-github-btn" class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem;">
