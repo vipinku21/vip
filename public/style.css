@@ -212,6 +212,12 @@ h1 {
   box-shadow: 0 0 8px var(--color-danger);
 }
 
+.status-indicator-dot.github {
+  background-color: var(--color-info);
+  box-shadow: 0 0 8px var(--color-info);
+  animation: pulse-dot 2s infinite;
+}
+
 @keyframes pulse-dot {
   0% { transform: scale(0.95); opacity: 0.5; }
   50% { transform: scale(1.15); opacity: 1; }

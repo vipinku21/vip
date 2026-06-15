@@ -34,11 +34,11 @@ const DEFAULT_POLICIES = {
 };
 
 const STORAGE_KEY = 'browser_extension_policies';
+const GITHUB_SETTINGS_KEY = 'github_policy_settings';
 
 // State Management
 let policyState = {};
 let filterText = '';
-let fileHandle = null;
 
 // DOM Elements
 const policyForm = document.getElementById('policy-form');
@@ -66,12 +66,11 @@ const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const toastWrapper = document.getElementById('toast-wrapper');
 
-// File Linking DOM Elements
-const fileLinkStatusBar = document.getElementById('file-link-status-bar');
-const linkStatusIcon = document.getElementById('link-status-icon');
-const linkStatusText = document.getElementById('link-status-text');
-const linkFileBtn = document.getElementById('link-file-btn');
-const linkBtnLabel = document.getElementById('link-btn-label');
+// GitHub Settings DOM Elements
+const githubTokenInput = document.getElementById('github-token-input');
+const githubRepoInput = document.getElementById('github-repo-input');
+const githubBranchInput = document.getElementById('github-branch-input');
+const saveGithubBtn = document.getElementById('save-github-btn');
 
 // Import Modal DOM Elements
 const importModal = document.getElementById('import-modal');
@@ -84,87 +83,11 @@ const fileNameDisplay = document.getElementById('file-name-display');
 const importErrorMsg = document.getElementById('import-error-msg');
 
 // ==========================================
-// INDEXEDDB FILE HANDLE PERSISTENCE
-// ==========================================
-const DB_NAME = 'PolicyManagerDB';
-const STORE_NAME = 'FileHandles';
-const KEY_NAME = 'policyFileHandle';
-
-function getDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onupgradeneeded = (e) => {
-      e.target.result.createObjectStore(STORE_NAME);
-    };
-    request.onsuccess = (e) => resolve(e.target.result);
-    request.onerror = (e) => reject(e.target.error);
-  });
-}
-
-async function storeHandle(handle) {
-  try {
-    const db = await getDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      tx.objectStore(STORE_NAME).put(handle, KEY_NAME);
-      tx.oncomplete = () => resolve();
-      tx.onerror = (e) => reject(e.target.error);
-    });
-  } catch (err) {
-    console.error("IndexedDB store handle failed:", err);
-  }
-}
-
-async function getStoredHandle() {
-  try {
-    const db = await getDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readonly');
-      const req = tx.objectStore(STORE_NAME).get(KEY_NAME);
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = (e) => reject(e.target.error);
-    });
-  } catch (err) {
-    console.error("IndexedDB retrieve handle failed:", err);
-    return null;
-  }
-}
-
-async function clearStoredHandle() {
-  try {
-    const db = await getDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      tx.objectStore(STORE_NAME).delete(KEY_NAME);
-      tx.oncomplete = () => resolve();
-      tx.onerror = (e) => reject(e.target.error);
-    });
-  } catch (err) {
-    console.error("IndexedDB delete handle failed:", err);
-  }
-}
-
-// ==========================================
-// FILE SYSTEM ACCESS PERMISSIONS
-// ==========================================
-async function verifyPermission(handle, withPrompt = false) {
-  const opts = { mode: 'readwrite' };
-  if ((await handle.queryPermission(opts)) === 'granted') {
-    return true;
-  }
-  if (withPrompt) {
-    if ((await handle.requestPermission(opts)) === 'granted') {
-      return true;
-    }
-  }
-  return false;
-}
-
-// ==========================================
 // INITIAL SETUP & EVENT LISTENERS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  checkStoredHandleOnLoad();
+  loadGithubSettings();
+  initPolicyData();
   
   // Toggle Block Message box on change
   installationModeSelect.addEventListener('change', toggleMessageField);
@@ -183,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadJsonBtn.addEventListener('click', downloadPolicyJson);
   resetJsonBtn.addEventListener('click', handleResetPolicies);
 
-  // File Link Button Listener
-  linkFileBtn.addEventListener('click', handleLinkBtnClick);
+  // GitHub Settings save
+  saveGithubBtn.addEventListener('click', handleSaveGithubSettings);
 
   // Modal Action Listeners
   importJsonBtn.addEventListener('click', openImportModal);
@@ -203,192 +126,125 @@ document.addEventListener('DOMContentLoaded', () => {
   fileUploadInput.addEventListener('change', handleFileUpload);
 });
 
-// Check if File Handle API is supported
-const isFileAccessSupported = () => {
-  return 'showOpenFilePicker' in window;
-};
-
-// Check for stored file handle on load
-async function checkStoredHandleOnLoad() {
-  if (!isFileAccessSupported()) {
-    showToast('File System Access API is not supported in this browser. Running in local memory.', 'error');
-    fileLinkStatusBar.style.display = 'none'; // Hide status bar if unsupported
-    initLocalStorageFallback();
-    return;
-  }
-
+// Load GitHub settings from localStorage on load
+function loadGithubSettings() {
   try {
-    const handle = await getStoredHandle();
-    if (handle) {
-      fileHandle = handle;
-      const hasPerm = await verifyPermission(handle, false);
-      if (hasPerm) {
-        await readLinkedFile();
-      } else {
-        // Awaiting user activation to prompt for permission
-        fileLinkStatusBar.className = 'file-link-bar unlinked';
-        linkStatusIcon.textContent = '🔒';
-        linkStatusText.innerHTML = `Linked to: <code>${handle.name}</code>. Click button to authorize writing.`;
-        linkBtnLabel.textContent = 'Authorize Write';
-        
-        statusDot.className = 'status-indicator-dot unlinked';
-        statusText.textContent = 'Awaiting Authorization';
-        
-        initLocalStorageFallback();
-      }
+    const settingsStr = localStorage.getItem(GITHUB_SETTINGS_KEY);
+    if (settingsStr) {
+      const settings = JSON.parse(settingsStr);
+      githubTokenInput.value = settings.token || '';
+      githubRepoInput.value = settings.repo || 'vipinku21/vip';
+      githubBranchInput.value = settings.branch || 'main';
     } else {
-      updateFileBarUI(false);
-      initLocalStorageFallback();
+      githubRepoInput.value = 'vipinku21/vip';
+      githubBranchInput.value = 'main';
     }
   } catch (err) {
-    console.error("Error checking stored handle:", err);
-    updateFileBarUI(false);
-    initLocalStorageFallback();
+    console.error("Error loading GitHub settings:", err);
   }
 }
 
-// Fallback to local storage
-function initLocalStorageFallback() {
+// Get current active GitHub settings
+function getGithubConfig() {
+  const token = githubTokenInput.value.trim();
+  const repo = githubRepoInput.value.trim();
+  const branch = githubBranchInput.value.trim();
+  return { token, repo, branch };
+}
+
+// Initialize policy data automatically
+async function initPolicyData() {
+  const config = getGithubConfig();
+  
+  // If we have a token, pull the absolute latest from the GitHub API
+  if (config.token && config.repo) {
+    statusDot.className = 'status-indicator-dot github';
+    statusText.textContent = `Connected to GitHub (${config.repo})`;
+    
+    const loaded = await loadFromGitHub(config);
+    if (loaded) return;
+  }
+  
+  // Fallback 1: Fetch ./policy.json relative from the website folder
+  try {
+    const response = await fetch('./policy.json');
+    if (response.ok) {
+      policyState = await response.json();
+      updateDashboard();
+      showToast('Loaded active policy.json from directory.');
+      
+      if (!config.token) {
+        statusDot.className = 'status-indicator-dot online';
+        statusText.textContent = 'Viewing Static policy.json';
+      }
+      return;
+    }
+  } catch (err) {
+    console.warn("Could not load local policy.json file:", err);
+  }
+
+  // Fallback 2: Load from local storage
   try {
     const storedData = localStorage.getItem(STORAGE_KEY);
     if (storedData) {
       policyState = JSON.parse(storedData);
+      showToast('Loaded policy from browser backup storage.');
     } else {
       policyState = { ...DEFAULT_POLICIES };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState));
+      showToast('Initialized default templates.');
     }
-    updateDashboard();
-  } catch (error) {
-    console.error('Error loading fallback:', error);
+  } catch (err) {
     policyState = { ...DEFAULT_POLICIES };
-    updateDashboard();
   }
-}
-
-// Update the File Link status banner interface
-function updateFileBarUI(linked, filename = '') {
-  if (linked) {
-    fileLinkStatusBar.className = 'file-link-bar linked';
-    linkStatusIcon.textContent = '✅';
-    linkStatusText.innerHTML = `Linked directly to: <code>${filename}</code>. Changes will save automatically.`;
-    linkBtnLabel.textContent = 'Unlink File';
-    
-    statusDot.className = 'status-indicator-dot linked';
-    statusText.textContent = 'Connected to policy.json';
-  } else {
-    fileLinkStatusBar.className = 'file-link-bar unlinked';
-    linkStatusIcon.textContent = '⚠️';
-    linkStatusText.textContent = 'Not linked to a local policy file. Changes will only save in browser memory.';
-    linkBtnLabel.textContent = 'Link policy.json';
-    
+  
+  if (!config.token) {
     statusDot.className = 'status-indicator-dot unlinked';
-    statusText.textContent = 'Local Sandbox (Unlinked)';
+    statusText.textContent = 'Awaiting GitHub Settings';
   }
+  
+  updateDashboard();
 }
 
-// Click listener for Link/Unlink/Authorize button
-async function handleLinkBtnClick() {
-  if (fileHandle) {
-    // If we have a file handle but not granted permission, click authorizes it
-    const hasPerm = await verifyPermission(fileHandle, false);
-    if (!hasPerm) {
-      // Authorize
-      try {
-        const granted = await verifyPermission(fileHandle, true);
-        if (granted) {
-          await readLinkedFile();
-        } else {
-          showToast('Write authorization denied.', 'error');
-        }
-      } catch (err) {
-        console.error(err);
-        showToast('Authorization request failed.', 'error');
+// Fetch policy.json from the GitHub API
+async function loadFromGitHub(config) {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
       }
-    } else {
-      // Unlink
-      unlinkFile();
-    }
-  } else {
-    // Select and link file
-    linkFile();
-  }
-}
-
-// Select a local JSON file and establish handle
-async function linkFile() {
-  try {
-    const [handle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: 'JSON Files',
-          accept: {
-            'application/json': ['.json']
-          }
-        }
-      ],
-      multiple: false
     });
-    
-    fileHandle = handle;
-    await storeHandle(handle);
-    
-    const granted = await verifyPermission(handle, true);
-    if (granted) {
-      await readLinkedFile();
+
+    if (res.ok) {
+      const fileInfo = await res.json();
+      // Decode base64
+      const decodedContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\s/g, ''))));
+      policyState = JSON.parse(decodedContent);
+      updateDashboard();
+      showToast('Successfully fetched latest policy.json from GitHub.');
+      return true;
+    } else if (res.status === 404) {
+      showToast('policy.json not found in repository. Using template rules.', 'error');
     } else {
-      showToast('Write permission denied. Running in memory.', 'error');
-      fileHandle = null;
-      await clearStoredHandle();
-      updateFileBarUI(false);
+      showToast('GitHub API returned connection error.', 'error');
     }
   } catch (err) {
-    if (err.name !== 'AbortError') {
-      console.error(err);
-      showToast('Failed to select file.', 'error');
-    }
+    console.error("Error loading from GitHub:", err);
+    showToast('Failed to connect to GitHub repository API.', 'error');
   }
+  return false;
 }
 
-// Unlink current file handle
-async function unlinkFile() {
-  fileHandle = null;
-  await clearStoredHandle();
-  updateFileBarUI(false);
-  showToast('File unlinked. Now saving in browser memory.');
-  initLocalStorageFallback();
-}
-
-// Read policy JSON data directly from the linked file handle
-async function readLinkedFile() {
-  if (!fileHandle) return;
-  try {
-    const file = await fileHandle.getFile();
-    const text = await file.text();
-    
-    if (text.trim() === '') {
-      policyState = {};
-    } else {
-      policyState = JSON.parse(text);
-    }
-    
-    updateFileBarUI(true, file.name);
-    updateDashboard();
-    showToast(`Loaded data from: ${file.name}`);
-  } catch (err) {
-    console.error(err);
-    showToast('Failed to parse linked JSON file. Check formatting.', 'error');
-    
-    // Maintain local storage fallback but keep handle in case they want to fix it
-    updateFileBarUI(true, fileHandle.name);
-    initLocalStorageFallback();
-  }
-}
-
-// Save policy JSON data directly to the linked file handle (or LocalStorage if unlinked)
+// Save policies to GitHub repository (or LocalStorage backup if unlinked)
 async function savePolicyData() {
-  if (!fileHandle) {
+  const config = getGithubConfig();
+  
+  // If no token is set, save to LocalStorage fallback
+  if (!config.token || !config.repo) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
+      showToast('No GitHub connection. Saved in browser memory.');
     } catch (e) {
       console.error(e);
     }
@@ -396,20 +252,117 @@ async function savePolicyData() {
   }
 
   try {
-    const hasPerm = await verifyPermission(fileHandle, false);
-    if (!hasPerm) {
-      showToast('Awaiting authorization to save changes. Click Authorize in Link Bar.', 'error');
-      return;
+    saveRuleBtn.disabled = true;
+    const saveBtnLabel = saveRuleBtn.querySelector('span');
+    const originalLabel = saveBtnLabel.textContent;
+    saveBtnLabel.textContent = 'Pushing to GitHub...';
+
+    // 1. Fetch the file SHA first (required to overwrite)
+    let fileSha = null;
+    try {
+      const getFileRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
+        headers: {
+          'Authorization': `token ${config.token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (getFileRes.ok) {
+        const fileInfo = await getFileRes.json();
+        fileSha = fileInfo.sha;
+      }
+    } catch (e) {
+      console.warn("Could not fetch file SHA (might be creating new file):", e);
     }
-    
-    const writable = await fileHandle.createWritable();
-    const formattedJson = JSON.stringify(policyState, null, 2);
-    await writable.write(formattedJson);
-    await writable.close();
-    showToast('Changes updated directly in policy.json!');
+
+    // 2. Prepare base64 payload
+    const jsonStr = JSON.stringify(policyState, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    // 3. Commit back to GitHub
+    const commitBody = {
+      message: 'Update policy.json via Web Editor',
+      content: base64Content,
+      branch: config.branch
+    };
+    if (fileSha) {
+      commitBody.sha = fileSha;
+    }
+
+    const pushRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(commitBody)
+    });
+
+    if (pushRes.ok) {
+      showToast('Successfully committed changes directly to GitHub!');
+      
+      // Also backup locally just in case
+      localStorage.setItem(STORAGE_KEY, jsonStr);
+    } else {
+      const errData = await pushRes.json();
+      throw new Error(errData.message || 'GitHub push failed');
+    }
+
+    saveRuleBtn.disabled = false;
+    saveBtnLabel.textContent = originalLabel;
+  } catch (err) {
+    console.error("GitHub Commit Error:", err);
+    showToast(`Failed to update GitHub: ${err.message}`, 'error');
+    saveRuleBtn.disabled = false;
+    saveRuleBtn.querySelector('span').textContent = 'Save Configuration';
+  }
+}
+
+// Handle GitHub integration settings validation and save
+async function handleSaveGithubSettings() {
+  const config = getGithubConfig();
+  
+  if (!config.token) {
+    showToast('Please enter a GitHub Access Token.', 'error');
+    return;
+  }
+  if (!config.repo || !config.repo.includes('/')) {
+    showToast('Please enter a valid repository (e.g. owner/repo).', 'error');
+    return;
+  }
+
+  try {
+    saveGithubBtn.disabled = true;
+    saveGithubBtn.querySelector('span').textContent = 'Verifying connection...';
+
+    // Verify token permissions by loading the repo properties
+    const res = await fetch(`https://api.github.com/repos/${config.repo}`, {
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (res.ok) {
+      // Save settings to localStorage
+      localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(config));
+      showToast('GitHub settings saved and verified successfully!');
+      
+      statusDot.className = 'status-indicator-dot github';
+      statusText.textContent = `Connected to GitHub (${config.repo})`;
+      
+      // Refresh policy.json values
+      await loadFromGitHub(config);
+    } else {
+      const errInfo = await res.json();
+      showToast(`Verification failed: ${errInfo.message || 'Invalid Token or Repository'}`, 'error');
+    }
   } catch (err) {
     console.error(err);
-    showToast('Failed to write changes directly to disk file.', 'error');
+    showToast('Connection verification timed out.', 'error');
+  } finally {
+    saveGithubBtn.disabled = false;
+    saveGithubBtn.querySelector('span').textContent = 'Save & Verify Connection';
   }
 }
 
@@ -418,7 +371,6 @@ function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   
-  // Icon based on type
   let iconSvg = '';
   if (type === 'success') {
     iconSvg = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
@@ -433,7 +385,6 @@ function showToast(message, type = 'success') {
   
   toastWrapper.appendChild(toast);
   
-  // Remove toast from DOM after animation completes (4s total)
   setTimeout(() => {
     toast.remove();
   }, 4000);
@@ -453,7 +404,6 @@ function toggleMessageField() {
 function highlightJson(jsonObj) {
   const jsonString = JSON.stringify(jsonObj, null, 2);
   
-  // Regex to match JSON parts
   return jsonString.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
     let cls = 'json-number';
     if (/^"/.test(match)) {
@@ -560,7 +510,7 @@ function renderTable() {
     deleteBtn.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="3 6 5 6 21 6"></polyline>
-        <path d="M19 6v14a2 2 0 0 1-2-2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
       </svg>
     `;
     deleteBtn.onclick = () => deletePolicy(id);
