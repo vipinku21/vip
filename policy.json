@@ -32,5 +32,8 @@
   },
   "vipinkuamr.data": {
     "installation_mode": "allowed"
+  },
+  "vipin.tooogja": {
+    "installation_mode": "allowed"
   }
 }
