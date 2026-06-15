@@ -34,6 +34,7 @@ const DEFAULT_POLICIES = {
 };
 
 const STORAGE_KEY = 'browser_extension_policies';
+const GITHUB_SETTINGS_KEY = 'github_policy_settings';
 
 // State Management
 let policyState = {};
@@ -65,6 +66,12 @@ const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const toastWrapper = document.getElementById('toast-wrapper');
 
+// GitHub Settings DOM Elements
+const githubTokenInput = document.getElementById('github-token-input');
+const githubRepoInput = document.getElementById('github-repo-input');
+const githubBranchInput = document.getElementById('github-branch-input');
+const saveGithubBtn = document.getElementById('save-github-btn');
+
 // Import Modal DOM Elements
 const importModal = document.getElementById('import-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
@@ -79,6 +86,7 @@ const importErrorMsg = document.getElementById('import-error-msg');
 // INITIAL SETUP & EVENT LISTENERS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  loadGithubSettings();
   initPolicyData();
   
   // Toggle Block Message box on change
@@ -98,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadJsonBtn.addEventListener('click', downloadPolicyJson);
   resetJsonBtn.addEventListener('click', handleResetPolicies);
 
+  // GitHub Settings save
+  saveGithubBtn.addEventListener('click', handleSaveGithubSettings);
+
   // Modal Action Listeners
   importJsonBtn.addEventListener('click', openImportModal);
   closeModalBtn.addEventListener('click', closeImportModal);
@@ -115,55 +126,243 @@ document.addEventListener('DOMContentLoaded', () => {
   fileUploadInput.addEventListener('change', handleFileUpload);
 });
 
-// Initialize policy data automatically from local policy.json or localStorage backup
-async function initPolicyData() {
+// Load GitHub settings from localStorage on load
+function loadGithubSettings() {
   try {
-    // If the user already made edits in their browser, load those
-    const storedData = localStorage.getItem(STORAGE_KEY);
-    if (storedData) {
-      policyState = JSON.parse(storedData);
-      showToast('Loaded saved configuration from browser storage.');
-      setConnectionStatus(true);
-      updateDashboard();
-      return;
+    const settingsStr = localStorage.getItem(GITHUB_SETTINGS_KEY);
+    if (settingsStr) {
+      const settings = JSON.parse(settingsStr);
+      githubTokenInput.value = settings.token || '';
+      githubRepoInput.value = settings.repo || 'vipinku21/vip';
+      githubBranchInput.value = settings.branch || 'main';
+    } else {
+      githubRepoInput.value = 'vipinku21/vip';
+      githubBranchInput.value = 'main';
     }
+  } catch (err) {
+    console.error("Error loading GitHub settings:", err);
+  }
+}
 
-    // Otherwise, fetch the default policy.json from the repository
+// Get current active GitHub settings
+function getGithubConfig() {
+  const token = githubTokenInput.value.trim();
+  const repo = githubRepoInput.value.trim();
+  const branch = githubBranchInput.value.trim();
+  return { token, repo, branch };
+}
+
+// Initialize policy data automatically
+async function initPolicyData() {
+  const config = getGithubConfig();
+  
+  // If we have a token, pull the absolute latest from the GitHub API
+  if (config.token && config.repo) {
+    statusDot.className = 'status-indicator-dot github';
+    statusText.textContent = `Connected to GitHub (${config.repo})`;
+    
+    const loaded = await loadFromGitHub(config);
+    if (loaded) return;
+  }
+  
+  // Fallback 1: Fetch ./policy.json relative from the website folder
+  try {
     const response = await fetch('./policy.json');
     if (response.ok) {
       policyState = await response.json();
-      savePolicyData();
-      showToast('Loaded active policy.json file.');
-      setConnectionStatus(true);
-    } else {
-      throw new Error('Could not find policy.json file');
+      updateDashboard();
+      showToast('Loaded active policy.json from directory.');
+      
+      if (!config.token) {
+        statusDot.className = 'status-indicator-dot online';
+        statusText.textContent = 'Viewing Static policy.json';
+      }
+      return;
     }
   } catch (err) {
-    console.warn("Failed to load policy.json. Falling back to templates:", err);
-    policyState = { ...DEFAULT_POLICIES };
-    savePolicyData();
-    setConnectionStatus(true);
+    console.warn("Could not load local policy.json file:", err);
   }
+
+  // Fallback 2: Load from local storage
+  try {
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      policyState = JSON.parse(storedData);
+      showToast('Loaded policy from browser backup storage.');
+    } else {
+      policyState = { ...DEFAULT_POLICIES };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState));
+      showToast('Initialized default templates.');
+    }
+  } catch (err) {
+    policyState = { ...DEFAULT_POLICIES };
+  }
+  
+  if (!config.token) {
+    statusDot.className = 'status-indicator-dot unlinked';
+    statusText.textContent = 'Awaiting GitHub Settings';
+  }
+  
   updateDashboard();
 }
 
-// Save policies to browser localStorage
-function savePolicyData() {
+// Fetch policy.json from the GitHub API
+async function loadFromGitHub(config) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
-  } catch (e) {
-    console.error('Failed to save to localStorage:', e);
+    const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (res.ok) {
+      const fileInfo = await res.json();
+      // Decode base64
+      const decodedContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\s/g, ''))));
+      policyState = JSON.parse(decodedContent);
+      updateDashboard();
+      showToast('Successfully fetched latest policy.json from GitHub.');
+      return true;
+    } else if (res.status === 404) {
+      showToast('policy.json not found in repository. Using template rules.', 'error');
+    } else {
+      showToast('GitHub API returned connection error.', 'error');
+    }
+  } catch (err) {
+    console.error("Error loading from GitHub:", err);
+    showToast('Failed to connect to GitHub repository API.', 'error');
+  }
+  return false;
+}
+
+// Save policies to GitHub repository (or LocalStorage backup if unlinked)
+async function savePolicyData() {
+  const config = getGithubConfig();
+  
+  // If no token is set, save to LocalStorage fallback
+  if (!config.token || !config.repo) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(policyState, null, 2));
+      showToast('No GitHub connection. Saved in browser memory.');
+    } catch (e) {
+      console.error(e);
+    }
+    return;
+  }
+
+  try {
+    saveRuleBtn.disabled = true;
+    const saveBtnLabel = saveRuleBtn.querySelector('span');
+    const originalLabel = saveBtnLabel.textContent;
+    saveBtnLabel.textContent = 'Pushing to GitHub...';
+
+    // 1. Fetch the file SHA first (required to overwrite)
+    let fileSha = null;
+    try {
+      const getFileRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
+        headers: {
+          'Authorization': `token ${config.token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (getFileRes.ok) {
+        const fileInfo = await getFileRes.json();
+        fileSha = fileInfo.sha;
+      }
+    } catch (e) {
+      console.warn("Could not fetch file SHA (might be creating new file):", e);
+    }
+
+    // 2. Prepare base64 payload
+    const jsonStr = JSON.stringify(policyState, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    // 3. Commit back to GitHub
+    const commitBody = {
+      message: 'Update policy.json via Web Editor',
+      content: base64Content,
+      branch: config.branch
+    };
+    if (fileSha) {
+      commitBody.sha = fileSha;
+    }
+
+    const pushRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(commitBody)
+    });
+
+    if (pushRes.ok) {
+      showToast('Successfully committed changes directly to GitHub!');
+      
+      // Also backup locally just in case
+      localStorage.setItem(STORAGE_KEY, jsonStr);
+    } else {
+      const errData = await pushRes.json();
+      throw new Error(errData.message || 'GitHub push failed');
+    }
+
+    saveRuleBtn.disabled = false;
+    saveBtnLabel.textContent = originalLabel;
+  } catch (err) {
+    console.error("GitHub Commit Error:", err);
+    showToast(`Failed to update GitHub: ${err.message}`, 'error');
+    saveRuleBtn.disabled = false;
+    saveRuleBtn.querySelector('span').textContent = 'Save Configuration';
   }
 }
 
-// Set UI status indicator state
-function setConnectionStatus(ok) {
-  if (ok) {
-    statusDot.className = 'status-indicator-dot online';
-    statusText.textContent = 'Active (Serverless)';
-  } else {
-    statusDot.className = 'status-indicator-dot offline';
-    statusText.textContent = 'Error Loading file';
+// Handle GitHub integration settings validation and save
+async function handleSaveGithubSettings() {
+  const config = getGithubConfig();
+  
+  if (!config.token) {
+    showToast('Please enter a GitHub Access Token.', 'error');
+    return;
+  }
+  if (!config.repo || !config.repo.includes('/')) {
+    showToast('Please enter a valid repository (e.g. owner/repo).', 'error');
+    return;
+  }
+
+  try {
+    saveGithubBtn.disabled = true;
+    saveGithubBtn.querySelector('span').textContent = 'Verifying connection...';
+
+    // Verify token permissions by loading the repo properties
+    const res = await fetch(`https://api.github.com/repos/${config.repo}`, {
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (res.ok) {
+      // Save settings to localStorage
+      localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(config));
+      showToast('GitHub settings saved and verified successfully!');
+      
+      statusDot.className = 'status-indicator-dot github';
+      statusText.textContent = `Connected to GitHub (${config.repo})`;
+      
+      // Refresh policy.json values
+      await loadFromGitHub(config);
+    } else {
+      const errInfo = await res.json();
+      showToast(`Verification failed: ${errInfo.message || 'Invalid Token or Repository'}`, 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('Connection verification timed out.', 'error');
+  } finally {
+    saveGithubBtn.disabled = false;
+    saveGithubBtn.querySelector('span').textContent = 'Save & Verify Connection';
   }
 }
 
@@ -491,7 +690,7 @@ async function applyImportedJson() {
     }
     
     policyState = parsedData;
-    savePolicyData();
+    await savePolicyData();
     updateDashboard();
     
     closeImportModal();
@@ -547,7 +746,7 @@ async function handleFormSubmit(e) {
   
   policyState[id] = config;
   
-  savePolicyData();
+  await savePolicyData();
   updateDashboard();
   
   policyForm.reset();
@@ -564,7 +763,7 @@ async function deletePolicy(id) {
   
   if (id in policyState) {
     delete policyState[id];
-    savePolicyData();
+    await savePolicyData();
     updateDashboard();
     showToast(`Policy for "${id}" removed successfully.`);
   } else {
