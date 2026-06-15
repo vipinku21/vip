@@ -32,5 +32,8 @@
   },
   "vipinkuamr.data": {
     "installation_mode": "allowed"
+  },
+  "vipinbb": {
+    "installation_mode": "allowed"
   }
 }
