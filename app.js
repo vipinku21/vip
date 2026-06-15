@@ -39,6 +39,7 @@ const GITHUB_SETTINGS_KEY = 'github_policy_settings';
 // State Management
 let policyState = {};
 let filterText = '';
+let loadedFileSha = null;
 
 // DOM Elements
 const policyForm = document.getElementById('policy-form');
@@ -71,6 +72,10 @@ const githubTokenInput = document.getElementById('github-token-input');
 const githubRepoInput = document.getElementById('github-repo-input');
 const githubBranchInput = document.getElementById('github-branch-input');
 const saveGithubBtn = document.getElementById('save-github-btn');
+const githubFormContent = document.getElementById('github-form-content');
+const githubConnectedContent = document.getElementById('github-connected-content');
+const githubConnectionDetails = document.getElementById('github-connection-details');
+const disconnectGithubBtn = document.getElementById('disconnect-github-btn');
 
 // Import Modal DOM Elements
 const importModal = document.getElementById('import-modal');
@@ -106,8 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadJsonBtn.addEventListener('click', downloadPolicyJson);
   resetJsonBtn.addEventListener('click', handleResetPolicies);
 
-  // GitHub Settings save
+  // GitHub Settings save & disconnect
   saveGithubBtn.addEventListener('click', handleSaveGithubSettings);
+  disconnectGithubBtn.addEventListener('click', handleDisconnectGithub);
 
   // Modal Action Listeners
   importJsonBtn.addEventListener('click', openImportModal);
@@ -125,6 +131,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // File Upload listener
   fileUploadInput.addEventListener('change', handleFileUpload);
 });
+
+// Helper to parse repo input and resolve to 'owner/repo'
+function parseRepoInput(input) {
+  let cleaned = input.trim();
+  // Remove git@github.com: prefix
+  cleaned = cleaned.replace(/^git@github\.com:/i, '');
+  // Remove https://github.com/ or http://github.com/ or github.com/ prefix
+  cleaned = cleaned.replace(/^(https?:\/\/)?(www\.)?github\.com\//i, '');
+  // Remove .git suffix
+  cleaned = cleaned.replace(/\.git$/i, '');
+  // Remove leading/trailing slashes
+  cleaned = cleaned.replace(/^\/+|\/+$/g, '');
+  return cleaned;
+}
+
+// Helper to sanitize token input (strip prefixes if pasted by accident)
+function parseTokenInput(input) {
+  let cleaned = input.trim();
+  // Remove "Bearer " or "token " prefix (case-insensitive)
+  cleaned = cleaned.replace(/^(bearer|token)\s+/i, '');
+  return cleaned;
+}
 
 // Load GitHub settings from localStorage on load
 function loadGithubSettings() {
@@ -144,11 +172,19 @@ function loadGithubSettings() {
   }
 }
 
-// Get current active GitHub settings
+// Get current active GitHub settings and update UI with sanitized inputs
 function getGithubConfig() {
-  const token = githubTokenInput.value.trim();
-  const repo = githubRepoInput.value.trim();
+  const rawToken = githubTokenInput.value.trim();
+  const rawRepo = githubRepoInput.value.trim();
+  
+  const token = parseTokenInput(rawToken);
+  const repo = parseRepoInput(rawRepo);
   const branch = githubBranchInput.value.trim();
+  
+  // Feed cleaned values back to UI inputs so the user sees the sanitized form
+  if (githubTokenInput.value !== token) githubTokenInput.value = token;
+  if (githubRepoInput.value !== repo) githubRepoInput.value = repo;
+  
   return { token, repo, branch };
 }
 
@@ -162,8 +198,13 @@ async function initPolicyData() {
     statusText.textContent = `Connected to GitHub (${config.repo})`;
     
     const loaded = await loadFromGitHub(config);
-    if (loaded) return;
+    if (loaded) {
+      updateGithubUIState(true);
+      return;
+    }
   }
+  
+  updateGithubUIState(false);
   
   // Fallback 1: Fetch ./policy.json relative from the website folder
   try {
@@ -211,7 +252,7 @@ async function loadFromGitHub(config) {
   try {
     const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
       headers: {
-        'Authorization': `token ${config.token}`,
+        'Authorization': `Bearer ${config.token}`,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
@@ -221,17 +262,22 @@ async function loadFromGitHub(config) {
       // Decode base64
       const decodedContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\s/g, ''))));
       policyState = JSON.parse(decodedContent);
+      loadedFileSha = fileInfo.sha; // Track the current file version SHA
       updateDashboard();
       showToast('Successfully fetched latest policy.json from GitHub.');
       return true;
+    } else if (res.status === 401) {
+      showToast('Unauthorized: GitHub token is invalid or expired.', 'error');
+    } else if (res.status === 403) {
+      showToast('Access forbidden: Check your token scopes or API rate limits.', 'error');
     } else if (res.status === 404) {
       showToast('policy.json not found in repository. Using template rules.', 'error');
     } else {
-      showToast('GitHub API returned connection error.', 'error');
+      showToast(`GitHub API returned error code ${res.status}`, 'error');
     }
   } catch (err) {
     console.error("Error loading from GitHub:", err);
-    showToast('Failed to connect to GitHub repository API.', 'error');
+    showToast(`Failed to connect to GitHub API: ${err.message || err}`, 'error');
   }
   return false;
 }
@@ -262,7 +308,7 @@ async function savePolicyData() {
     try {
       const getFileRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json?ref=${config.branch}`, {
         headers: {
-          'Authorization': `token ${config.token}`,
+          'Authorization': `Bearer ${config.token}`,
           'Accept': 'application/vnd.github.v3+json'
         }
       });
@@ -272,6 +318,14 @@ async function savePolicyData() {
       }
     } catch (e) {
       console.warn("Could not fetch file SHA (might be creating new file):", e);
+    }
+
+    // Version Conflict Detection: Compare current remote SHA with loadedFileSha
+    if (loadedFileSha && fileSha && fileSha !== loadedFileSha) {
+      showToast('Save Blocked: Another teammate has updated the policies in the repository. Please reload the page to get their latest updates before saving your changes.', 'error');
+      saveRuleBtn.disabled = false;
+      saveBtnLabel.textContent = originalLabel;
+      return;
     }
 
     // 2. Prepare base64 payload
@@ -291,7 +345,7 @@ async function savePolicyData() {
     const pushRes = await fetch(`https://api.github.com/repos/${config.repo}/contents/policy.json`, {
       method: 'PUT',
       headers: {
-        'Authorization': `token ${config.token}`,
+        'Authorization': `Bearer ${config.token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json'
       },
@@ -299,13 +353,28 @@ async function savePolicyData() {
     });
 
     if (pushRes.ok) {
+      const pushData = await pushRes.json();
+      loadedFileSha = pushData.content.sha; // Update the loaded version hash to avoid false conflicts
       showToast('Successfully committed changes directly to GitHub!');
       
       // Also backup locally just in case
       localStorage.setItem(STORAGE_KEY, jsonStr);
     } else {
-      const errData = await pushRes.json();
-      throw new Error(errData.message || 'GitHub push failed');
+      let errMsg = 'GitHub push failed';
+      try {
+        const errData = await pushRes.json();
+        errMsg = errData.message || errMsg;
+      } catch (jsonErr) {}
+      
+      if (pushRes.status === 401) {
+        throw new Error('Unauthorized: Invalid or expired GitHub token.');
+      } else if (pushRes.status === 403) {
+        throw new Error('Forbidden: Lacking write permissions or rate-limited.');
+      } else if (pushRes.status === 404) {
+        throw new Error('Repository or branch not found.');
+      } else {
+        throw new Error(`${errMsg} (Status: ${pushRes.status})`);
+      }
     }
 
     saveRuleBtn.disabled = false;
@@ -338,28 +407,70 @@ async function handleSaveGithubSettings() {
     // Verify token permissions by loading the repo properties
     const res = await fetch(`https://api.github.com/repos/${config.repo}`, {
       headers: {
-        'Authorization': `token ${config.token}`,
+        'Authorization': `Bearer ${config.token}`,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
 
     if (res.ok) {
+      const repoInfo = await res.json();
+      
+      // Verify if the token actually has push (write) permissions to this repository
+      const hasPushAccess = repoInfo.permissions && repoInfo.permissions.push;
+      
+      if (!hasPushAccess) {
+        showToast('Verification failed: Your token is valid, but it lacks WRITE (push) permissions. For Fine-Grained tokens, ensure "Contents: Read & Write" is selected under Repository Permissions. For Classic tokens, ensure the "repo" scope is checked.', 'error');
+        return;
+      }
+
+      // Check for OAuth scopes for classic tokens to warn the user if repo scope is missing
+      const scopes = res.headers.get('X-OAuth-Scopes');
+      let scopeWarning = '';
+      if (scopes !== null) {
+        const scopeArray = scopes.split(',').map(s => s.trim());
+        if (!scopeArray.includes('repo')) {
+          scopeWarning = 'Warning: Token is missing the "repo" scope needed to edit files.';
+        }
+      }
+
       // Save settings to localStorage
       localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(config));
-      showToast('GitHub settings saved and verified successfully!');
+      
+      if (scopeWarning) {
+        showToast(`Connected, but authorization warning: ${scopeWarning}`, 'error');
+      } else {
+        showToast('GitHub credentials verified! Connected successfully with write access.', 'success');
+      }
       
       statusDot.className = 'status-indicator-dot github';
       statusText.textContent = `Connected to GitHub (${config.repo})`;
       
       // Refresh policy.json values
       await loadFromGitHub(config);
+      updateGithubUIState(true);
     } else {
-      const errInfo = await res.json();
-      showToast(`Verification failed: ${errInfo.message || 'Invalid Token or Repository'}`, 'error');
+      let errMsg = 'Invalid Token or Repository';
+      try {
+        const errInfo = await res.json();
+        errMsg = errInfo.message || errMsg;
+      } catch (jsonErr) {}
+      
+      let hint = '';
+      if (res.status === 401) {
+        hint = 'Bad Credentials: Check that your token is typed correctly, not expired, and has access.';
+      } else if (res.status === 404) {
+        hint = 'Not Found: Verify the repository name is correct. If the repository is private, verify your token has "repo" (classic) or "Contents: Read & Write" (fine-grained) access.';
+      } else if (res.status === 403) {
+        hint = 'Forbidden: Access blocked. You might have hit GitHub\'s rate limits or the token lacks permission.';
+      } else {
+        hint = `Error code: ${res.status}`;
+      }
+      
+      showToast(`Verification Failed: ${errMsg}. ${hint}`, 'error');
     }
   } catch (err) {
     console.error(err);
-    showToast('Connection verification timed out.', 'error');
+    showToast(`Network error: ${err.message || err}`, 'error');
   } finally {
     saveGithubBtn.disabled = false;
     saveGithubBtn.querySelector('span').textContent = 'Save & Verify Connection';
@@ -790,4 +901,35 @@ function clearSearch() {
   filterText = '';
   clearSearchBtn.classList.add('hidden');
   renderTable();
+}
+
+// Update the GitHub UI card state based on connection
+function updateGithubUIState(connected) {
+  const config = getGithubConfig();
+  if (connected && config.token && config.repo) {
+    githubFormContent.style.display = 'none';
+    githubConnectedContent.style.display = 'flex';
+    githubConnectionDetails.innerHTML = `Repository: <strong>${config.repo}</strong><br>Branch: <strong>${config.branch}</strong>`;
+  } else {
+    githubFormContent.style.display = 'flex';
+    githubConnectedContent.style.display = 'none';
+  }
+}
+
+// Disconnect GitHub and clear localStorage credentials
+function handleDisconnectGithub() {
+  if (confirm('Are you sure you want to disconnect your GitHub integration? This will remove the token from your browser memory.')) {
+    localStorage.removeItem(GITHUB_SETTINGS_KEY);
+    githubTokenInput.value = '';
+    githubRepoInput.value = 'vipinku21/vip';
+    githubBranchInput.value = 'main';
+    loadedFileSha = null;
+    updateGithubUIState(false);
+    
+    statusDot.className = 'status-indicator-dot unlinked';
+    statusText.textContent = 'Awaiting GitHub Settings';
+    
+    // Reload local/fallback policy rules
+    initPolicyData();
+  }
 }
