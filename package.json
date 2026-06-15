@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Premium browser extension policy manager and formatter",
   "scripts": {
-    "start": "npx http-server ./public",
-    "serve": "npx http-server ./public"
+    "start": "npx http-server .",
+    "serve": "npx http-server ."
   }
 }
