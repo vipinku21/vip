@@ -38,7 +38,7 @@ If the browser remembers the linked file from a previous session, the app automa
 1. The app will **not** ask you to link the `policy.json` file again.
 2. The status indicator in the top-right corner will show **Awaiting Authorization**.
 3. The brown banner at the top of the page will automatically say: **"Linked to: policy.json. Click button to authorize writing."**
-4. Click the **"Authorize Write"** button on the right side of this banner.
+4. Click the **"Authorize Write"** button on the right side of the banner.
 5. Your browser will show a security prompt (e.g., *"Allow this site to edit files?"* or *"View files"*). Click **Allow** or **Save Changes** to grant the app permission to write changes.
 6. The status indicator in the top-right corner will change to **Authorized**.
 
