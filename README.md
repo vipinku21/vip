@@ -1,0 +1,87 @@
+# EXECUTIVE STRATEGY PROPOSAL
+## Microsoft Intune Store App Deployment & Application Owner Identification Framework
+
+**Target Audience:** IT Leadership, Endpoint Management, Security & Compliance  
+**Subject:** Proactive Intune Store App Control & Just-In-Time Application Owner Identification  
+**Document Length:** 1.5 Pages (Executive Briefing)
+
+---
+
+### 1. Executive Summary
+
+Pre-creating Microsoft Store applications in Intune and deploying them without designated owners leads to **catalog bloat, security compliance gaps, and unmanaged software**. Attempting to find app owners retroactively fails because departments rarely claim ownership of apps already deployed.
+
+We propose a streamlined **4-step governance strategy**: 
+1. **Block** the consumer Microsoft Store via Intune configuration policies to stop Shadow IT.
+2. **Create** the required Microsoft Store (new) app objects in Intune (pre-stage technically).
+3. **Wait** for users/departments to request the application.
+4. **Identify/Assign Ownership:** Before assigning the app in Intune, mandate that the requestor provide the App Owner details. If no owner exists, **require the requesting user or their manager to become the official Application Owner**.
+
+---
+
+### 2. The 4-Step Operational Strategy
+
+```
++---------------------------------------------------------------------------------------------------+
+|                                 PROPOSED GOVERNANCE WORKFLOW                                      |
++---------------------------------------------------------------------------------------------------+
+|  [ STEP 1 ] Block Microsoft Store via Intune Configuration Policy (Settings Catalog)              |
+|  [ STEP 2 ] Create & Stage Store App Objects in Intune (WinGet / New Store Integration)           |
+|  [ STEP 3 ] Hold Assignment & Wait for User Application Request                                   |
+|  [ STEP 4 ] Collect Owner Details -> If None Exists, Assign Requestor/Manager as App Owner        |
+|  [ STEP 5 ] Complete Intune Assignment to User/Group via Company Portal                           |
++---------------------------------------------------------------------------------------------------+
+```
+
+#### Step 1: Block Public Microsoft Store Access
+* Apply an Intune Configuration Profile / Settings Catalog policy (`Turn off the Store application`) to corporate endpoints.
+* **Why it works:** Prevents unvetted, unmanaged downloads across all managed devices. Windows built-in system apps (Calculator, Photos) continue to update via background channels, and IT-approved apps remain accessible via Company Portal.
+
+#### Step 2: Create Store App Intune Objects (Pre-Staging)
+* IT pre-configures required applications in Intune using the **Microsoft Store app (new)** integration powered by WinGet.
+* Apps are fully packaged and ready for deployment, but **assignment is intentionally set to None** (unassigned).
+
+#### Step 3: Wait for Application Request
+* Apps remain staged in Intune without auto-deploying to devices, eliminating catalog bloat and unneeded software push.
+
+#### Step 4: Demand-Driven Owner Identification & Conditional Assignment
+When a user requests an application:
+* **Check Ownership Record:** IT checks if an official Business & Technical Owner is already registered for the app.
+* **Assign Ownership:** 
+  * If an owner exists $\rightarrow$ Confirm details and proceed to assign.
+  * **If NO owner exists $\rightarrow$ Require the requesting user (or their department lead/manager) to become the official Application Owner** before completing the Intune assignment.
+* **Finalize Assignment:** IT assigns the app object in Intune to the requestor's Entra ID group / Company Portal.
+
+---
+
+### 3. Comparison Matrix: Why Management Should Approve This
+
+| Dimension | Standard Approach (Deploy First, Find Owner Later) | Proposed Strategy (Block, Stage, JIT Ownership) |
+| :--- | :--- | :--- |
+| **Shadow IT Risk** | High – Users download arbitrary apps from public Store. | **Zero** – Public Store blocked; Company Portal strictly curated. |
+| **App Accountability** | Poor – 80%+ apps become orphaned with no owner contact. | **100% Guaranteed** – Requesting user/manager becomes owner before assignment. |
+| **Packaging Delay** | Slow – IT packages app after request comes in. | **Zero Delay** – App object is already pre-created in Step 2. |
+| **Catalog Hygiene** | Bad – Tenant cluttered with unmaintained apps. | **Clean** – Apps assigned only upon validated business demand. |
+
+---
+
+### 4. Key Stakeholder FAQ & Objection Handling
+
+* **Q: Will blocking the Microsoft Store disrupt daily user work?**  
+  * **A:** No. Standard business users get approved software via Company Portal. System components (Calculator, Snipping Tool) update automatically via native Windows servicing.
+* **Q: What if the user refuses to become the Application Owner?**  
+  * **A:** If a department requires software for business operations, someone in that department must take responsibility for business continuity, license compliance, and vendor contacts. Requiring ownership at request time ensures 100% governance compliance without IT pushback.
+* **Q: Does this delay software delivery to end users?**  
+  * **A:** No. Because IT already pre-created the Store App object in Step 2, the app is instantly ready to assign once ownership details are confirmed.
+
+---
+
+### 5. Immediate Action & Approval Request
+
+We request leadership approval to execute:
+1. **Enforce Store Block Policy:** Enable Intune Settings Catalog policy to block public Store access.
+2. **Approve JIT Ownership Policy:** Authorize IT to mandate App Owner registration (or self-designation) prior to Intune app assignment.
+3. **Authorize 2-Week Pilot:** Roll out the policy to a pilot group before enterprise-wide deployment.
+
+---
+*Document prepared for GitHub repository hosting.*
