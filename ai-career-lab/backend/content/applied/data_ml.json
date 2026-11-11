@@ -1,0 +1,2552 @@
+{
+  "numpy": {
+    "Beginner": [
+      [
+        "For a count array [6,0,3], which count is at position zero?",
+        "The first entry is 6.",
+        "6/six"
+      ],
+      [
+        "A sheet lists 4 people and 2 measurements per person. How many numerical cells does it contain?",
+        "There are 8 cells from 4 times 2.",
+        "8/eight"
+      ],
+      [
+        "What does it mean to subtract one from every element of [3,5]?",
+        "The result contains 2 and 4 in that order.",
+        "2",
+        "4"
+      ],
+      [
+        "A single temperature such as 19 is called a scalar. How many measurements does that scalar hold?",
+        "One measurement.",
+        "one/1"
+      ],
+      [
+        "A basket identifier is 04. Why might an array of integer identifiers lose useful information?",
+        "Integer conversion loses the leading zero.",
+        "leading",
+        "zero"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Sales arrays record morning [2,4] and evening [3,1] for the same ordered products. What are the daily per-product totals?",
+        "Add partners to get 5 and 5.",
+        "5 and 5/[5,5]/[5, 5]"
+      ],
+      [
+        "A three-by-two table has columns cost and weight. Is averaging each row into one value meaningful?",
+        "No. Cost and weight have different units and answer different questions.",
+        "cost",
+        "weight"
+      ],
+      [
+        "A grid has three stores across two days. Which dimension must be retained to obtain one weekly mean so far per store?",
+        "Retain the store dimension and average over days.",
+        "store",
+        "day"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A numerical calculation completes and gives the right shape but losses have negative quantities. What check could reveal the semantic problem?",
+        "Check allowed ranges or physical constraints alongside shapes, using known stock movements.",
+        "range/constraint",
+        "shape"
+      ],
+      [
+        "A camera measures light using small unsigned integers. Why check the data type before multiplying every reading by ten?",
+        "The result may exceed the type’s representable range. Convert to a sufficiently wide type and test bright pixels.",
+        "range",
+        "type"
+      ],
+      [
+        "A technician stores 0 both for a black pixel and for a failed reading. How can averaging pixels distinguish the two?",
+        "Keep a separate validity mask and average only valid measurements while retaining real zero readings.",
+        "mask",
+        "zero"
+      ],
+      [
+        "A programmer replaces a loop with an array operation and assumes it must be faster. What comparison is appropriate?",
+        "Benchmark both on representative array shapes and account for temporary allocation or copying.",
+        "benchmark",
+        "allocation/copy"
+      ],
+      [
+        "Daily temperature rows are reordered but date labels are stored separately. How can a test detect a lost association?",
+        "Attach distinctive known dates and values, reorder them together and verify each date still maps to its original value.",
+        "date",
+        "value"
+      ]
+    ]
+  },
+  "pandas": {
+    "Beginner": [
+      [
+        "A Series shows West:12 and North:5. What are West and North in this record?",
+        "They are labels identifying the entries.",
+        "label"
+      ],
+      [
+        "Does filtering a Series to values above 8 tell you how many were removed automatically?",
+        "No. Compare the lengths before and after the filter to count removals.",
+        "length",
+        "filter"
+      ],
+      [
+        "A sales amount is 4; the condition is less than or equal to 4. Is the corresponding mask entry true?",
+        "True because equality is included.",
+        "true"
+      ],
+      [
+        "An empty filtered Series has how many matching records?",
+        "Zero matching records.",
+        "zero/0"
+      ],
+      [
+        "Why name a Series daily_crates rather than simply numbers when displaying it?",
+        "The name conveys what the values measure, crates per day.",
+        "crate",
+        "day"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Counts are East 1, West 6, South 9. Add two crates only to entries below 5. What changes?",
+        "East rises from 1 to 3. West and South keep their counts.",
+        "east",
+        "3/three"
+      ],
+      [
+        "A label lookup for 'North' fails although the sheet contains 'North '. What difference should be inspected?",
+        "Inspect the trailing space and normalize the comparison labels deliberately.",
+        "space",
+        "label"
+      ],
+      [
+        "A shop uses a mask for positive stock to average availability. What recorded stores are excluded by that filter?",
+        "Stores with zero stock are excluded, so the mean describes only stores carrying stock.",
+        "zero",
+        "store"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A monthly total uses addition across labeled Series. A label appears in one month only. What two questions separate an expected absence from a data fault?",
+        "Check whether the store existed that month and whether it submitted a complete report.",
+        "exist",
+        "report"
+      ],
+      [
+        "A person sorts values inside an exported list then attaches the original Series index again. What silent corruption can occur?",
+        "Values can be assigned to different labels. Sort paired label-value records together.",
+        "label",
+        "value"
+      ],
+      [
+        "A notebook filters count > 0 then count < 2 on different copies. What check ensures the intended combined subset was used?",
+        "Build both comparisons on the same Series and inspect the intersection of their matching labels.",
+        "same",
+        "intersection"
+      ],
+      [
+        "A mask excludes all rows before an average is taken. Why should a report distinguish that result from an average of zero?",
+        "There are no observations in the selected group. Zero means an observed numerical value.",
+        "observation",
+        "zero"
+      ],
+      [
+        "One Series has duplicate dates because stores report twice per day. How can both dates and store names identify the intended comparison?",
+        "Use a composite date-and-store key, verifying uniqueness or aggregating repeated reports under a stated rule.",
+        "date",
+        "store"
+      ]
+    ]
+  },
+  "dataframes": {
+    "Beginner": [
+      [
+        "One receipt row has branch, item, and rupees. How many named columns are described?",
+        "Three columns.",
+        "three/3"
+      ],
+      [
+        "A table contains two identical amounts in separate sales. How many rows do those two sales require?",
+        "Two rows because they are distinct events.",
+        "two/2"
+      ],
+      [
+        "Does the displayed left-hand row label always have to be a running number?",
+        "No. A DataFrame index can use other labels, such as order codes.",
+        "label/index"
+      ],
+      [
+        "Which operation narrows a table to only names and prices while retaining all products?",
+        "Select the name and price columns.",
+        "column"
+      ],
+      [
+        "What does counting rows after grouping by city measure if one row represents a customer?",
+        "It counts customers in each city.",
+        "customer",
+        "city"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A table has two rows for the same product: 2 units at 4 and 3 units at 6. What is the total value across the rows?",
+        "The values 8 and 18 total 26.",
+        "26"
+      ],
+      [
+        "A group report contains totals 10, 20 and 50. The raw total is 86. How much money needs investigation?",
+        "The groups total 80, leaving 6 unaccounted for.",
+        "6/six"
+      ],
+      [
+        "A city report switches from one row per customer to one row per visit. How should customer counts be protected?",
+        "Count unique customer identifiers instead of counting all visit rows.",
+        "unique",
+        "customer"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two item rows of one order carry its full shipping fee of 12. What rule makes an order-level shipping report accurate?",
+        "Count the verified shipping fee once per order ID before summing across orders.",
+        "once",
+        "order"
+      ],
+      [
+        "A summary is grouped by a customer's current city but the question is where each sale actually occurred. What data is required?",
+        "Use the sale-time city recorded on each transaction or reconstruct the historical location.",
+        "sale/transaction",
+        "historical/city"
+      ],
+      [
+        "The same goods are priced in different currencies across branches. When is summing the price column across branches meaningful?",
+        "Convert values using an agreed currency and conversion date or keep separate currency totals.",
+        "currency",
+        "date/separate"
+      ],
+      [
+        "A report averages ten five-star reviews from one customer and one one-star review from another. Why could a customer-level score differ?",
+        "Review rows weight frequent reviewers more. Aggregate per customer first if each customer should contribute equally.",
+        "customer",
+        "weight/equally"
+      ],
+      [
+        "A wide table creates one new column per possible product. When could a row-per-sale layout simplify analysis?",
+        "When products change often or sales are sparse, product names as values can be grouped without changing columns for every addition.",
+        "product",
+        "group/column"
+      ]
+    ]
+  },
+  "data-cleaning": {
+    "Beginner": [
+      [
+        "What changes if extra spaces around ' East ' are removed?",
+        "The stored text becomes East with no surrounding spaces.",
+        "east",
+        "space"
+      ],
+      [
+        "A product code is already unique but its display name changes. Which field is better for matching the same product later?",
+        "Use the stable product code.",
+        "code"
+      ],
+      [
+        "What does a rejected-record count tell the report reader?",
+        "It tells how many records failed a stated rule or were excluded.",
+        "how many/count",
+        "rule/exclud"
+      ],
+      [
+        "Can a blank note in an otherwise valid receipt prove the sale never happened?",
+        "No. The note can be missing while the sale is valid.",
+        "note",
+        "sale"
+      ],
+      [
+        "A data rule requires positive weights. How does a recorded weight of -2 compare with the rule?",
+        "It fails because -2 is negative.",
+        "fail",
+        "negative"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Two copies have the same loan ID, same amount and same source timestamp. What should be checked before dropping a copy?",
+        "Confirm that one ID represents one loan and that repeated imports do not represent separate events.",
+        "id",
+        "event/loan"
+      ],
+      [
+        "A source changed its price unit from rupees to paise on June 1. What must a cleaner use to interpret 250?",
+        "Use the source date and the documented unit to choose the correct conversion.",
+        "date",
+        "unit"
+      ],
+      [
+        "A raw file has 50 records, 4 verified duplicates and 2 unrelated invalid records. How many valid unique records remain?",
+        "50 minus 4 minus 2 gives 44.",
+        "44"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two source systems number invoices from 1 independently. Why could deduplication by invoice number alone erase valid revenue?",
+        "Invoice numbers collide across systems. Use a key that includes the source and invoice number.",
+        "source",
+        "number"
+      ],
+      [
+        "A pipeline silently changes a negative quantity to positive. Why can this corrupt a return report?",
+        "A negative quantity may encode a legitimate return. Verify transaction meaning before changing its sign.",
+        "return",
+        "sign/meaning"
+      ],
+      [
+        "An analyst replaces an old city spelling globally, including inside street names. What safer transformation would preserve address meaning?",
+        "Map exact city-field values and leave unrelated address text untouched, checking known exceptions.",
+        "city",
+        "field"
+      ],
+      [
+        "The same cleaning rule improves matching in one language but merges different names in another. What evidence should decide whether to apply it globally?",
+        "Measure false merges by language using verified distinct records and retain original names for review.",
+        "language",
+        "merge"
+      ],
+      [
+        "A reconciliation finds two unmatched cleaned rows but 200 raw conflicts. How would you preserve reviewability?",
+        "Record which raw row IDs produced each cleaned row and which conflict-resolution rule was applied.",
+        "raw",
+        "rule"
+      ]
+    ]
+  },
+  "missing-values": {
+    "Beginner": [
+      [
+        "A student answered 'none' to an optional activities question. How is that different from a blank answer?",
+        "None is an explicit response; a blank leaves the answer unknown.",
+        "explicit",
+        "unknown"
+      ],
+      [
+        "Two of ten expected shop returns are missing. What fraction of expected returns is missing?",
+        "2 of 10 equals 20 percent.",
+        "20/0.2"
+      ],
+      [
+        "What word describes a guessed replacement for a missing number?",
+        "An imputed value or estimate.",
+        "imputed/estimate"
+      ],
+      [
+        "A report says average from 12 of 14 days. What does 12 count?",
+        "It counts the observed days used in the average.",
+        "observed",
+        "day"
+      ],
+      [
+        "Can a missing indicator by itself recover a lost temperature reading?",
+        "No. It records absence without recovering the temperature.",
+        "absence",
+        "temperature"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A café measured 0, 2 and 4 sales across three known hours and lost a fourth reading. What is the mean over measured hours?",
+        "The observed mean is (0 + 2 + 4) / 3 = 2 sales per hour.",
+        "2",
+        "hour"
+      ],
+      [
+        "A meter fails for the whole holiday week. Why is copying the previous ordinary week questionable?",
+        "Holiday usage can differ, so the previous week may be a poor estimate.",
+        "holiday",
+        "differ"
+      ],
+      [
+        "An order has no delivery address because it is a pickup order. How should that absence be described?",
+        "Mark the address as not applicable for pickup rather than treating it as a forgotten delivery field.",
+        "applicable",
+        "pickup"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A station sends rainfall only when it detects rain. Can missing transmissions safely count as dry days?",
+        "Only with evidence that the station was working. Distinguish silence from outages using a separate status signal.",
+        "working/status",
+        "outage"
+      ],
+      [
+        "A model trained with exact ages uses a training median for missing ages, but many new users skip age. What monitoring would expose a changed risk?",
+        "Track missing-age rates and prediction errors separately for provided and imputed cases.",
+        "rate",
+        "error"
+      ],
+      [
+        "A survey uses imputed salaries in a histogram. Why could there be an artificial spike at the median?",
+        "Replacing many blanks with one median puts repeated identical values at the same point, narrowing apparent spread.",
+        "median",
+        "repeated/identical"
+      ],
+      [
+        "The mean of observed delivery durations seems low. Staff often fail to close the longest deliveries. What collection change would test the suspicion?",
+        "Audit a sample of open deliveries to recover completion times and compare their durations with closed records.",
+        "open",
+        "compare"
+      ],
+      [
+        "A spreadsheet uses 'NA' both for unknown sales and a legitimate product code. Why should missing-value parsing be column-specific?",
+        "The same text means different things across fields. Use documented column rules to preserve the real code.",
+        "column",
+        "code"
+      ]
+    ]
+  },
+  "data-transformation": {
+    "Beginner": [
+      [
+        "Which price compares pack sizes more directly, price per pack or price per litre?",
+        "Price per litre uses the same quantity as a reference.",
+        "litre"
+      ],
+      [
+        "A mapping changes code P to Pending. What information connects the two?",
+        "A documented correspondence connects the source code with its intended meaning.",
+        "correspondence/mapping",
+        "meaning"
+      ],
+      [
+        "A duration is 120 minutes. What is the same duration in hours?",
+        "It is 2 hours.",
+        "2/two"
+      ],
+      [
+        "Does summing three daily counts retain the individual daily values?",
+        "No. The total loses the separate daily breakdown.",
+        "total",
+        "daily"
+      ],
+      [
+        "A price-per-item calculation uses total price divided by what?",
+        "Divide by the number of items.",
+        "number/count",
+        "item"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A pack costs 36 rupees for 600 grams. What is its price per kilogram?",
+        "600 grams is 0.6 kg, so 36/0.6 gives 60 rupees per kg.",
+        "60"
+      ],
+      [
+        "Branch A packs 8 kg and branch B packs 2 kg. What fraction of the combined weight comes from A?",
+        "8 out of 10 kg is 80 percent.",
+        "80/0.8"
+      ],
+      [
+        "An import supplies decimal prices with a comma such as 3,50. What preparation makes arithmetic safe?",
+        "Interpret the source decimal convention and parse the value as 3.50 under that convention.",
+        "decimal",
+        "3.50/3.5"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A proportion was stored as 0.2 in one file and 20 in another. What does a common-scale transformation need before combining them?",
+        "Identify whether each source stores fractions or percentages, then convert to a consistent representation.",
+        "fraction",
+        "percentage"
+      ],
+      [
+        "Two stations each average speed by day. Weekly distance and travel-time totals are available. Which calculation gives true overall travel speed?",
+        "Divide total distance by total travel time, preserving consistent units.",
+        "distance",
+        "time"
+      ],
+      [
+        "A preprocessing step takes the logarithm of a monetary amount that may be zero or negative. What decision must be made before deployment?",
+        "Define handling for zero and negative values and test the transformation on them, since the ordinary real logarithm is undefined there.",
+        "zero",
+        "negative"
+      ],
+      [
+        "A report sums hourly energy readings but the instrument reports cumulative meter totals. Why is the rule wrong?",
+        "Cumulative totals include earlier usage. Use differences between readings while accounting for resets.",
+        "difference",
+        "reset"
+      ],
+      [
+        "A team records customer age in a column computed once on sign-up. Why will it become stale and what alternative is appropriate?",
+        "Age changes with date. Derive it for the relevant reference date from approved birth-date information when needed.",
+        "date",
+        "derive"
+      ]
+    ]
+  },
+  "data-visualization": {
+    "Beginner": [
+      [
+        "In a bar chart of five routes, what does one bar represent?",
+        "One route’s measured quantity.",
+        "route"
+      ],
+      [
+        "What does the chart title 'Daily parcels' still need if values could be sent or delivered parcels?",
+        "Specify the measured event, such as parcels delivered, so the count is interpretable.",
+        "event/delivered"
+      ],
+      [
+        "If a temperature reading was never taken, should a dot at zero represent it?",
+        "No. A zero dot would indicate an observed temperature.",
+        "zero",
+        "observed"
+      ],
+      [
+        "A chart displays 5 kg, 7 kg and 4 kg. Which measurement is highest?",
+        "7 kg is highest.",
+        "7"
+      ],
+      [
+        "Why include the observation dates on a chart comparing school weeks?",
+        "Dates tell the reader which periods the measurements describe.",
+        "date/period"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A dashboard labels bars with 48 and 52 visits. How many more visits did the larger bar represent?",
+        "Four more visits.",
+        "four/4"
+      ],
+      [
+        "A bus stop had no counts between 9 and 10. How could the chart show the gap without inventing passenger counts?",
+        "Leave a visibly marked gap and label the period as unmeasured.",
+        "gap",
+        "unmeasured/missing"
+      ],
+      [
+        "Two products have 4 returns each, from 20 and 200 sales. What rates should a comparison of return frequency show?",
+        "They are 20 percent and 2 percent respectively.",
+        "20",
+        "2 percent"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An average temperature chart uses wider bars for cities with longer names. What unintended meaning might readers infer?",
+        "Area or width may appear to encode a second quantity. Use consistent bar widths for a simple magnitude comparison.",
+        "width/area",
+        "consistent"
+      ],
+      [
+        "A dashboard shows weekly total revenue climbing as stores open. How could a second series separate expansion from performance at existing shops?",
+        "Add revenue per active store or a same-store series alongside total revenue.",
+        "store",
+        "total"
+      ],
+      [
+        "A daily graph smooths a strike-day collapse into an ordinary decline. When is showing both raw and smoothed observations valuable?",
+        "Show both when short events matter to the decision and smoothing can hide their size or timing.",
+        "event",
+        "smoothing/size"
+      ],
+      [
+        "Two charts for adjacent weeks automatically choose different vertical scales. How can side-by-side comparison mislead?",
+        "Equal-looking heights can represent different magnitudes. Use shared axes or clearly mark the independent scales.",
+        "scale/axes",
+        "magnitude"
+      ],
+      [
+        "A percentage chart is based on only two responses in one town and two thousand in another. What extra information helps judge confidence?",
+        "Display sample counts and suitable uncertainty information with the percentages.",
+        "count",
+        "uncertainty"
+      ]
+    ]
+  },
+  "statistics": {
+    "Beginner": [
+      [
+        "Which observation sits in the middle of sorted values [1,5,12]?",
+        "5 sits in the middle.",
+        "5/five"
+      ],
+      [
+        "The values [4,4,4] have what range?",
+        "The range is zero because maximum and minimum are equal.",
+        "zero/0"
+      ],
+      [
+        "What is an outlier in a daily sales table?",
+        "A day's sales unusually far from the bulk of the observed values.",
+        "unusual",
+        "value/sale"
+      ],
+      [
+        "If a shop samples ten receipts, what is one observation in that sample?",
+        "One receipt is one observation.",
+        "receipt"
+      ],
+      [
+        "Three identical weights of 6 kg have what mean?",
+        "Their mean is 6 kg.",
+        "6"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "For [2,2,6,10], compute the median by showing which values are central.",
+        "The central values are 2 and 6, so the median is 4.",
+        "2 and 6",
+        "4"
+      ],
+      [
+        "A counter measured 25 appointments across 5 open days. What is the mean per open day?",
+        "25/5 gives 5 appointments per open day.",
+        "5/five"
+      ],
+      [
+        "A score of 100 is added to [3,4,5]. Which changes more, the mean or median?",
+        "The mean changes from 4 to 28, while the median changes from 4 to 4.5.",
+        "mean",
+        "28"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A weekly report says half the clients paid less than the median. When many bills equal the median, why might strictly less than half have paid less?",
+        "Tied values can sit at the median. The ordering guarantee allows observations equal to it.",
+        "tied/equal",
+        "median"
+      ],
+      [
+        "Two teachers compare score variability using range alone. What dependence on just two observations can distort their conclusion?",
+        "Range uses only the maximum and minimum; one extreme observation can dominate it.",
+        "maximum",
+        "minimum"
+      ],
+      [
+        "One school measures attendance per enrolled student and another per scheduled class seat. What must agree before pooling their rates?",
+        "The event and denominator definitions must match, so both rates describe the same population and opportunity.",
+        "denominator",
+        "population/opportunity"
+      ],
+      [
+        "A courier's mean delivery time falls after a slow route is removed from the business. Can the mean prove drivers became faster?",
+        "No. The route mix changed. Compare equivalent routes before and after to investigate a speed change.",
+        "mix",
+        "route"
+      ],
+      [
+        "A census of all current members is numerically complete. Why can measurement accuracy still matter?",
+        "Wrong entries or inconsistent definitions create measurement error even when no member is omitted.",
+        "error",
+        "definition/wrong"
+      ]
+    ]
+  },
+  "http-rest": {
+    "Beginner": [
+      [
+        "What is the client in a phone app that asks a library computer for a title?",
+        "The phone app initiating the request is the client.",
+        "phone/app"
+      ],
+      [
+        "What role does the server play after receiving a read request?",
+        "It processes the request and returns a response.",
+        "response"
+      ],
+      [
+        "What does the plural word loans in /loans usually name?",
+        "It names a collection of loan resources.",
+        "collection"
+      ],
+      [
+        "Does status 404 by itself supply the title of a missing book?",
+        "No. It reports a missing resource, without supplying a book record.",
+        "missing"
+      ],
+      [
+        "Which action better describes DELETE /loans/8, read or removal?",
+        "It requests removal under the service’s contract.",
+        "removal/delete"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A document service allows PATCH /notes/2 for a changed title. What does PATCH commonly ask for?",
+        "A partial modification of the existing note.",
+        "partial",
+        "modification/update"
+      ],
+      [
+        "A repeat DELETE returns 404 because the first call removed the item. Can deletion still have an idempotent intended effect?",
+        "Yes. The item remains absent after both calls even though the responses differ.",
+        "absent/removed",
+        "response"
+      ],
+      [
+        "A user receives status 403 after signing in. Is repeating the same password necessarily useful?",
+        "No. The service may be denying permission for that specific operation.",
+        "permission"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A catalogue caches a GET response before a book becomes unavailable. What controls can reduce stale reads?",
+        "Use an appropriate freshness lifetime or validation mechanism and invalidate affected entries when stock changes.",
+        "freshness/validation",
+        "invalidate/change"
+      ],
+      [
+        "Changing account details requires a token but a public help-page GET does not. Can both still follow resource-oriented HTTP conventions?",
+        "Yes. Authorization policy can vary by resource without changing method semantics.",
+        "resource",
+        "authorization"
+      ],
+      [
+        "A retailer processes a request successfully but sends malformed output with 200. Which contract must tests check besides the status?",
+        "Check the response representation and required fields against the agreed schema.",
+        "representation/field",
+        "schema"
+      ],
+      [
+        "The server assigns a new URL on each creation POST. Why might PUT fit a different workflow where the client knows a stable target address?",
+        "PUT can create or replace the representation at the specified target with repeatable intended effect.",
+        "target",
+        "replace/repeat"
+      ],
+      [
+        "An organization returns a detailed 404 revealing a private case owner's name. What should error design protect?",
+        "Limit disclosure of sensitive resource details while providing enough information for authorized troubleshooting.",
+        "disclosure",
+        "resource/detail"
+      ]
+    ]
+  },
+  "fastapi": {
+    "Beginner": [
+      [
+        "Does declaring a route automatically create real locker records?",
+        "No. The handler still needs stored records or other data to look up.",
+        "record/data"
+      ],
+      [
+        "In /stations/3/lockers/7, how many numeric segments appear?",
+        "Two numeric segments, 3 and 7.",
+        "two/2"
+      ],
+      [
+        "A handler returns a small dictionary through a standard FastAPI JSON endpoint. What can the client receive?",
+        "A JSON object representing the returned fields.",
+        "json",
+        "object"
+      ],
+      [
+        "What distinguishes an input type declaration from an actual value such as 7?",
+        "The type describes allowed kinds of values; 7 is a particular integer.",
+        "kind/type",
+        "integer"
+      ],
+      [
+        "Is a path's variable name number itself sent when calling /lockers/7?",
+        "No. The URL contains 7, which is bound to the parameter named number.",
+        "7",
+        "parameter"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A ticket route accepts an optional limit defaulting to 10. The client omits it. Which limit should the handler receive under that definition?",
+        "The default limit of 10.",
+        "10"
+      ],
+      [
+        "A workshop ID is valid as text like W04. Why should its path field avoid conversion to an integer?",
+        "The letters and leading zero belong to the ID and must be preserved as text.",
+        "text",
+        "zero/letter"
+      ],
+      [
+        "An API lists a successful model response but its numeric input is unbounded. What rule would prevent requests for minus three seats?",
+        "Constrain seat count to a positive integer and reject negative values.",
+        "positive",
+        "integer"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A route gets one database connection from a dependency. What test would show cleanup still happens when the handler fails?",
+        "Trigger a handler exception and verify the borrowed connection is released through the dependency cleanup path.",
+        "exception/failure",
+        "released/cleanup"
+      ],
+      [
+        "An app has identical method-and-path registrations in two routers. Why can changing registration order alter responses?",
+        "A matching route may win before the other is considered. Detect duplicate routes and test intended dispatch.",
+        "route",
+        "order/before"
+      ],
+      [
+        "A price endpoint should return 5 as a number but its handler returns the string '5'. What contract test would catch an unwanted coercion or mismatch?",
+        "Inspect the actual serialized response type under the declared response schema, including malformed or mismatched cases.",
+        "response",
+        "type"
+      ],
+      [
+        "A synchronous business function is correct in a unit test. Which separate request-level concerns remain for its FastAPI route?",
+        "Check routing, input validation, permissions and response serialization through an actual request.",
+        "routing",
+        "validation/serialization"
+      ],
+      [
+        "A developer renames an optional query parameter. Old clients continue sending its former name. What regression can appear?",
+        "The new handler may silently use its default instead of the intended supplied filter. Test the older query contract.",
+        "default",
+        "filter/query"
+      ]
+    ]
+  },
+  "pydantic": {
+    "Beginner": [
+      [
+        "What does specifying meal as a text field tell a lunch-order validator?",
+        "It states the required kind of the meal value.",
+        "kind/type"
+      ],
+      [
+        "Which quantity sits just above a model's inclusive maximum of 8?",
+        "9 is the next whole quantity.",
+        "9/nine"
+      ],
+      [
+        "Does validating one order save it in the kitchen database automatically?",
+        "No. Validation checks the record; saving it is a separate operation.",
+        "saving/save",
+        "separate"
+      ],
+      [
+        "An optional field has an explicit default of 1. What value should be used when the caller omits it?",
+        "Use the default value 1.",
+        "1/one"
+      ],
+      [
+        "Why name the rejected field when reporting a validation error?",
+        "The caller can identify which input needs correction.",
+        "input",
+        "correction"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A model accepts a list of item codes but the kitchen requires at least one. What rule must be added?",
+        "Add a minimum list length of one.",
+        "minimum",
+        "length"
+      ],
+      [
+        "The incoming value for age is 'two'. Why cannot ordinary conversion treat it like the numeric text '2' without a custom rule?",
+        "The word is not ordinary integer syntax. An explicit mapping would be needed.",
+        "integer",
+        "mapping"
+      ],
+      [
+        "Which stage should compare two already parsed dates, field conversion or a relationship check?",
+        "Use a relationship check on the two parsed dates.",
+        "relationship",
+        "date"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A user may omit a discount code or send an empty string deliberately. Why can normalizing both to the same value complicate auditing?",
+        "It erases the difference between an omitted input and an explicitly supplied empty value.",
+        "omitted",
+        "empty"
+      ],
+      [
+        "A nested address model flags an invalid postal code. What information lets a caller locate the problem among two addresses?",
+        "Report the nested field path and index identifying the affected address and postal-code field.",
+        "path",
+        "index/address"
+      ],
+      [
+        "If a service switches strict integer validation on only in one endpoint, what compatibility issue might appear?",
+        "Identical payloads can be accepted on one route and rejected on another. Align or document the contracts.",
+        "route",
+        "contract"
+      ],
+      [
+        "Two fields are individually within range but their sum exceeds an order limit. Why should summing live in a model-level rule?",
+        "The combined total depends on both fields, so a check with access to the whole model can enforce the limit.",
+        "both",
+        "total"
+      ],
+      [
+        "A public import accepts arbitrary extra fields for forward compatibility. What downstream practice avoids accidental privilege changes?",
+        "Persist only explicitly authorized fields and keep extra values away from privileged updates.",
+        "field",
+        "privileg"
+      ]
+    ]
+  },
+  "json": {
+    "Beginner": [
+      [
+        "Which symbol separates a JSON field name from its value?",
+        "A colon separates the name and value.",
+        "colon"
+      ],
+      [
+        "What do curly braces around fields indicate in JSON?",
+        "They delimit an object.",
+        "object"
+      ],
+      [
+        "Can a JSON list contain both text and a number under the basic JSON syntax?",
+        "Yes. Arrays can contain different value types, subject to any application schema.",
+        "yes",
+        "type"
+      ],
+      [
+        "Which JSON value is a string, 8 or \"8\"?",
+        "The quoted \"8\" is a string.",
+        "quoted/\"8\""
+      ],
+      [
+        "If a message sends an empty array for items, how many items are listed?",
+        "Zero items are listed.",
+        "zero/0"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A note contains a real newline inside its text. How should a program produce valid JSON for it?",
+        "Use a serializer that escapes the newline inside the JSON string.",
+        "serializer/serializ",
+        "escape"
+      ],
+      [
+        "A caller sends a top-level array but the order endpoint requires an object. Can a parser accept it while the service rejects it?",
+        "Yes. An array can be valid JSON while violating the required object schema.",
+        "array",
+        "object"
+      ],
+      [
+        "A field named active is false. Why must a program distinguish it from a missing active field?",
+        "False explicitly supplies a decision; a missing field supplies no value.",
+        "false",
+        "missing"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An app writes a timestamp into JSON. What extra agreement ensures another program interprets the instant correctly?",
+        "Specify the timestamp format and time-zone or offset convention, since JSON has no native timestamp type.",
+        "format",
+        "zone/offset"
+      ],
+      [
+        "A money value such as 0.10 is exchanged between programs using binary floating point. What representation can reduce currency rounding ambiguity?",
+        "Use agreed integer minor units or a decimal string with documented precision and currency.",
+        "integer/decimal",
+        "currency/precision"
+      ],
+      [
+        "A large incoming document has deeply nested arrays. Why might a service limit more than its byte length?",
+        "Parsing depth and resulting resource use can be excessive even for a modest number of bytes.",
+        "depth",
+        "resource"
+      ],
+      [
+        "A signed payload is reformatted to prettier JSON before forwarding. Why may a signature fail although the parsed fields match?",
+        "Changing whitespace changes the signed bytes unless a canonical representation was agreed.",
+        "whitespace",
+        "bytes"
+      ],
+      [
+        "A newer client includes a field older servers do not know. What must a shared JSON contract settle?",
+        "Document whether unrecognized fields are rejected, ignored or preserved and test the chosen behavior.",
+        "field",
+        "reject/ignore/preserved"
+      ]
+    ]
+  },
+  "requests-responses": {
+    "Beginner": [
+      [
+        "What identifies which web service operation a request is asking for besides its address?",
+        "The HTTP method identifies the requested action.",
+        "method"
+      ],
+      [
+        "A status code appears in which direction of exchange, incoming request or returned reply?",
+        "The returned reply carries the status code.",
+        "reply/response"
+      ],
+      [
+        "Does every successful request require a response body containing a new entity?",
+        "No. Some successful responses have an empty body.",
+        "empty"
+      ],
+      [
+        "If the caller requests order 7 and receives order 9 in a successful body, did status alone verify the correct order?",
+        "No. The mismatched identifier shows a content error.",
+        "identifier/id",
+        "error"
+      ],
+      [
+        "A response field says quantity=2. What does it describe if the contract says accepted quantity?",
+        "Two units were accepted according to the response.",
+        "two/2",
+        "accepted"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A request body is JSON but a client accidentally attempts to decode the response as an image. Which response information helps choose the decoder?",
+        "The response Content-Type identifies its representation.",
+        "content-type"
+      ],
+      [
+        "A customer submitted a quantity of 4, but stock permitted only 3 under the service's partial-fill contract. Which value belongs on the confirmation?",
+        "Display the accepted quantity 3 from the server response.",
+        "3/three",
+        "accepted"
+      ],
+      [
+        "A caller receives status 401. Which part of a new request may need valid authentication information?",
+        "Supply appropriate authorization credentials in the request, commonly in the Authorization header.",
+        "credential/authorization"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two downstream services each overwrite the same request identifier. Why could tracing a reply become difficult?",
+        "Events lose the shared correlation value. Propagate or map identifiers across service boundaries.",
+        "correlation",
+        "propagate/map"
+      ],
+      [
+        "A client automatically retries a large upload after reading only part of a reply. What evidence determines whether retrying will duplicate work?",
+        "Check whether the original operation committed, using an operation ID or resumable protocol.",
+        "commit",
+        "id/protocol"
+      ],
+      [
+        "A mobile app caches a success screen after a backend starts returning errors. What test ensures its view reflects the latest exchange?",
+        "Return a success and then a failure for the same action and assert that the stale success state is cleared.",
+        "failure",
+        "stale"
+      ],
+      [
+        "A response includes 10000 rows while the phone needs 20. What request/response design reduces waste with verifiable continuity?",
+        "Support pagination with a limit and cursor, and verify pages cover the intended records without duplicates or gaps.",
+        "pagination/cursor",
+        "duplicate/gap"
+      ],
+      [
+        "A client submits a language preference. The server returns localized text. What must a shared cache distinguish?",
+        "Cache entries should vary by the relevant language preference so callers receive the intended representation.",
+        "language",
+        "cache"
+      ]
+    ]
+  },
+  "routing": {
+    "Beginner": [
+      [
+        "What does the fixed part /books in /books/17 communicate to the router?",
+        "It identifies the book collection path.",
+        "book",
+        "path/collection"
+      ],
+      [
+        "Are /buses/4 and /buses/5 different item addresses under the same general rule?",
+        "Yes. They can match one rule with different parameter values.",
+        "yes",
+        "parameter"
+      ],
+      [
+        "In /shops?open=true, what query key is present?",
+        "The key is open.",
+        "open"
+      ],
+      [
+        "What does the path /products usually refer to when /products/8 refers to one product?",
+        "It refers to the product collection.",
+        "collection"
+      ],
+      [
+        "Which comes first for a first-match router: choosing a matching route or running its handler?",
+        "Choose the matching route first, then execute its handler.",
+        "route",
+        "first"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An event page uses /events/E4?day=2. Identify the event and chosen day.",
+        "The event is E4 and the requested day is 2.",
+        "e4",
+        "2"
+      ],
+      [
+        "A dynamic path requires one segment after /receipts. Why does /receipts/12/items add more information than that pattern expects?",
+        "It has an additional items segment beyond the single receipt identifier.",
+        "items",
+        "segment"
+      ],
+      [
+        "A caller writes city='New Delhi' as a query value. What should a client do with spaces and other URL-special characters?",
+        "Use proper URL encoding when building the query.",
+        "encod"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A route accepts the same path with a trailing slash only through a redirect. Why test a state-changing client through that redirect?",
+        "Clients may handle method, body or credentials differently across redirects. Verify the intended operation survives.",
+        "redirect",
+        "method/body"
+      ],
+      [
+        "A team proposes reusing /users/{id} for two different meanings depending on today's data. Why can this undermine routing predictability?",
+        "The same request may reach different semantics as data changes. Prefer explicit distinct paths or a clearly defined resolution rule.",
+        "same",
+        "path/rule"
+      ],
+      [
+        "A route matches an order ID but the ID belongs to another account. What checks occur after routing?",
+        "Authenticate the caller and authorize access to that order before returning its information.",
+        "authenticate",
+        "authorize"
+      ],
+      [
+        "A query filter is missing, while another request explicitly sends an empty filter. What should a robust route contract clarify?",
+        "Specify whether missing and empty are equivalent, defaulted or invalid, and test both forms.",
+        "missing",
+        "empty"
+      ],
+      [
+        "A catch-all file route is introduced for a new feature. What existing paths should be tested for accidental interception?",
+        "Test literal routes and narrower dynamic routes that share the same prefix, alongside genuinely unmatched paths.",
+        "literal",
+        "dynamic"
+      ]
+    ]
+  },
+  "authentication": {
+    "Beginner": [
+      [
+        "Why is a username typed into a form alone insufficient proof of identity?",
+        "Anyone can type the name; the service needs verified evidence.",
+        "verified",
+        "evidence"
+      ],
+      [
+        "A club member can view events but cannot edit them. Which word describes that permitted set of actions?",
+        "Permissions describe the allowed actions.",
+        "permission"
+      ],
+      [
+        "Does a unique account number automatically grant its holder ownership of every report?",
+        "No. Ownership must be established for the specific report.",
+        "ownership",
+        "report"
+      ],
+      [
+        "What does ending a login session usually intend to prevent?",
+        "Further authenticated use of that session.",
+        "session",
+        "use"
+      ],
+      [
+        "Which detail matters in authorization besides who and what resource?",
+        "The requested action, such as reading versus deleting.",
+        "action",
+        "read/delete"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A public library catalog can be read without login. Does that require granting anonymous visitors permission to edit it?",
+        "No. Read and edit permissions can differ.",
+        "read",
+        "edit"
+      ],
+      [
+        "A caregiver has access to one student's reports for a semester. What two pieces should limit the authorization grant?",
+        "Limit it to the specified student and the permitted date range or expiry.",
+        "student",
+        "expir/date"
+      ],
+      [
+        "A user knows an account's email address and requests a password reset. Why send a verification step to a trusted channel?",
+        "Knowing the address does not prove control. Confirm control of the verified channel before changing access.",
+        "control",
+        "channel"
+      ]
+    ],
+    "Advanced": [
+      [
+        "One token works on two unrelated services although it was issued for only one. What validation should prevent misuse?",
+        "Check the token's intended audience and trusted issuer before granting service access.",
+        "audience",
+        "issuer"
+      ],
+      [
+        "A service checks access once when a large export begins. The person's permission is revoked before the file is collected. Where else should access be checked?",
+        "At export retrieval or download time, verify the current authorization for that file.",
+        "download/retrieval",
+        "current"
+      ],
+      [
+        "A clerk can create an order but cannot approve their own order. What rule goes beyond checking a simple clerk role?",
+        "Check the relationship between the actor and the order creator for the approval action.",
+        "creator",
+        "approval"
+      ],
+      [
+        "A parent shares a report by forwarding a long unguessable URL. How should its system treat that URL if possession grants access?",
+        "Treat it as a secret capability with scope, expiry and revocation, and avoid exposing it in logs.",
+        "secret",
+        "expiry/revocation"
+      ],
+      [
+        "A team writes authorization tests only for successful owners. What negative pairing reveals ownership failures?",
+        "Use a second valid account to request the first account's object and confirm denial without disclosure.",
+        "second",
+        "denial"
+      ]
+    ]
+  },
+  "database-integration": {
+    "Beginner": [
+      [
+        "Where should a saved seat booking survive after closing the phone app?",
+        "It should remain in persistent database storage.",
+        "database/storage"
+      ],
+      [
+        "A database query asks for one named book. What does its result represent?",
+        "It represents the matching record or the absence of a match.",
+        "record/match"
+      ],
+      [
+        "In a transaction, when is an ordinary pending insert made durable?",
+        "When the transaction commits successfully.",
+        "commit"
+      ],
+      [
+        "A table uses ticket_id as a unique key. Can two valid rows have the same ticket_id under that constraint?",
+        "No. The unique constraint forbids a repeated ticket ID.",
+        "unique",
+        "repeat"
+      ],
+      [
+        "Which resource can a request return to a pool after finishing database work?",
+        "Its borrowed database connection.",
+        "connection"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An order has status pending and is moved to paid only if currently pending. What should an update report when it finds the row already cancelled?",
+        "It should report no eligible change or a conflict because the condition failed.",
+        "condition/conflict",
+        "change/eligible"
+      ],
+      [
+        "The stock database stores 9 notebooks and a transaction deducts 2. What value should a successful committed read later show absent other writes?",
+        "It should show 7 notebooks.",
+        "7/seven"
+      ],
+      [
+        "A service receives a product name with spaces and quotation marks. How should it pass that name to a query searching one field?",
+        "Pass the complete original name as one bound data value.",
+        "bound",
+        "value"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A connection-sharing design lets two unrelated requests use the same uncommitted session. What can go wrong on failure?",
+        "One request's rollback or commit could affect another request's changes. Isolate transaction ownership.",
+        "rollback/commit",
+        "isolate/ownership"
+      ],
+      [
+        "Two reports read one changing table at slightly different moments and the totals disagree. What requirement would justify a consistent snapshot?",
+        "If both totals must describe the same instant, read them under an appropriate shared snapshot or transaction isolation level.",
+        "instant/same",
+        "snapshot/isolation"
+      ],
+      [
+        "A stale form tries to update an order based on version 3 after version 4 was saved. How can the service prevent a lost edit?",
+        "Include the expected version in the update condition and detect when no row matches.",
+        "version",
+        "condition"
+      ],
+      [
+        "A long import writes 100000 unrelated rows. How should a team choose between one transaction and batches?",
+        "Decide whether the business requires all-or-nothing completion and weigh lock time, failure recovery and restartability.",
+        "all-or-nothing",
+        "lock/restart"
+      ],
+      [
+        "A table is migrated while an older application version still runs. What verification protects live reads and writes?",
+        "Check compatibility of both versions against the transitional schema, including defaults and required fields.",
+        "compatibility",
+        "schema"
+      ]
+    ]
+  },
+  "validation": {
+    "Beginner": [
+      [
+        "Is a syntactically valid email guaranteed to identify an existing mailbox?",
+        "No. Valid format does not prove mailbox existence or ownership.",
+        "format",
+        "exist/ownership"
+      ],
+      [
+        "Why test the smallest allowed order size as well as a typical size?",
+        "It checks whether the lower boundary is implemented correctly.",
+        "lower",
+        "boundary"
+      ],
+      [
+        "A field allows only red, green or blue. What is being checked?",
+        "Membership in an allowed set of values.",
+        "allowed",
+        "set"
+      ],
+      [
+        "A required description contains only spaces. Why might a length-above-zero test be insufficient?",
+        "Spaces can satisfy raw length while providing no meaningful description.",
+        "space",
+        "length"
+      ],
+      [
+        "Which should a helpful error name for an invalid arrival date?",
+        "It should name the arrival field and the condition or format it must satisfy.",
+        "arrival",
+        "format/condition"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A booking allows at most 6 people including adults and children. Requests say 4 adults and 3 children. What rule fails?",
+        "The combined count is 7, exceeding the total limit of 6.",
+        "7/seven",
+        "limit/6"
+      ],
+      [
+        "A service accepts year 2026 as four digits but considers only 2000–2025 historical. Is a four-digit check enough?",
+        "No. The numerical range must be checked separately.",
+        "range"
+      ],
+      [
+        "A shipping form accepts a pickup code instead of an address only when delivery_mode is pickup. Which kind of rule expresses that?",
+        "Use validation conditional on the delivery mode and require the appropriate field for that mode.",
+        "mode",
+        "field"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An input can be legitimate text but dangerous if later inserted into HTML. Why are validation and output escaping separate?",
+        "Validation checks acceptable input meaning. Context-specific escaping protects how that text is rendered in HTML.",
+        "meaning/input",
+        "escaping/render"
+      ],
+      [
+        "A price can be updated by two servers after independent request validation. Where must a final nonnegative-balance invariant be enforced?",
+        "Enforce it atomically at the storage or transaction boundary under concurrent updates.",
+        "atomic",
+        "storage/transaction"
+      ],
+      [
+        "A service lowercases all identifiers before validation, but external codes are case sensitive. What should its tests include?",
+        "Use two valid distinct codes differing only in case and verify normalization never merges their identities.",
+        "case",
+        "merge/distinct"
+      ],
+      [
+        "A team adds an upper length cap for names after seeing slow requests. What evidence balances resource protection and genuine usage?",
+        "Review realistic name lengths and resource costs, choose a documented limit, and test boundary inputs.",
+        "length",
+        "cost/boundary"
+      ],
+      [
+        "A caller sends extra field is_staff alongside a valid profile update. Beyond validating known fields, what check prevents unauthorized effects?",
+        "Limit accepted update fields and check authorization before applying any privileged change.",
+        "field",
+        "authorization/privileged"
+      ]
+    ]
+  },
+  "exception-handling": {
+    "Beginner": [
+      [
+        "A program cannot open its database file. Is that a success result or a failure needing handling?",
+        "A failure needing handling.",
+        "failure"
+      ],
+      [
+        "A known validation error tells the user to correct a field. Who can usually act on that information?",
+        "The caller can correct the submitted input.",
+        "caller/user",
+        "input"
+      ],
+      [
+        "What does the phrase safe public error message mean?",
+        "It explains the outcome without exposing private implementation details.",
+        "outcome",
+        "private"
+      ],
+      [
+        "A booking reference K8 appears in a failure message. What can support use it for?",
+        "To find the matching diagnostic event in internal records.",
+        "diagnostic/log"
+      ],
+      [
+        "After a failed write, why is it useful to state whether anything was saved if that is known?",
+        "The caller can decide whether it is safe or necessary to retry.",
+        "retry"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A date parser reports an invalid date and a caller retries unchanged indefinitely. What response guidance could end the loop?",
+        "Explain the expected date format and that the caller should correct the input before retrying.",
+        "format",
+        "correct"
+      ],
+      [
+        "An external service returns unavailable. Which is a more honest provisional state for a delivery, unknown or confirmed delivered?",
+        "Unknown until the delivery status can be verified.",
+        "unknown",
+        "verified"
+      ],
+      [
+        "A handled stock conflict happens regularly during popular sales. Should every occurrence be exposed as an unexpected internal crash?",
+        "No. Treat the known conflict as a business outcome with a clear customer response.",
+        "conflict",
+        "business"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A failed request leaves a reserved seat in memory while database changes rolled back. What invariant should recovery restore?",
+        "The visible reservation state must agree with durable storage after the failure.",
+        "state",
+        "storage"
+      ],
+      [
+        "A catch block catches all errors and returns an empty search result. What targeted fault injection exposes misleading behavior?",
+        "Make the search dependency fail, then verify its error differs from a successful query that genuinely returns no matches.",
+        "dependency/fail",
+        "successful/query"
+      ],
+      [
+        "A support team wants exact stack traces sent through the public app. How can it retain diagnostic utility with less disclosure?",
+        "Store sanitized traces in access-controlled diagnostics and return a reference that staff can use for lookup.",
+        "reference",
+        "controlled/sanitized"
+      ],
+      [
+        "A transient fault happens repeatedly on every retry. What should bound fault recovery?",
+        "Use a retry budget and delay policy, then surface failure once the budget is exhausted.",
+        "budget",
+        "delay"
+      ],
+      [
+        "A batch of ten independent label prints fails on number six. What should the reported outcome enable?",
+        "Identify completed and failed items so a retry can avoid printing duplicates.",
+        "completed",
+        "duplicate"
+      ]
+    ]
+  },
+  "logging": {
+    "Beginner": [
+      [
+        "In event order_saved, what does the event name tell a reader?",
+        "The order was saved at the recorded step.",
+        "saved"
+      ],
+      [
+        "A log line contains request_id=K8. Is K8 normally the customer's password?",
+        "No. It is an identifier for correlating request events.",
+        "identifier/correlat"
+      ],
+      [
+        "Why record a timestamp with a failed operation?",
+        "It helps locate when the failure occurred and reconstruct its sequence.",
+        "when/time",
+        "sequence"
+      ],
+      [
+        "A log records amount=18 and currency=INR separately. What kind of event representation is this?",
+        "A structured event with named fields.",
+        "structured",
+        "field"
+      ],
+      [
+        "If a log says a request started, does that alone prove it completed?",
+        "No. A completion event or resulting state is needed.",
+        "completion",
+        "state/event"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Three timeout messages share one operation ID with attempt numbers 1, 2 and 3. How many user operations are evidenced?",
+        "One operation with three recorded attempts.",
+        "one/1",
+        "three/3"
+      ],
+      [
+        "A kitchen log has reference K4 but a payment service uses P9 for the same request. What datum would connect the records?",
+        "Store a mapping or parent reference linking K4 and P9.",
+        "mapping/reference"
+      ],
+      [
+        "A routine inventory update succeeds. Which detail would help later diagnosis without storing the whole product record?",
+        "Record a safe product reference, action and result.",
+        "reference",
+        "result"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A production incident caused logs to fill the disk, causing more failures. What controls protect the service during a log storm?",
+        "Bound volume using rotation or retention limits and rate-limited repetitive events, while preserving key diagnostics.",
+        "rotation/retention",
+        "rate/volume"
+      ],
+      [
+        "A log event records raw user search text. What should be decided before retaining this field for a month?",
+        "Assess privacy and diagnostic need, redact sensitive content and set an appropriate retention limit.",
+        "privacy",
+        "retention"
+      ],
+      [
+        "A team treats a count of error log lines as the count of failed orders. When is that inference unreliable?",
+        "Multiple layers or retries may log one failure repeatedly. Count distinct failed order IDs or final outcomes.",
+        "retry/retries/multiple",
+        "distinct/outcome"
+      ],
+      [
+        "Machine-readable event names change on every deployment. What problem does that create and how can it be avoided?",
+        "Queries and alerts break across versions. Maintain a stable event schema or version schema changes explicitly.",
+        "alert/quer",
+        "schema"
+      ],
+      [
+        "Two events have valid times but no indication whether a booking succeeded. Which outcome field would make a completion log actionable?",
+        "Record final status such as confirmed, rejected or pending together with its operation ID.",
+        "status",
+        "operation"
+      ]
+    ]
+  },
+  "api-testing": {
+    "Beginner": [
+      [
+        "A test supplies quantity 2 and expects 80 rupees. Which number is the expected output?",
+        "80 rupees is the expected output.",
+        "80"
+      ],
+      [
+        "What does a passing price test mean for the specific values it exercised?",
+        "The observed result matched the expectation for those inputs.",
+        "expectation",
+        "input"
+      ],
+      [
+        "Why give a test booking a known seat inventory at the beginning?",
+        "It makes the result predictable and repeatable.",
+        "predictable/repeatable"
+      ],
+      [
+        "Which test needs an HTTP request, an endpoint test or a pure arithmetic test?",
+        "An endpoint test calls the HTTP interface.",
+        "endpoint"
+      ],
+      [
+        "If a missing-product test expects no new row, what side effect is it checking?",
+        "It checks that storage was not changed by the failed lookup.",
+        "storage",
+        "changed"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A booking requires at least one guest. Which request directly exercises the lower rejection boundary?",
+        "Send zero guests and expect rejection with no saved booking.",
+        "zero/0",
+        "rejection/reject"
+      ],
+      [
+        "A test expects status 201 but receives 200 with the correct ID. What aspect of the service differs from the declared expectation?",
+        "The creation status differs even though the response identifies the new item.",
+        "status",
+        "creation"
+      ],
+      [
+        "A client sends a malformed request body. Which two observations should its rejection test check?",
+        "Check the error response and confirm that invalid data was not saved.",
+        "error",
+        "saved"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A test calls an API three times with valid quantities but always uses the same owner account. What important access behavior is uncovered?",
+        "Authorization for other accounts is untested. Try cross-account requests to protected resources.",
+        "account",
+        "authorization"
+      ],
+      [
+        "A clock-based expiry test sleeps for one real minute. How could it become faster and more reliable?",
+        "Use an injectable clock and advance it to just before and after expiry.",
+        "clock",
+        "expiry"
+      ],
+      [
+        "An endpoint test passes when run with a mock database but production raises a unique-constraint conflict. What evidence was missing?",
+        "Test the persistence behavior against a representative database schema with actual constraints.",
+        "database",
+        "constraint"
+      ],
+      [
+        "A team updates expected outputs automatically whenever a test fails. Why can that conceal a regression?",
+        "It can replace an intended contract with a buggy actual result. Review expected behavior independently.",
+        "contract",
+        "bug"
+      ],
+      [
+        "A background job completes after the initial API response. How can an end-to-end test check it without relying on a fixed long sleep?",
+        "Poll an observable completion condition with a bounded timeout and verify the final job state.",
+        "poll",
+        "timeout"
+      ]
+    ]
+  },
+  "backend-security": {
+    "Beginner": [
+      [
+        "Who can alter the fields sent by a browser client?",
+        "The caller can modify the submitted request.",
+        "caller/user"
+      ],
+      [
+        "What does sensitive data mean in a report-download response?",
+        "Information such as private student records that only authorized people should receive.",
+        "private",
+        "authorized"
+      ],
+      [
+        "If a page hides an edit button, where must permission still be enforced?",
+        "The server must enforce edit permission.",
+        "server"
+      ],
+      [
+        "Why restrict a service account to selected database tables?",
+        "It limits what the account can read or change if misused.",
+        "limit",
+        "read/change"
+      ],
+      [
+        "Is an unpredictable report ID a replacement for checking ownership?",
+        "No. Anyone who obtains the ID still needs a permission check.",
+        "permission/ownership"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A teacher's grade updater accepts grade and comment. A caller adds student_owner. Which fields should the service apply under the stated contract?",
+        "Apply only the allowed grade and comment fields after permission checks.",
+        "grade",
+        "comment"
+      ],
+      [
+        "A request asks for a 500 MB report when the service allows only 5 MB. What check protects memory before expensive processing?",
+        "Enforce a size limit early and reject oversized input.",
+        "size",
+        "early"
+      ],
+      [
+        "A PDF viewer can read protected notes because both use one unrestricted filesystem account. Which change narrows exposure?",
+        "Separate permissions so the viewer can read only approved reports.",
+        "permission",
+        "report"
+      ]
+    ],
+    "Advanced": [
+      [
+        "One uploaded file has a safe name but is a link to private storage. Why should path checking consider the resolved destination?",
+        "A link can escape the permitted directory even when its visible name looks safe. Verify containment of the actual target.",
+        "link",
+        "target/destination"
+      ],
+      [
+        "An API allows any origin to make credentialed state-changing browser requests. What trust-boundary question should be addressed?",
+        "Decide which origins may act for the signed-in user and protect state-changing requests against unauthorized origins.",
+        "origin",
+        "user"
+      ],
+      [
+        "A service authorizes viewing a book but allows the caller to choose any storage object key when downloading it. How should the two steps be tied?",
+        "Derive the storage key from the authorized book record rather than trusting a separate user-supplied key.",
+        "key",
+        "authorized"
+      ],
+      [
+        "A team rotates a leaked credential but still has active sessions created with it. What recovery scope should be considered?",
+        "Review sessions and dependent credentials for revocation, and inspect access during the exposure window.",
+        "session",
+        "revocation/access"
+      ],
+      [
+        "A permission rule is added to a new report endpoint but not to its export job. How would a security review test consistency?",
+        "Attempt the same protected resource through view and export paths with an unauthorized account and check both deny access.",
+        "export",
+        "deny/unauthorized"
+      ]
+    ]
+  },
+  "ml-concepts": {
+    "Beginner": [
+      [
+        "A forecast is made before a result is known. Is the forecast itself the verified answer?",
+        "No. The later observed outcome supplies the verified answer.",
+        "observed",
+        "later"
+      ],
+      [
+        "Which record describes one example if a bakery forecasts daily sales?",
+        "One day's clues paired with that day's observed sales.",
+        "day",
+        "sale"
+      ],
+      [
+        "A model uses two clues, headcount and weather. How many features are described?",
+        "Two features.",
+        "two/2"
+      ],
+      [
+        "Why must the unit of a predicted quantity be stated?",
+        "The unit tells the user what the predicted number measures.",
+        "unit",
+        "measure"
+      ],
+      [
+        "If tomorrow's outcome is unknown, can a trained model still produce an estimate?",
+        "Yes. It applies its learned settings to available input clues.",
+        "learned",
+        "input"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A rule forecasts three slices per guest for 14 guests. Afterwards 39 slices sell. How many too many slices were forecast?",
+        "The forecast is 42, which is 3 slices too high.",
+        "42",
+        "3/three"
+      ],
+      [
+        "An owner always orders 25 packets. A model sometimes does worse. What comparison makes its suggested change meaningful?",
+        "Compare both methods' errors or costs on the same representative days.",
+        "same",
+        "error/cost"
+      ],
+      [
+        "A training table has order numbers that merely count upward. What should be checked before treating them as meaningful clues?",
+        "Check whether their apparent relationship is stable information available at prediction time or a coincidental time pattern.",
+        "prediction/time",
+        "stable/pattern"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A school cancels a lunch if estimated demand is low, so actual sales for cancelled lunches become zero. Why may those outcomes mislead retraining?",
+        "The decision prevents observing demand. Collect evidence for cancelled cases or evaluate a controlled trial before interpreting zeros as no interest.",
+        "demand",
+        "cancelled/trial"
+      ],
+      [
+        "Mistakes of ten units high cost less than ten low because running out loses customers. Which success definition should change?",
+        "Use a loss measure reflecting asymmetric shortage and surplus costs and compare it with current ordering.",
+        "cost",
+        "shortage"
+      ],
+      [
+        "A model learns a different forecast only because a spreadsheet row was duplicated 100 times. What changed in the effective training data?",
+        "That case received extra weight. Deduplicate confirmed repeats or explicitly define intended sample weights.",
+        "weight",
+        "repeat/deduplicate"
+      ],
+      [
+        "Training labels for late deliveries switch from over 20 minutes to over 30 minutes in July. How could this masquerade as model improvement?",
+        "The target definition changed. Compare outcomes under a consistent definition across periods.",
+        "definition",
+        "consistent"
+      ],
+      [
+        "A supermarket sells different goods after renovations. How can an old forecast be evaluated before replacing daily ordering decisions?",
+        "Run it alongside existing decisions on new-season cases, then score both against actual outcomes under current conditions.",
+        "alongside/both",
+        "actual"
+      ]
+    ]
+  },
+  "learning-types": {
+    "Beginner": [
+      [
+        "An old complaint already names its correct department. What kind of information does that name supply?",
+        "It supplies the target label for that example.",
+        "label/target"
+      ],
+      [
+        "Can a group of similar receipts contain more than one customer's receipts?",
+        "Yes. Group membership is based on similarity rather than requiring one owner.",
+        "similarity",
+        "group"
+      ],
+      [
+        "What does unlabeled mean for a collection of flower photos?",
+        "The photos lack the supplied answers, such as verified species names.",
+        "answer/species"
+      ],
+      [
+        "Does an unsupervised algorithm need actual observations to work with?",
+        "Yes. It needs input examples even without supplied target labels.",
+        "input",
+        "example"
+      ],
+      [
+        "If two shoppers have identical purchases under the chosen representation, what can a similarity rule see?",
+        "It sees matching purchase features, regardless of other differences outside those observations.",
+        "purchase",
+        "feature"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A shop wants verified fruit names for unknown items and has 500 named photos. Which part of an old example is the desired output?",
+        "The verified fruit name is the output label.",
+        "fruit",
+        "name"
+      ],
+      [
+        "A school groups pupils only by travel distance. Can the resulting groups automatically be called skill levels?",
+        "No. Distance-based similarity provides no evidence of learning skill.",
+        "distance",
+        "skill"
+      ],
+      [
+        "A company has unlabeled notes plus a few staff-assigned subjects. How could it select examples worth labeling next?",
+        "Inspect varied or uncertain groups and ask staff to label representative examples.",
+        "staff",
+        "representative/varied"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A support classifier is trained on which team historically took each ticket, but management wants the team best equipped to resolve it. What mismatch matters?",
+        "Historical assignment is a proxy label and may differ from the desired best resolver. Validate the labeling objective.",
+        "label",
+        "resolver/objective"
+      ],
+      [
+        "Customers are grouped by average spending on food and travel. Why might seasonal changes alter groups without any person's preferences changing?",
+        "The observed spending mix can change with seasonal availability or prices. Compare periods or adjust the features before naming preference groups.",
+        "season",
+        "feature/period"
+      ],
+      [
+        "An unlabeled anomaly detector finds rare shop receipts. Why could both large legitimate sales and fraud appear together?",
+        "Rarity describes unusual input patterns, not intent. Use verified investigation outcomes to estimate fraud relevance.",
+        "rarity/unusual",
+        "verified"
+      ],
+      [
+        "A team switches its grouping distance from total purchase volume to proportions by category. What deliberate change in question does that produce?",
+        "It moves from similarity in scale toward similarity in spending mix, even for shoppers spending different totals.",
+        "scale",
+        "mix"
+      ],
+      [
+        "A fully supervised study discards all unlabeled records. When might those records still be useful without treating predictions as truth?",
+        "Use them to inspect feature coverage or discover new patterns, then obtain labels to evaluate any proposed change.",
+        "coverage/pattern",
+        "label"
+      ]
+    ]
+  },
+  "regression": {
+    "Beginner": [
+      [
+        "If each extra delivery kilometre adds five minutes, what are the units of the slope?",
+        "Minutes per kilometre.",
+        "minute",
+        "kilometre/km"
+      ],
+      [
+        "A straight-line rule has a starting fee of 25. What output does its formula give at zero units?",
+        "25 under the stated formula.",
+        "25"
+      ],
+      [
+        "If the actual and predicted bills are identical, how large is the absolute error?",
+        "Zero.",
+        "zero/0"
+      ],
+      [
+        "A predictor returns 12.5 days. Does regression require its numerical prediction to be a whole number?",
+        "No. A regression estimate can be fractional.",
+        "fractional"
+      ],
+      [
+        "What makes 'minutes late' a different target from 'late or on time'?",
+        "Minutes late measures an amount, while late or on time names a category.",
+        "amount",
+        "category"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An observed bill is 50 at one unit and 62 at four units. Under a straight-line rule, how much is added per unit?",
+        "The increase of 12 over 3 units gives 4 per unit.",
+        "12",
+        "4"
+      ],
+      [
+        "A freight rule predicts 8 + 3 × weight minutes. How much does the estimate change from 2 kg to 5 kg?",
+        "It increases by 9 minutes, from 14 to 23.",
+        "9/nine"
+      ],
+      [
+        "A taxi model has a residual of -6 under actual minus predicted. The predicted price was 70. What was the actual price?",
+        "The actual fare was 64.",
+        "64"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A rule fits rents from 40 to 80 square metres. Its zero-area intercept is 5000. Why might that intercept have little practical meaning?",
+        "Zero-area homes fall outside the training range, so the fitted intercept may be only a mathematical extension.",
+        "range",
+        "intercept/extension"
+      ],
+      [
+        "A service's absolute error is 5 kg, but most parcels weigh under 1 kg and a few weigh 100 kg. Which additional analysis helps assess usability?",
+        "Break error down by weight range and inspect typical small-parcel errors relative to their size.",
+        "range",
+        "small"
+      ],
+      [
+        "A supposedly precise fare formula uses rounded whole kilometres from training but live routes arrive in metres. What should a compatibility test control?",
+        "Convert to matching units and agree on rounding before comparing estimates on identical routes.",
+        "unit",
+        "round"
+      ],
+      [
+        "A fitted slope is negative in a task where larger orders should never decrease the base price. What should be checked before enforcing monotonicity?",
+        "Check data quality and genuine discounts or fixed-price bundles, then validate any monotonic constraint on fresh orders.",
+        "discount/data",
+        "constraint"
+      ],
+      [
+        "A model has zero mean signed residual yet every individual bill is badly wrong. How is that possible and what should be reported?",
+        "High and low errors cancel in a signed mean. Report absolute-error magnitudes or their distribution.",
+        "cancel",
+        "absolute"
+      ]
+    ]
+  },
+  "classification": {
+    "Beginner": [
+      [
+        "A classifier assigns an outcome such as 'urgent'. What does that word represent?",
+        "It is a class label for the case.",
+        "class/label"
+      ],
+      [
+        "If 'defective' is the positive class, what is a true positive?",
+        "A defective item correctly flagged as defective.",
+        "defective",
+        "correctly"
+      ],
+      [
+        "A healthy item is correctly passed through. Which confusion-matrix outcome is this when faults are positive?",
+        "A true negative.",
+        "true negative"
+      ],
+      [
+        "Can a classification problem have three or more possible categories?",
+        "Yes. A multiclass problem can have three or more classes.",
+        "multiclass/three"
+      ],
+      [
+        "What does lowering a cutoff ordinarily do to the set of cases flagged at or above it on fixed scores?",
+        "It keeps existing flags and may add new ones.",
+        "add",
+        "existing"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A bakery flags items when score is strictly above 0.5. What happens to score exactly 0.5 under that rule?",
+        "It is not flagged because strict greater-than excludes equality.",
+        "not flagged",
+        "strict/equality"
+      ],
+      [
+        "In a tray of 30, a screen correctly passes 24 healthy units, flags 2 healthy units and flags 3 faulty units. How many faulty units remain missed?",
+        "The listed outcomes cover 29 units, leaving 1 missed faulty unit.",
+        "29",
+        "1/one"
+      ],
+      [
+        "A flower model chooses the largest score among rose 0.2, lily 0.5 and tulip 0.3. Which label is selected?",
+        "Lily has the largest score and is selected.",
+        "lily"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An order type can be either standard, express or overnight, but a new 'pickup' type appears in service. What must the team decide?",
+        "Define unknown or new-class handling, obtain labeled pickup examples and evaluate an updated classification policy.",
+        "unknown/new",
+        "label"
+      ],
+      [
+        "A threshold is tuned using only damaged test parcels. Why can't this reveal the extra work from false alarms?",
+        "Healthy parcels are needed to count false positives and estimate inspection workload at that threshold.",
+        "healthy",
+        "false positives/workload"
+      ],
+      [
+        "A pair of classes have tied highest scores and the app must choose one. What makes outcomes reproducible and reviewable?",
+        "Specify a deterministic tie policy or abstention and test equal-score cases.",
+        "tie",
+        "test"
+      ],
+      [
+        "A parcel score shifts upward after a camera update even for healthy boxes. What evidence should precede threshold changes?",
+        "Collect verified outcomes under the new camera and compare score distributions and error rates against the previous setup.",
+        "verified",
+        "distribution/error"
+      ],
+      [
+        "A medical-equipment fault screen routes uncertain cases for human inspection. How should its evaluation account for those cases?",
+        "Report the fraction deferred and the accuracy or cost of the combined inspection workflow, alongside automatic decisions.",
+        "deferred",
+        "combined/cost"
+      ]
+    ]
+  },
+  "train-test": {
+    "Beginner": [
+      [
+        "If 80 of 100 cases train a model and 20 are held back, what share is held back?",
+        "20 percent.",
+        "20"
+      ],
+      [
+        "Does a test answer need to be known eventually in order to compute prediction error?",
+        "Yes. Compare predictions with later verified answers.",
+        "verified/actual",
+        "prediction"
+      ],
+      [
+        "A January-only training set precedes a February-only test set. Which split principle is used?",
+        "A chronological or time-based split.",
+        "time/chronological"
+      ],
+      [
+        "Why give different rows from the same sale a common group identifier before dividing records?",
+        "It allows all related rows to be kept together during splitting.",
+        "together",
+        "row"
+      ],
+      [
+        "What is a random seed used for in a reproducible split?",
+        "It lets the same randomized assignment be reproduced under the same procedure.",
+        "reproduc/randomized"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A data collection has 50 households with four records each. For a test of new households, what is the independent grouping unit?",
+        "One household is the grouping unit.",
+        "household"
+      ],
+      [
+        "Dates 1–12 are available and the last quarter is held back as a contiguous test. Which dates are held back?",
+        "Dates 10, 11 and 12 form the final quarter.",
+        "10",
+        "12"
+      ],
+      [
+        "A team fits its feature vocabulary on article titles before splitting them. What should it fit that vocabulary on instead?",
+        "Fit the vocabulary on training articles only and handle unfamiliar test words under a declared rule.",
+        "training",
+        "word/vocabulary"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A fraud dataset must preserve rare positives while testing unseen merchants. Why is ordinary per-row stratification insufficient?",
+        "It can spread the same merchant over both sides. Respect merchant groups while checking class counts in each split.",
+        "merchant",
+        "class"
+      ],
+      [
+        "An annual model is trained on ten years and tested on one month. What evidence would reveal a seasonal weakness?",
+        "Use rolling chronological checks covering different seasons and report errors by period.",
+        "chronological/rolling",
+        "season"
+      ],
+      [
+        "Repeated workers contribute many shifts. A team wants to forecast their next shift, not predict a new worker. Is group-holding every worker always the right test?",
+        "No. A time-based split for existing workers better matches that use, while an unseen-worker test answers a separate transfer question.",
+        "time",
+        "worker"
+      ],
+      [
+        "The final test set initially has no labels and staff label only cases where the model looks wrong. What could bias evaluation?",
+        "Selection depends on model predictions. Verify a representative sample independently of apparent error.",
+        "selection",
+        "representative"
+      ],
+      [
+        "A preprocessing script uses overall sales rank including test shops as a feature. How do you prove a repair removed that information route?",
+        "Perturb only held-back records and verify that all fitted training features and settings stay fixed.",
+        "held",
+        "training"
+      ]
+    ]
+  },
+  "feature-engineering": {
+    "Beginner": [
+      [
+        "Hours since a customer’s last visit is calculated from two dates. Is that raw or derived information?",
+        "It is a derived feature calculated from the dates.",
+        "derived"
+      ],
+      [
+        "A category value is train, bus or walk. Which type of information does that describe?",
+        "A travel-mode category.",
+        "category"
+      ],
+      [
+        "What happens to a missing departure time if one tries to compute a gap without a missing-value policy?",
+        "The gap is unknown because an input time is missing.",
+        "unknown",
+        "missing"
+      ],
+      [
+        "A feature is recorded in metres during training. Which detail should travel with it into production?",
+        "Its measurement unit must remain explicit.",
+        "unit"
+      ],
+      [
+        "A single weekend indicator is 1 on Saturday or Sunday. What value should it take on Monday?",
+        "0 for a non-weekend day.",
+        "0/zero"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A customer's past trip distances are 2, 5 and 8 km. What mean-distance feature follows?",
+        "The mean is 5 kilometres.",
+        "5"
+      ],
+      [
+        "A station has 30 passengers among 3 trains. What feature measures passengers per train?",
+        "Divide 30 by 3 to obtain 10 passengers per train.",
+        "10"
+      ],
+      [
+        "A one-hot encoding has separate red, blue and green slots in that order. What vector describes blue?",
+        "The vector is [0, 1, 0], with only the blue slot on.",
+        "0, 1, 0/0,1,0"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A customer spending ratio has total visits as denominator. What policy should cover brand-new customers?",
+        "Define a cold-start or missing value when visits are zero and preserve that status as appropriate.",
+        "zero",
+        "missing/cold"
+      ],
+      [
+        "A clinic schedules longer visits for people already judged high risk; visit length is then used to predict risk in a different clinic. What transfer problem arises?",
+        "The feature partly reflects the first clinic's policy. Evaluate whether the relationship survives different scheduling practices.",
+        "policy",
+        "scheduling"
+      ],
+      [
+        "A train model uses time since station opening. On daylight-saving transitions local clock subtraction can miscount elapsed time. What representation helps?",
+        "Compute elapsed time from timezone-aware instants under a documented time convention.",
+        "time",
+        "instant/convention"
+      ],
+      [
+        "A feature is updated weekly in production but daily in training. What simulation tests its real usefulness?",
+        "Rebuild validation features using the weekly refresh schedule and compare errors under realistic staleness.",
+        "weekly",
+        "validation"
+      ],
+      [
+        "A report stores a customer’s lifetime total after every sale. For a decision just before that sale, which version should training join?",
+        "Use the most recent total available strictly before the decision, excluding the current sale.",
+        "before",
+        "excluding/current"
+      ]
+    ]
+  },
+  "model-evaluation": {
+    "Beginner": [
+      [
+        "An estimate misses the actual value by 0 units. Is that prediction exactly correct for that case?",
+        "Yes. Its numerical error is zero.",
+        "zero"
+      ],
+      [
+        "If ten predictions are checked and eight class labels match, what is the simple accuracy?",
+        "80 percent.",
+        "80"
+      ],
+      [
+        "Why do evaluation cases need trustworthy reference answers?",
+        "Errors are judged against the reference, so incorrect labels distort the measured score.",
+        "label/reference",
+        "score"
+      ],
+      [
+        "Which group supplies the denominator for a false-positive rate, all actual negatives or all flags?",
+        "All actual negatives supply the denominator.",
+        "actual negatives"
+      ],
+      [
+        "A measured recall of 1 on ten real faults means how many of those faults were found?",
+        "All ten faults were found.",
+        "ten/10"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A survey model correctly classifies 7 of 8 answers in English and 1 of 2 in Marathi. What is overall accuracy?",
+        "8 of 10 is 80 percent.",
+        "80"
+      ],
+      [
+        "A repair screen has five alarms, all correct, but another five actual faults go unflagged. Compare precision and recall.",
+        "Precision is 100 percent and recall is 50 percent.",
+        "100",
+        "50"
+      ],
+      [
+        "A uniform baseline guesses a 12-minute wait every time. Actual waits are 9, 12 and 15. Find its mean absolute error.",
+        "The misses are 3, 0 and 3, so the mean absolute error is 2 minutes.",
+        "2"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A model's monthly precision fell even though the operating threshold stayed fixed. Why examine prevalence as well as model quality?",
+        "The mix of actual positives changes the fraction of alerts that are correct. Compare error rates and case mix across months.",
+        "mix",
+        "rate"
+      ],
+      [
+        "A delivery test measures only completed jobs and excludes cancelled ones. How should a claim about all bookings be qualified?",
+        "The result describes completed jobs. Evaluate cancellation patterns and coverage before generalizing to every booking.",
+        "completed",
+        "coverage/cancellation"
+      ],
+      [
+        "A model beats its baseline in 9 of 10 weekly batches, but the last batch is vastly larger. Which two averages answer different questions?",
+        "An equal-week average weights weeks equally; a per-case average weights by batch size.",
+        "week",
+        "size"
+      ],
+      [
+        "A routing model is scored first on every message and then on every customer. Why might frequent complainants change the ranking?",
+        "A per-message score gives frequent customers more weight, while a per-customer score can give each customer equal influence.",
+        "weight",
+        "customer"
+      ],
+      [
+        "A company wants a target of under 10 minutes for 95 percent of requests. Why is an average-under-10 measure insufficient?",
+        "Long-tail waits can violate the target despite a low mean. Measure the fraction crossing 10 minutes or the appropriate percentile.",
+        "fraction/percentile",
+        "mean/average"
+      ]
+    ]
+  },
+  "overfitting": {
+    "Beginner": [
+      [
+        "What evidence is missing if a team reports only how well a model fits its own training data?",
+        "Performance on fresh cases is missing.",
+        "fresh/unseen"
+      ],
+      [
+        "A learner uses a holdout to choose model complexity. Is that holdout serving as training labels or validation evidence?",
+        "It is serving as validation evidence.",
+        "validation"
+      ],
+      [
+        "What is one common reason a highly detailed rule can memorize a small dataset?",
+        "It has enough capacity relative to the limited examples.",
+        "capacity",
+        "example"
+      ],
+      [
+        "A model gets less flexible after restricting tree depth. What changed?",
+        "Its capacity to express detailed patterns decreased.",
+        "capacity",
+        "decreas"
+      ],
+      [
+        "Why keep the final test separate from decisions about when to stop training?",
+        "Stopping is a model selection decision, so an untouched test gives an independent check.",
+        "selection",
+        "independent/untouched"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Training and validation misses are 1 and 6 minutes respectively. What is the observed gap in average miss?",
+        "The validation miss is 5 minutes higher.",
+        "5"
+      ],
+      [
+        "A learner adds a feature containing a random ID and training accuracy rises. Which performance should decide whether to retain it?",
+        "Check whether it improves held-back performance on unseen records.",
+        "held/unseen"
+      ],
+      [
+        "A curve showing check errors 8, 5, 4, 6, 7 reaches its best early point when?",
+        "The third round has the minimum check error of 4.",
+        "third/3",
+        "4"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two groups have identical training scores, but one trained repeatedly on near-duplicates. How should the amount of independent evidence be compared?",
+        "Count distinct cases or groups and test on new groups. Duplicate rows do not create equivalent independent evidence.",
+        "distinct",
+        "group"
+      ],
+      [
+        "A model appears to overfit because training examples are easy and evaluation examples are deliberately hard. Which comparison clarifies the cause?",
+        "Measure held-back performance on cases sampled like training and report the separate challenge-set score.",
+        "held",
+        "challenge"
+      ],
+      [
+        "A teacher removes every rare case to simplify learning. What risk could be hidden by a better average validation score?",
+        "The model may fail legitimate rare cases. Track performance and cost on the removed or rare groups separately.",
+        "rare",
+        "cost/performance"
+      ],
+      [
+        "A developer adds regularization until both training and validation predictions barely change across different inputs. What could have gone too far?",
+        "Excessive regularization can underfit; compare weaker settings and inspect whether genuine signal returns.",
+        "underfit",
+        "weaker"
+      ],
+      [
+        "A shop records all sales from one special promotional week. How could a larger but equally narrow sample still lead to brittle rules?",
+        "It repeats one promotion's conditions. Gather varied periods to test whether the pattern persists outside the promotion.",
+        "promotion",
+        "period"
+      ]
+    ]
+  },
+  "scikit-learn": {
+    "Beginner": [
+      [
+        "What does X commonly represent in a table passed to an estimator?",
+        "X is the collection of input feature rows.",
+        "input/feature",
+        "row"
+      ],
+      [
+        "What does y commonly hold in a supervised fit call?",
+        "It holds the target answers paired with the input rows.",
+        "target/answer"
+      ],
+      [
+        "A fitted estimator is used to quote two new orders. Must it learn again for every quote?",
+        "No. It can reuse the learned settings for prediction.",
+        "reuse",
+        "setting"
+      ],
+      [
+        "What kind of step changes raw inputs before the final estimator uses them?",
+        "A transformer prepares or transforms the inputs.",
+        "transformer"
+      ],
+      [
+        "Can a pipeline contain both a transformer and a predictor?",
+        "Yes. Preparation and prediction can be ordered in one pipeline.",
+        "yes",
+        "pipeline"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A training set has 6 examples with 2 clues each. What input shape describes it?",
+        "Six rows by two columns, or (6, 2).",
+        "6/six",
+        "2/two"
+      ],
+      [
+        "A training scaler divides months of experience by 12 to obtain years. What should the live path do for 18 months?",
+        "Apply the same conversion and pass 1.5 years.",
+        "1.5"
+      ],
+      [
+        "An app stores an estimator but discards its fitted text vocabulary. Which piece needed for the next request is missing?",
+        "The learned text transformer or vocabulary mapping is missing.",
+        "vocabulary/transformer"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An estimator's built-in score is accuracy but the business cares about finding rare faults. How should candidate evaluation change?",
+        "Choose a scoring metric aligned with fault detection, such as recall, and examine false alarms as well.",
+        "recall",
+        "false alarm"
+      ],
+      [
+        "A transformer's fit method modifies state. Why can reusing one estimator instance across experimental folds without resetting it be risky?",
+        "Learned state can carry information across folds. Use independently fitted instances or an appropriate cross-validation helper.",
+        "state",
+        "fold"
+      ],
+      [
+        "A team changes a pipeline parameter after fitting but reports old predictions. What rerun should an experiment require?",
+        "Refit when the parameter affects learned settings and regenerate predictions and metrics from the new fitted version.",
+        "refit",
+        "prediction"
+      ],
+      [
+        "A later toolkit version reads a saved pipeline but produces different output on a fixed receipt. What release evidence should block blind replacement?",
+        "Compare versioned reference cases and compatibility metadata, and investigate changed predictions before release.",
+        "version",
+        "prediction"
+      ],
+      [
+        "A test suite checks only whether predict() returns a sequence. What numeric fixture would make the print-pricing check meaningful?",
+        "Use a known page count and expected bill, then assert the returned price within the required tolerance.",
+        "expected",
+        "price"
+      ]
+    ]
+  },
+  "model-deployment": {
+    "Beginner": [
+      [
+        "What is a deployment's caller in an appointment form?",
+        "The application or program sending the prediction request.",
+        "application/program"
+      ],
+      [
+        "A booking rule needs repair_type and count. What is missing from a request containing only count?",
+        "The repair_type field is missing.",
+        "repair_type/repair type"
+      ],
+      [
+        "Why attach minutes to a predicted repair duration of 35?",
+        "It specifies the measurement unit of the returned duration.",
+        "unit"
+      ],
+      [
+        "What does a rollback switch the running service back to?",
+        "A previously working version.",
+        "previous",
+        "version"
+      ],
+      [
+        "What is an actual outcome for a completed repair-time estimate?",
+        "The measured duration of the finished repair.",
+        "duration",
+        "repair"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A new model returns 0.8 days while the booking contract requires hours. What value should a correct adapter return?",
+        "0.8 times 24 is 19.2 hours.",
+        "19.2"
+      ],
+      [
+        "A pricing service serves requests using model v4 today. What should be saved with an estimate for later audit?",
+        "Record the model version v4 and the permitted data needed to reproduce the case.",
+        "v4",
+        "reproduce"
+      ],
+      [
+        "A deployment handles 200 requests and times out on 10. What fraction timed out?",
+        "10 divided by 200 is 5 percent.",
+        "5"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A model is accurate but a missing model file makes the service return a default zero-minute estimate. How should a health check expose this?",
+        "Use a known prediction probe and verify the model is loaded and returns the expected nonzero result.",
+        "prediction",
+        "expected/loaded"
+      ],
+      [
+        "A newly deployed route uses the correct weights but a different currency rate table. Why tag both versions?",
+        "The final forecast depends on model and reference data. Reproduction and rollback require both identities.",
+        "reference",
+        "both"
+      ],
+      [
+        "A team sends a new model only traffic at midnight to reduce risk. What limits the conclusions from that trial?",
+        "Night traffic may differ from daytime cases and load. Expand the trial across representative conditions before wider release.",
+        "traffic",
+        "representative"
+      ],
+      [
+        "A predicted delay is fed into a scheduling rule that changes actual waiting time. Why can simple before-and-after accuracy obscure deployment impact?",
+        "The schedule reacts to the prediction and changes the outcome. Compare the whole decision policy with an appropriate baseline.",
+        "outcome",
+        "policy/baseline"
+      ],
+      [
+        "A retired model remains active in one long-running service process. How can a canary check detect the mismatch?",
+        "Query or log the serving version per instance and compare known predictions across instances.",
+        "version",
+        "instance"
+      ]
+    ]
+  }
+}

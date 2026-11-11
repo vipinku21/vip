@@ -1,0 +1,86 @@
+{
+  "predicates": {
+    "Beginner": [
+      [
+        "A shop promises free delivery for orders of £25 or more. What happens to an order of exactly £25?",
+        "It qualifies because the threshold includes equality.",
+        "qualifies/yes/free/eligible/accept"
+      ],
+      [
+        "Meera has two library books. Checking whether either book is overdue gives a yes-or-no answer. What is the everyday meaning of the answer False here?",
+        "Neither book is overdue.",
+        "neither/no overdue/no book/none"
+      ],
+      [
+        "Write the Python comparison that asks whether copies equals zero.",
+        "copies == 0",
+        "copies == 0/copies==0"
+      ],
+      [
+        "A jam shop keeps jars whose weight is over 300 g. What do we call the operation that keeps only matching items?",
+        "Filtering applies the predicate to each jar and retains the ones that pass.",
+        "filter"
+      ],
+      [
+        "A rule says “the ticket is not expired.” If expired is False, what Boolean result does not expired produce?",
+        "True. Negating False gives True.",
+        "true"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A club charges members only when their booking is late AND they did not cancel in time. Which two true/false values would uncover an accidental use of OR? Explain the intended decision.",
+        "Make one value true and the other false, for example late but cancelled in time. The intended rule must not charge the member.",
+        "true/late",
+        "false/cancelled/canceled",
+        "no charge/not charge/waive/shouldn't charge"
+      ],
+      [
+        "A search needs to keep only in-stock blue shirts. How would you combine a test of colour with a test of stock? Explain what happens to a red shirt with three in stock.",
+        "Use colour == 'blue' and stock > 0. The red shirt fails the colour test and is excluded.",
+        "and/both",
+        "excluded/fail/reject/drop"
+      ],
+      [
+        "A helper returns the words 'yes' and 'no'. A Python if takes the yes branch for both. How would you change the helper?",
+        "Return Boolean True or False. Both nonempty strings count as true in the if test.",
+        "boolean/true or false",
+        "nonempty/non-empty/non empty"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A gym allows entry from 06:00 inclusive until 22:00 exclusive. Which four times would you test at minute precision, and what should their results be?",
+        "05:59 fails, 06:00 passes, 21:59 passes and 22:00 fails. These surround both transitions.",
+        "05:59/5:59",
+        "06:00/6:00",
+        "21:59",
+        "22:00"
+      ],
+      [
+        "A housing benefit policy changes on July 1. Rechecking a June application with today's predicate gives a different decision. What needs to be saved for a reproducible audit?",
+        "Save the rule version or effective date and the input facts used for the original decision.",
+        "version/effective date",
+        "input/facts/snapshot"
+      ],
+      [
+        "A filter calls has_credit() first and is_active() second. has_credit() debits an account as a side effect. What goes wrong if someone changes the order for speed?",
+        "Short-circuit evaluation may skip the debit depending on the first result. Move the debit into the confirmed purchase action and make the predicate read-only.",
+        "skip/short-circuit/short circuit",
+        "read-only/read only/pure/separate/move"
+      ],
+      [
+        "A risk flag comes from a yes/no rule on income. Later it is offered as a model prediction of default. What evidence would justify that new use?",
+        "Compare its flags against actual repayment outcomes on separate borrowers. Measure missed defaults and false alarms before deciding whether the rule predicts default usefully.",
+        "actual/repayment/observed",
+        "miss/false alarm/precision/recall"
+      ],
+      [
+        "Two validators disagree on a missing postcode: the web form accepts it and the warehouse rejects it. How do you resolve the disagreement and prevent it from returning?",
+        "Agree on an explicit missing-value policy, then share the rule or run the same contract tests in both places. Include missing, blank and normal postcodes.",
+        "missing/blank",
+        "shared/share/contract/same test"
+      ]
+    ]
+  }
+}

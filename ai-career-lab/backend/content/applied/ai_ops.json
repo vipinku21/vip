@@ -1,0 +1,2875 @@
+{
+  "llms": {
+    "Beginner": [
+      [
+        "What does the word “training” describe when people say a text model learned from examples?",
+        "Adjusting the model's internal numbers using examples of text.",
+        "adjust/learn",
+        "example/text"
+      ],
+      [
+        "A writer enters “The boat floated on the”. What is a completion?",
+        "A continuation of that unfinished text.",
+        "continuation/ending/next"
+      ],
+      [
+        "What does inference mean when a trained model drafts an invitation?",
+        "Using the trained model to produce the draft.",
+        "using/running/applying",
+        "trained/model"
+      ],
+      [
+        "In a toy choice between endings, which is more likely, 0.7 or 0.3?",
+        "0.7 has the larger chance.",
+        "0.7/.7"
+      ],
+      [
+        "What part of “park the car” helps establish the meaning of the word park?",
+        "The surrounding words “the car” supply context.",
+        "car/context"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A piano teacher asks for three possible recital titles. What task characteristic makes sampling several endings useful?",
+        "Several creative titles can meet the request.",
+        "creative/several/variety"
+      ],
+      [
+        "An order prompt states “six chairs.” A generated draft says “five.” What exact field failed?",
+        "The chair quantity changed from six to five.",
+        "quantity/count/number"
+      ],
+      [
+        "A weather bot has no weather feed and a user asks for the temperature outside now. Which information would turn its draft into a checkable answer?",
+        "A current local weather observation.",
+        "current/live",
+        "local/weather"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A fictional writing exercise and a refund notice both demand confident prose. Which error would you weigh more heavily in the notice and why?",
+        "An unsupported refund promise can cause a real customer to rely on an incorrect policy.",
+        "refund/policy",
+        "customer/rely"
+      ],
+      [
+        "A small model proposes ten product names. A larger model shares the same false claim about a trademark. What evidence is still missing?",
+        "Independent authoritative trademark information applicable to the proposed name.",
+        "independent/authoritative",
+        "trademark"
+      ],
+      [
+        "You compare two models on completion accuracy and one always copies the input. What control cases would reveal that shortcut?",
+        "Include held-out prompts whose correct continuation differs from the supplied text.",
+        "continuation",
+        "differs/new/novel"
+      ],
+      [
+        "A historical letter sounds perfectly authentic but includes a place opened years later. What test separates stylistic fit from factual consistency?",
+        "Check named places and dates against the historical timeline independently of style.",
+        "dates/timeline",
+        "places/historical"
+      ],
+      [
+        "A draft contains a personally identifying phrase from a user's example. What observation shows copying in this run without proving memorization during training?",
+        "The phrase appears in the supplied context and reappears in the output.",
+        "context/input",
+        "output"
+      ]
+    ]
+  },
+  "tokens": {
+    "Beginner": [
+      [
+        "Why can one printed emoji require several model tokens?",
+        "The tokenizer can represent its encoded text using several pieces.",
+        "tokenizer/pieces/encoded"
+      ],
+      [
+        "In the phrase “bring it back,” what counts as input when you send it to a model?",
+        "The supplied phrase and any other request instructions or context.",
+        "supplied/request/input/instructions"
+      ],
+      [
+        "What is generated output in a question-and-answer exchange?",
+        "The text produced in the reply.",
+        "reply/response/produced"
+      ],
+      [
+        "What does truncating a passage do?",
+        "It cuts off part of the passage.",
+        "cut/remove/shorten"
+      ],
+      [
+        "Why does punctuation matter when counting model input?",
+        "Punctuation can contribute to tokenization and the token count.",
+        "token/piece/count"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A shop assistant reserves 100 pieces for a reply and has 20 remaining after adding history. How much space must be recovered?",
+        "At least 80 pieces.",
+        "80/eighty"
+      ],
+      [
+        "A model's tokenizer counts a plain address and its quoted JSON form differently. Which form should a budget calculation count?",
+        "Count the serialized form actually sent in the request.",
+        "actual/serialized/serialized form/sent"
+      ],
+      [
+        "A chatbot blindly drops the first message to save space. That message held the customer's order number. Which fact should be retained for the current order?",
+        "The verified order number linked to this customer's current task.",
+        "order",
+        "number/id"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A budget tool counts only the document body, then actual requests overflow. Which items should a representative full-request measurement include?",
+        "Include system instructions, tool descriptions, conversation text, formatting overhead and the output allocation.",
+        "instructions/tool",
+        "output"
+      ],
+      [
+        "A 100-token answer limit fits checkout explanations but truncates code examples. What measurement would support task-specific limits?",
+        "Compare completion lengths and truncation rates separately by task, then set limits from those distributions.",
+        "truncation/length",
+        "task/group"
+      ],
+      [
+        "A model changes its tokenizer while the app keeps cached counts for articles. Which key or invalidation should protect the budget?",
+        "Version cached counts by tokenizer and source-text revision, and invalidate incompatible counts.",
+        "tokenizer",
+        "version/revision"
+      ],
+      [
+        "A recent message says “use the earlier option.” After shortening the conversation, the earlier choice has vanished. How should a summary maintain the reference?",
+        "Preserve the actual option identifiers and decision context or ask the user to clarify.",
+        "option/clarify",
+        "identifiers/context/user"
+      ],
+      [
+        "Your system accepts a file with 200 pages before estimating prompt size. How could admission avoid wasting processing while keeping a final accurate bound?",
+        "Use a cheap preliminary size check, then measure exact tokens on the selected request before sending.",
+        "preliminary/cheap",
+        "exact/token"
+      ]
+    ]
+  },
+  "prompt-engineering": {
+    "Beginner": [
+      [
+        "Who specifies the task in a prompt asking “sort these letters by date”?",
+        "The person or application supplying the instruction.",
+        "person/user/application/instruction"
+      ],
+      [
+        "In “answer with one sentence,” which property of the reply is constrained?",
+        "Its length or sentence count.",
+        "length/sentence"
+      ],
+      [
+        "What is a delimiter around an input letter used to show?",
+        "Where the letter's content starts and ends.",
+        "starts/begins/boundary",
+        "ends/boundary"
+      ],
+      [
+        "A brand message should sound courteous. What does tone describe?",
+        "The style or manner of expression.",
+        "style/manner"
+      ],
+      [
+        "What is an input example in an instruction for extracting postcodes?",
+        "A sample address or note that contains a postcode to extract.",
+        "sample/example",
+        "address/note"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A message-classification prompt has examples but never names the requested task. What simple addition would tell the model what to do?",
+        "State the classification task and required output explicitly.",
+        "task/classif",
+        "output/label"
+      ],
+      [
+        "A shop asks for a two-sentence summary but needs the date and venue in every summary. How should the must-have content be expressed?",
+        "Specify both date and venue as required facts and define handling when either is missing.",
+        "date",
+        "venue"
+      ],
+      [
+        "Two trial prompts use different examples and different scoring rules. What comparison would isolate the example change?",
+        "Keep the judging rule and test cases fixed while changing only the examples.",
+        "fixed/same",
+        "examples"
+      ]
+    ],
+    "Advanced": [
+      [
+        "One proposed extraction instruction quietly replaces “no evidence” with a guessed default. What evaluation subset would reveal the damage?",
+        "Cases with deliberately missing evidence whose correct result is unknown or clarification.",
+        "missing/absent",
+        "unknown/clarif"
+      ],
+      [
+        "A support workflow uses one prompt to select a tool and write a customer reply. A label error triggers an expensive action. How could you check the decision before acting?",
+        "Validate the structured action and authorization separately before running the tool or sending its reply.",
+        "validat/authoriz",
+        "action/tool"
+      ],
+      [
+        "A lengthy prompt contains two contradictory instructions about reply language. Which intervention makes behavior testable for multilingual inputs?",
+        "Resolve the priority rule explicitly and test examples for each supported language conflict.",
+        "priority/rule",
+        "language/conflict"
+      ],
+      [
+        "A model copies sample customer names into unrelated summaries. What controlled test would separate literal copying from correct extraction?",
+        "Substitute different names in the input and examples independently and require output names to track the actual input.",
+        "substitute/change",
+        "input"
+      ],
+      [
+        "A prompt revision changes defaults for missing quantities. How should existing customer workflows discover the semantic change?",
+        "Version and document the default rule and regression-test downstream behavior for incomplete orders.",
+        "version/rule",
+        "downstream/test"
+      ]
+    ]
+  },
+  "model-apis": {
+    "Beginner": [
+      [
+        "What is the client when a café tablet asks an online translation service for a result?",
+        "The tablet application making the request.",
+        "tablet/app"
+      ],
+      [
+        "What is a response body?",
+        "The data the service returns inside its reply.",
+        "data/returned/content"
+      ],
+      [
+        "A service returns an error code. What does the code communicate?",
+        "A category or status of the request outcome.",
+        "status/category/outcome"
+      ],
+      [
+        "What is an endpoint in a service that offers translation and speech?",
+        "A named request address or operation for a particular service function.",
+        "address/operation/function"
+      ],
+      [
+        "What does a request identifier help a support worker locate?",
+        "The records for one specific request.",
+        "request",
+        "record/trace/log"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A school needs 300 translations before tomorrow, and pupils do not need immediate replies. What execution arrangement suits this workload?",
+        "Queue a bounded batch job and record per-item outcomes.",
+        "batch/queue",
+        "item/outcome"
+      ],
+      [
+        "A provider returns an error for unsupported language code XY. Why will an unchanged retry usually fail?",
+        "The invalid parameter remains unchanged.",
+        "invalid/unsupported",
+        "parameter/language"
+      ],
+      [
+        "A customer's phone disconnects after the service returns a translation to the server. Where could the app preserve a finished result for reconnection?",
+        "Save it on the application server under the authorized request identity.",
+        "server/storage",
+        "identity/request"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A translation form uses a 2-second client deadline and a 20-second provider deadline. Why can the server continue spending after the customer gives up?",
+        "The downstream operation may continue unless cancellation or a compatible deadline propagates.",
+        "downstream/provider",
+        "cancel/deadline"
+      ],
+      [
+        "A provider splits one answer into streaming pieces. The connection breaks halfway through. What should a durable result record distinguish?",
+        "Partial received text and a confirmed completed response must have different completion status.",
+        "partial",
+        "complete"
+      ],
+      [
+        "You replace the provider and language quality falls only for short phrases. What paired comparison would distinguish malformed payloads from model weakness?",
+        "Compare normalized outgoing payloads and valid responses for the same short-phrase fixtures across providers.",
+        "payload",
+        "same/fixtures"
+      ],
+      [
+        "A backend exposes a token in an API error message sent to the browser. Where should error translation happen and what should the client receive?",
+        "Redact at the server boundary and return a safe category with a request reference.",
+        "server/redact",
+        "safe/reference"
+      ],
+      [
+        "A provider's usage limit is daily while your app caps only concurrent requests. Why can the daily limit still be exceeded?",
+        "Concurrency bounds simultaneous work, while many sequential requests still accumulate daily usage.",
+        "simultaneous/concurrent",
+        "sequential/daily"
+      ]
+    ]
+  },
+  "structured-outputs": {
+    "Beginner": [
+      [
+        "In an order record, what is the value in the field item with value pear?",
+        "Pear.",
+        "pear"
+      ],
+      [
+        "What is a Boolean field such as gift_wrap used to represent?",
+        "A true-or-false choice.",
+        "true/false/yes/no"
+      ],
+      [
+        "What is a list of items in a shopping order used for?",
+        "Holding several ordered entries together.",
+        "several/multiple/collection"
+      ],
+      [
+        "A schema marks note optional. What does optional allow?",
+        "The note field may be absent.",
+        "absent/omitted/missing"
+      ],
+      [
+        "What does nesting an address record under a delivery record express?",
+        "The address fields belong to that delivery.",
+        "belong/contain/part"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A café permits only small, medium and large cups. What kind of field restriction should reject gigantic?",
+        "A finite set of allowed values or enum.",
+        "allowed/enum"
+      ],
+      [
+        "An order contains a valid numeric price but omits its currency. Why is the price insufficient for billing?",
+        "The number alone does not identify the monetary unit.",
+        "currency/unit"
+      ],
+      [
+        "A note includes two products. Which structure avoids inventing separate field names item1 and item2 for every basket size?",
+        "A list of item records.",
+        "list/array",
+        "item"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An optional delivery instruction becomes required in version 2. What compatibility failure could older clients encounter and what migration can prevent it?",
+        "Older records may lack the field; use version-aware validation or a deliberate migration before enforcing it.",
+        "lack/missing",
+        "version/migration"
+      ],
+      [
+        "A JSON parser accepts very large nested lists before the schema validator rejects them. Which resource defense belongs earlier in the request path?",
+        "Limit request size and nesting depth during input parsing.",
+        "size",
+        "depth/nest"
+      ],
+      [
+        "A model emits both “total” and line items. They are individually valid but disagree. What rule should determine the amount charged?",
+        "Recompute the authoritative total from validated line items under the pricing rules and compare it with the stated total.",
+        "recompute/calculate",
+        "line items/pricing"
+      ],
+      [
+        "Two schema variants allow the same record to match as a sale or a refund. How could the representation make the intended action unambiguous?",
+        "Require an explicit action discriminator and validate each variant's required fields.",
+        "discriminator/action",
+        "validat/fields"
+      ],
+      [
+        "A system retries generation until the record passes validation, silently discarding 40% of attempts. What should operational evaluation report beyond the eventual pass rate?",
+        "Record first-pass validity, retry count and cost or latency per accepted record.",
+        "first-pass/retry",
+        "cost/latency"
+      ]
+    ]
+  },
+  "embeddings": {
+    "Beginner": [
+      [
+        "For the list [2, 5, 1], what is the number of dimensions?",
+        "Three dimensions.",
+        "three/3"
+      ],
+      [
+        "What is one coordinate in a numerical description?",
+        "One number at a particular position.",
+        "number/value"
+      ],
+      [
+        "Why keep the original ticket text after making an embedding?",
+        "People need the actual wording to inspect the match.",
+        "wording/text/read"
+      ],
+      [
+        "Which has zero length on a two-dimensional map, [0,0] or [1,0]?",
+        "[0,0] has zero length.",
+        "zero/0,0"
+      ],
+      [
+        "What does encoding a sentence into a vector produce?",
+        "A numerical representation of the sentence.",
+        "numerical/numeric/number"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A pair of two-dimensional vectors and one three-dimensional vector reach a dot-product function. Which input is incompatible?",
+        "The three-dimensional vector has the wrong number of coordinates for the pair.",
+        "three/3",
+        "dimension/coordinate"
+      ],
+      [
+        "A search stores only item names. What extra text could help distinguish a replacement pump from a pump repair manual?",
+        "Include descriptions naming the product type and use.",
+        "description/type/use"
+      ],
+      [
+        "The same paragraph is embedded before and after removing its title. Why compare search results on both versions?",
+        "The title may supply context that changes which meaning the vector captures.",
+        "title/context"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A cosine system treats short and long nonzero vectors pointing the same way as equal. When might that discard a signal?",
+        "If vector magnitude encodes useful information, direction alone discards that magnitude.",
+        "magnitude/length",
+        "direction"
+      ],
+      [
+        "An encoder truncates a long report before its final sentence “no leak found.” What paired input exposes the failure?",
+        "Compare reports sharing the prefix but ending in opposite diagnoses and inspect whether their embeddings distinguish them.",
+        "prefix/ending",
+        "opposite/diagnos"
+      ],
+      [
+        "You remove personal identifiers before embedding support tickets. How would you assess both privacy and lookup quality?",
+        "Audit the scrubbed input and evaluate retrieved matches on representative labeled queries after removal.",
+        "audit/privacy/scrub",
+        "labeled/quality/matches"
+      ],
+      [
+        "A team compresses vector values to save memory and identical top-one scores become frequent. Which ranking checks should accompany memory measurements?",
+        "Check near ties, ordering stability and retrieval quality against the uncompressed reference.",
+        "tie/stability",
+        "reference/uncompressed"
+      ],
+      [
+        "Customer queries describe symptoms but documents use repair instructions. Why might embedding the two kinds of input with arbitrary independent encoders fail?",
+        "They need compatible representations trained to align queries with documents in a shared comparison space.",
+        "compatible/shared",
+        "query/queries/documents"
+      ]
+    ]
+  },
+  "vector-databases": {
+    "Beginner": [
+      [
+        "Why store an original document ID beside each passage ID?",
+        "It identifies which parent document owns the passage.",
+        "parent/document"
+      ],
+      [
+        "Returning top one instead of top five changes which setting?",
+        "The requested result count k.",
+        "k/count"
+      ],
+      [
+        "What does inserting a new record add to a searchable index?",
+        "A new candidate that may match later queries.",
+        "candidate/record/result"
+      ],
+      [
+        "What is a metadata filter for records labeled French intended to keep?",
+        "Records matching the French language label.",
+        "french"
+      ],
+      [
+        "What does a deleted note's stale index entry point to?",
+        "An old or missing source record.",
+        "old/missing/deleted"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A collection includes drafts and published manuals. Which metadata value should public search require?",
+        "Published status.",
+        "published"
+      ],
+      [
+        "An update replaces one passage with two. What must happen to the original passage ID once the replacement is active?",
+        "Retire or remove the old record to avoid duplicate outdated retrieval.",
+        "retire/remove/delete"
+      ],
+      [
+        "A search requests ten results but only four eligible records exist. What size can the valid result set reach?",
+        "At most four distinct eligible records.",
+        "four/4"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A system stores separate copies of one passage for multiple departments. What must happen when one department loses permission?",
+        "Remove or invalidate that department's eligible copy without affecting other authorized copies.",
+        "department",
+        "invalidat/remove"
+      ],
+      [
+        "A full index rebuild lasts an hour while repairs continue arriving. How can a rebuild avoid losing updates written during that hour?",
+        "Record incremental updates and replay them into the new index before switching readers.",
+        "update/event",
+        "replay/apply"
+      ],
+      [
+        "A database reports high average recall, but records added in the past minute are never returned. Which separate property should be tested?",
+        "Insertion-to-search visibility or freshness delay for new records.",
+        "visibility/freshness/delay"
+      ],
+      [
+        "A fast approximate index passes small tests but slows when filters select only one workshop. What workload deserves special measurement?",
+        "Benchmark selective per-workshop filters with realistic eligible counts and candidate search effort.",
+        "selective/filter",
+        "workshop/eligible"
+      ],
+      [
+        "The service wants to change from distance to similarity ordering. What contract test catches a reversed ranking?",
+        "Use known close and far records and assert the closest appears ahead of the farthest.",
+        "close/near",
+        "far"
+      ]
+    ]
+  },
+  "semantic-search": {
+    "Beginner": [
+      [
+        "Which typed request is the query when a visitor enters “replace my pass”?",
+        "The words “replace my pass.”",
+        "replace my pass"
+      ],
+      [
+        "What is a candidate result?",
+        "A potential match considered for display.",
+        "match/potential/result"
+      ],
+      [
+        "What does a relevance label record?",
+        "Whether or how well a result answers the query.",
+        "answers/relevant/useful"
+      ],
+      [
+        "A word with two meanings can confuse search. What does ambiguity describe?",
+        "More than one plausible interpretation.",
+        "multiple/one/two"
+      ],
+      [
+        "Which type of search explicitly looks for matching words or codes?",
+        "Keyword or lexical search.",
+        "keyword/lexical"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A query says “cancel my pass” and a page explains buying a pass. What difference matters despite the shared noun?",
+        "The requested action or intent differs.",
+        "action/intent"
+      ],
+      [
+        "In a set of 12 returned items, three are irrelevant. How many are relevant?",
+        "Nine are relevant.",
+        "nine/9"
+      ],
+      [
+        "A site scores candidates and shows only those above its threshold. What user-visible outcome occurs if none meet it?",
+        "The site returns no qualifying results.",
+        "no/empty"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A query expansion adds “return” to every request about a “trip back” and floods travel results with refund policies. How would you catch that sense error?",
+        "Evaluate travel and purchase contexts separately using intent-labeled queries and inspect expansion-induced false matches.",
+        "context/intent",
+        "false/expansion"
+      ],
+      [
+        "Ranking by clicks promotes a popular wrong policy. What independent signal can distinguish usefulness from exposure?",
+        "Judge relevance against verified query needs or measure successful task completion independently of clicks.",
+        "relevance/completion",
+        "independent/verified"
+      ],
+      [
+        "A user accepts either of two valid answers, but the test labels only one ID as correct. What should change in the reference set?",
+        "Include all adjudicated acceptable passages or equivalence groups before scoring retrieval.",
+        "all/equivalence",
+        "acceptable/relevant"
+      ],
+      [
+        "A system has perfect recall at fifty, but its interface displays three results. Which metric at what cutoff best tests that experience?",
+        "Measure success, precision or recall at the visible cutoff of three.",
+        "three/3",
+        "recall/precision/success"
+      ],
+      [
+        "A new product family uses old product names with different meanings. Which time-aware evaluation could reveal index drift?",
+        "Test recent catalog queries on current product labels and compare results with earlier cohorts by date.",
+        "recent/current",
+        "compare/date/cohort"
+      ]
+    ]
+  },
+  "rag": {
+    "Beginner": [
+      [
+        "What does the generation step produce after supporting passages are found?",
+        "A written answer using those passages.",
+        "answer/text/reply"
+      ],
+      [
+        "What does searching external documents add to a model's available material?",
+        "Relevant information from those documents.",
+        "information/evidence/passage"
+      ],
+      [
+        "In a RAG session, what is the user's query?",
+        "The question used to find evidence and request an answer.",
+        "question"
+      ],
+      [
+        "What is context assembly?",
+        "Choosing and arranging passages with the question for the answer writer.",
+        "passage/evidence",
+        "arranging/choosing/collect"
+      ],
+      [
+        "What does a page label beside a timetable passage let a reader do?",
+        "Open the cited page and inspect the original row.",
+        "page",
+        "inspect/open/verify"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Two bus routes both pass Oak Gate. What must a retrieved row identify before using it to answer a route-number question?",
+        "The row's route number.",
+        "route",
+        "number/id"
+      ],
+      [
+        "A policy assistant is asked for a calculation from two source amounts. What support should accompany its computed total?",
+        "Cite both source amounts and show how they were combined.",
+        "both",
+        "combined/calculation"
+      ],
+      [
+        "A user asks “what about weekends?” after discussing route 7. What information should retrieval preserve from the preceding turn?",
+        "The route 7 reference for the weekend question.",
+        "route/7"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An answer cites two valid passages but one belongs to a different customer's contract. What is wrong beyond ordinary citation correctness?",
+        "The context has the wrong access or applicability scope and should be rejected before use.",
+        "scope/access",
+        "contract/context"
+      ],
+      [
+        "A RAG pipeline retries retrieval with broader terms after zero matches. At what point could that strategy harm answer quality?",
+        "Broader terms may return irrelevant evidence; require sufficient support and abstain if the scope no longer matches.",
+        "irrelevant/scope",
+        "abstain/support"
+      ],
+      [
+        "A team moves evidence after a very long question and still passes retrieval tests. Which interface boundary should be checked for truncation?",
+        "Inspect the final serialized model input to verify the selected evidence actually reaches the writer.",
+        "final/serialized",
+        "evidence/context"
+      ],
+      [
+        "Several answer sentences depend on different manuals. How should a claim-to-source mapping handle mixed support?",
+        "Associate each factual claim with the passage that supports it and flag claims lacking a matching passage.",
+        "each/claim",
+        "passage/support"
+      ],
+      [
+        "A search timeout is mistaken for a genuine empty corpus. What states should be distinguished for a truthful user response?",
+        "Distinguish retrieval unavailable from a completed search with no matching evidence.",
+        "unavailable/timeout",
+        "no match/empty/completed"
+      ]
+    ]
+  },
+  "document-qa": {
+    "Beginner": [
+      [
+        "What is a document revision?",
+        "A particular updated version of a file.",
+        "version/update"
+      ],
+      [
+        "What is OCR used to extract from a scanned page?",
+        "Machine-readable text from its image.",
+        "text"
+      ],
+      [
+        "What does a table column heading tell the reader?",
+        "What values underneath that heading represent.",
+        "value/meaning/represent"
+      ],
+      [
+        "Why keep page numbers when dividing a long handbook?",
+        "They locate each excerpt in the original document.",
+        "locat/find/trace"
+      ],
+      [
+        "What is the question in “Where do I collect the key?” asking the document to supply?",
+        "The key collection location.",
+        "location/place/where"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A form says “see Appendix B for exceptions.” What other section may need retrieval to answer accurately?",
+        "Appendix B and its exceptions.",
+        "appendix b"
+      ],
+      [
+        "A document has printed page 10 at PDF viewer index 12. How should the displayed citation avoid confusion?",
+        "Include the printed page label and viewer location or a direct link.",
+        "printed",
+        "viewer/link"
+      ],
+      [
+        "A heading names “Junior membership” and a paragraph says £12. Which membership does this fee apply to?",
+        "Junior membership.",
+        "junior"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A scanned form uses a tick in one of two boxes. OCR extracts both labels but loses the tick. What evidence should control the answer?",
+        "Check the page image or layout-aware extraction for the selected box before asserting the choice.",
+        "image/layout",
+        "box/selected"
+      ],
+      [
+        "A handbook passage is translated for a user. How can readers verify both the translation and the source words?",
+        "Show the translation alongside a citation to the versioned original-language span.",
+        "original",
+        "citation/span"
+      ],
+      [
+        "A document contains two dated amendments to the same clause. What handling prevents the first matching sentence becoming an obsolete answer?",
+        "Resolve amendment precedence by effective dates and cite the applicable clause version.",
+        "date",
+        "version/clause/precedence"
+      ],
+      [
+        "A high-quality Q&A model appears to know answers before any pages are supplied. Which adversarial fixture tests source dependence?",
+        "Use a fictional handbook with changed values and require answers and citations to follow its supplied text.",
+        "fictional/changed",
+        "citation/source"
+      ],
+      [
+        "A citation highlights ten paragraphs for one numeric claim. How would you assess explanation precision without rewarding tiny misleading snippets?",
+        "Require the smallest sufficient span containing the value, subject and conditions needed to interpret it.",
+        "value",
+        "subject/condition"
+      ]
+    ]
+  },
+  "grounding": {
+    "Beginner": [
+      [
+        "What is contradiction when comparing an answer with a policy?",
+        "The answer and policy make incompatible claims.",
+        "incompatible/conflict/opposite"
+      ],
+      [
+        "What does provenance identify about a claim?",
+        "Where its supporting information came from.",
+        "source/origin/where"
+      ],
+      [
+        "A passage says fee £4. Is “the fee is £4” directly supported for that same service?",
+        "Yes, the stated fee matches the passage.",
+        "yes/matches"
+      ],
+      [
+        "What does quoting a passage do?",
+        "Reproduces its exact words.",
+        "exact/verbatim/original"
+      ],
+      [
+        "What does a qualification such as “for unopened items” add to a claim?",
+        "A condition limiting where the claim applies.",
+        "condition/limit"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A membership rule says only adults can sponsor a guest. A summary says any member can. Which category has been broadened improperly?",
+        "The summary expands adult sponsors to all members.",
+        "adult",
+        "all/any"
+      ],
+      [
+        "A menu lists two prices but gives no delivery estimate. What part of a price-and-delivery question can be answered immediately?",
+        "The listed price information.",
+        "price"
+      ],
+      [
+        "A notice says a counter “usually closes at five.” Can the reply promise a guaranteed 5 pm closing every day? Explain.",
+        "No. Usually allows exceptions and cannot support a guarantee.",
+        "usually/exception",
+        "guarantee"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A grounding checker approves an answer whenever it and the evidence share many words. Give a failure case that exposes this rule.",
+        "Opposite claims can share words, such as “refunds allowed” and “refunds never allowed”; check negation and actual entailment.",
+        "opposite/negation",
+        "allowed/refund"
+      ],
+      [
+        "A reliable article accurately describes another branch's return policy. Why could every sentence still be unsuitable for this customer?",
+        "The source's branch scope differs from the customer's applicable branch.",
+        "branch",
+        "scope/applicab"
+      ],
+      [
+        "A quoted policy leaves whether a special order qualifies genuinely ambiguous. What would a defensible answer need to communicate?",
+        "Explain the ambiguity, state the supported conditions and ask for clarification or an authoritative ruling.",
+        "ambiguity/uncertain",
+        "clarification/authoritative"
+      ],
+      [
+        "A checker gives a correct factual answer full marks although it cites an unrelated document. Which two independent qualities must the score distinguish?",
+        "Answer correctness and support from the cited evidence.",
+        "correctness/accuracy",
+        "support/citation"
+      ],
+      [
+        "A frequently refreshed source changes after an answer has been issued. How can later reviewers judge whether the claim was supported at the time?",
+        "Preserve the source version or snapshot and answer timestamp for the original check.",
+        "version/snapshot",
+        "time"
+      ]
+    ]
+  },
+  "ai-evaluation": {
+    "Beginner": [
+      [
+        "What is a test case in an evaluation sheet?",
+        "One example input with a way to judge its outcome.",
+        "input/example",
+        "judge/expected"
+      ],
+      [
+        "What is the reference answer used for?",
+        "Comparing the system's answer with an accepted outcome.",
+        "compare/comparing/expected"
+      ],
+      [
+        "If an assistant passes zero of four cases, what is its pass rate?",
+        "Zero percent.",
+        "zero/0"
+      ],
+      [
+        "What is a baseline system?",
+        "A reference system used for comparison.",
+        "reference/comparison"
+      ],
+      [
+        "What does the word criterion mean in a grading rubric?",
+        "One condition used to judge the response.",
+        "condition/rule/standard"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A staffer counts eight factual answers and two clarifying replies. How should a clarification be scored if the reference explicitly requires asking for a missing date?",
+        "Count the justified clarification as correct.",
+        "correct/accept/pass"
+      ],
+      [
+        "A test sheet contains ten exact duplicates of the same question. What effect can that have on the overall score?",
+        "It gives that one behavior extra weight.",
+        "weight/overrepresent"
+      ],
+      [
+        "A team wants to see whether response length decreased. Which measured quantity should it record separately from correctness?",
+        "Word or token count per response.",
+        "word/token/length"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An evaluation metric accepts paraphrases only if they exactly match a reference string. Which error will it make and how can you detect it?",
+        "It rejects correct alternative wordings; inspect labeled paraphrase pairs or use a suitable semantic rubric.",
+        "reject",
+        "paraphrase/wording"
+      ],
+      [
+        "A new assistant costs more but resolves difficult tickets more often. How would you present a decision without collapsing everything into one unexplained number?",
+        "Report quality by difficulty alongside cost per successful resolution and explicit acceptance thresholds.",
+        "difficulty",
+        "cost"
+      ],
+      [
+        "Two weekly evaluations use different case mixtures. What normalization or control would support a quality comparison over time?",
+        "Evaluate both releases on a fixed benchmark or report matched weighted subgroup results.",
+        "fixed/matched",
+        "benchmark/subgroup"
+      ],
+      [
+        "A judge gets examples from the actual test set as calibration material. What separation prevents optimistic estimates?",
+        "Reserve separate calibration and final evaluation cases, grouped to avoid near-duplicate leakage.",
+        "separate",
+        "calibration/leakage"
+      ],
+      [
+        "A counter assistant fails on one rare but irreversible action. Why can ten thousand easy successes be insufficient release evidence?",
+        "Critical irreversible failures need their own constrained acceptance criteria and targeted tests.",
+        "critical/irreversible",
+        "criteri/test"
+      ]
+    ]
+  },
+  "ai-privacy": {
+    "Beginner": [
+      [
+        "What is a recipient when data is sent to an external AI service?",
+        "The service or party receiving the data.",
+        "service/receiv"
+      ],
+      [
+        "What does a redacted phone number look like conceptually?",
+        "Its actual digits are removed or masked.",
+        "removed/masked/hidden"
+      ],
+      [
+        "What is an account scope in an order lookup?",
+        "The group of records that account may access.",
+        "record/access"
+      ],
+      [
+        "Which text should be treated as untrusted when a user uploads a PDF?",
+        "The text contained in the uploaded PDF.",
+        "uploaded/document/pdf"
+      ],
+      [
+        "What is consent to a specific data use?",
+        "Informed permission for that stated use.",
+        "permission/agree"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A customer voice note names a neighbour. Which task check decides whether the name belongs in an outgoing transcript?",
+        "Whether that name is necessary and authorized for the stated task.",
+        "necessary/needed",
+        "authorized/permission"
+      ],
+      [
+        "An online model is disabled. A local lesson still asks for a name. Where should data handling be checked even without a model call?",
+        "Check local storage and logs for unnecessary retention.",
+        "storage",
+        "log"
+      ],
+      [
+        "A staff member can view orders but cannot export them in bulk. Which permission needs checking for a CSV download?",
+        "A separate bulk export permission.",
+        "export"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A customer authorizes translation of one receipt. Why is the same receipt's later use in a shared evaluation dataset a separate decision?",
+        "Translation consent covers a specific purpose; evaluation reuse requires appropriate permission and handling for that purpose.",
+        "purpose",
+        "permission/consent"
+      ],
+      [
+        "A private document is redacted after it has already been embedded and cached. What residual artifacts need review?",
+        "Review existing embeddings, cached passages and derived records for retained information.",
+        "embedding",
+        "cache/derived"
+      ],
+      [
+        "A shared assistant uses private chat history to personalize public answers. What test can expose cross-user leakage invisibly caused by that history?",
+        "Plant a distinctive detail in one account and query from another account without authorized access.",
+        "account",
+        "distinctive/planted"
+      ],
+      [
+        "An administrator can view private traces for troubleshooting. What controls make this access accountable and proportionate?",
+        "Restrict trace access by role and purpose, audit its use and limit retention.",
+        "access/role",
+        "audit/retention"
+      ],
+      [
+        "A document says “call the approved email tool.” The tool is on an allowlist. Why are destination and content checks still needed?",
+        "An allowed tool can send unauthorized data to an unauthorized recipient; validate target, payload and caller scope.",
+        "recipient/target",
+        "payload/data"
+      ]
+    ]
+  },
+  "linux": {
+    "Beginner": [
+      [
+        "In the path /library/loans/today.csv, what is the parent directory of today.csv?",
+        "/library/loans is its parent directory.",
+        "loans"
+      ],
+      [
+        "What does a directory hold?",
+        "Names of files and other directories.",
+        "files/folders/directories"
+      ],
+      [
+        "What is a process ID used to distinguish?",
+        "One running process from another.",
+        "running/process"
+      ],
+      [
+        "What does changing directory do for a shell session?",
+        "Sets its current folder for relative paths.",
+        "current/working"
+      ],
+      [
+        "What does standard output carry when a program prints a receipt line?",
+        "The program's normal printed output.",
+        "normal/printed/text"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "The file is named Sales.csv, but a program on a case-sensitive filesystem requests sales.csv. Why can the lookup fail?",
+        "The capitalization differs, so the names identify different paths.",
+        "capital/case"
+      ],
+      [
+        "A machine shows a ticket process and a database process. Why should troubleshooting target the identified printer process carefully?",
+        "Stopping the database would interrupt unrelated storage work.",
+        "database",
+        "storage/unrelated"
+      ],
+      [
+        "A scheduled job starts before its network share is mounted. What dependency should its startup check?",
+        "Verify that the required share is mounted and readable before loading the plan.",
+        "share/mount",
+        "readable/available"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A service can read a file's permissions but cannot traverse one containing directory. What distinct permission on the ancestor matters?",
+        "Directory search or execute permission permits traversal to the file.",
+        "search/execute",
+        "travers"
+      ],
+      [
+        "Two separate paths refer to the same underlying file. Why can counting filenames overstate the number of independent data copies?",
+        "Links can point to the same underlying file data, leaving no independent backup.",
+        "link/same",
+        "backup/independent"
+      ],
+      [
+        "A process consumes high CPU but its log file receives nothing. Why is adding file permissions an unsupported first diagnosis?",
+        "CPU activity and logging are separate behaviors; inspect the running process and its configured output destination.",
+        "process",
+        "output/destination"
+      ],
+      [
+        "A startup configuration references a secret file through an inherited environment variable that exists only in a terminal. Which reproducibility test isolates the mismatch?",
+        "Run under a clean service environment with only documented variables and verify the configured path.",
+        "service/environment",
+        "variable/path"
+      ],
+      [
+        "An operator redirects output and loses diagnostic errors. Which two streams should runbooks specify separately when preserving a failure report?",
+        "Standard output and standard error.",
+        "standard output/stdout",
+        "standard error/stderr"
+      ]
+    ]
+  },
+  "docker": {
+    "Beginner": [
+      [
+        "What is a registry used to store and distribute?",
+        "Container images.",
+        "images"
+      ],
+      [
+        "What is the name tag on an image used for?",
+        "A human-readable reference to an image version.",
+        "reference/version/label"
+      ],
+      [
+        "Does stopping a container by itself delete a separate named volume?",
+        "No, the volume persists unless separately removed.",
+        "persist/remain/separate"
+      ],
+      [
+        "What does “build an image” mean in a recipe-based setup?",
+        "Create the packaged environment from build instructions.",
+        "package/environment/build instructions"
+      ],
+      [
+        "A volume is mounted at /app/data. What does that path identify inside the container?",
+        "The location where the attached storage appears.",
+        "location/path/storage"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Two identical containers need different branch names. Where would you supply the branch setting without creating two images?",
+        "Runtime configuration for each instance.",
+        "runtime/configuration"
+      ],
+      [
+        "The team accidentally writes bookings to /tmp while its durable volume is at /app/data. Why does mounting the volume fail to protect those bookings?",
+        "The writes go outside the mounted storage path.",
+        "outside/path/tmp"
+      ],
+      [
+        "One host already uses port 8080. What mapping choice can expose a second container using the same internal port?",
+        "Choose a different available host port.",
+        "different/available",
+        "host"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A rollout uses a newer image and reuses an older local volume. A developer's clean-volume test misses an upgrade defect. What fixture should public release tests cover?",
+        "A representative existing volume with older records upgraded by the new image.",
+        "older/existing",
+        "records/upgrade"
+      ],
+      [
+        "An application stores sessions inside each of three replaceable containers. A user loses their session after a request goes to another copy. What design issue is exposed?",
+        "Session state is instance-local; use shared durable session state or a suitable verified token design.",
+        "local",
+        "shared/token"
+      ],
+      [
+        "A server's volume backups succeed according to an exit code, but the restored app cannot read the bookings. What evidence should define backup success?",
+        "Restore into a compatible environment and verify application-level booking reads.",
+        "restore",
+        "booking/read"
+      ],
+      [
+        "A containerized app can read the host's entire home directory through a mount. What would narrow its reach while keeping a specific input available?",
+        "Mount only the required input path, read-only where possible.",
+        "required/specific",
+        "read-only"
+      ],
+      [
+        "An image upgrade replaces the program but leaves the old dependency in a mounted application directory. Why can deployment inspection show the new image digest yet old behavior?",
+        "The mount hides image files, so runtime contents can differ from the packaged image.",
+        "mount",
+        "hide/override/differ"
+      ]
+    ]
+  },
+  "ci-cd": {
+    "Beginner": [
+      [
+        "What is a commit in a team's code history?",
+        "A recorded version of changes.",
+        "version/snapshot/record"
+      ],
+      [
+        "What does a passing test report for the case it actually ran?",
+        "The observed outcome satisfied that test's expectations.",
+        "expectation/expected/satisfied"
+      ],
+      [
+        "What is a test environment used for before public release?",
+        "Trying the application with controlled data and settings.",
+        "test/controlled"
+      ],
+      [
+        "What does promoting a release to production make it eligible to do?",
+        "Serve real users.",
+        "users/traffic"
+      ],
+      [
+        "Why give every release a version identifier?",
+        "To distinguish and trace exactly which release is running.",
+        "trace/distinguish/identify"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A package passed a build step but failed its policy check. Does a successful build alone make it releasable? Explain.",
+        "No. Required quality gates still failed.",
+        "gate/check",
+        "fail"
+      ],
+      [
+        "A test runner reports a failure but logs only “bad.” What evidence would make fixing the failing case easier?",
+        "Record the input, expected outcome and actual outcome.",
+        "expected",
+        "actual/observed"
+      ],
+      [
+        "Two developers merge changes that separately assume the final seat is free. What integrated behavior should a test exercise?",
+        "Competing bookings for that last seat should allow only one success.",
+        "seat",
+        "one/single"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A deployment pipeline can promote an artifact even though a required test job was skipped. What status policy prevents false green releases?",
+        "Require explicit success for every mandatory gate and treat missing or skipped evidence as incomplete.",
+        "success",
+        "missing/skipped"
+      ],
+      [
+        "A staging kiosk uses a different timezone and release times shift by a day in production. Which configuration variation should release checks include?",
+        "Exercise representative production timezone and date-boundary conditions with known expected dates.",
+        "timezone",
+        "date/boundary"
+      ],
+      [
+        "A pipeline rolls back source but not a separately versioned template. What release record would support full recovery?",
+        "Record the compatible set of artifact and template versions as one release manifest.",
+        "artifact",
+        "template/version"
+      ],
+      [
+        "Two release jobs promote different packages simultaneously. What could prevent the deployment record describing A while kiosks run B?",
+        "Serialize promotions or compare-and-set the release pointer and record the actual deployed digest.",
+        "serialize/atomic/compare",
+        "digest/version"
+      ],
+      [
+        "A developer disables one intermittent acceptance case to accelerate delivery. What evidence would justify replacing that check with a narrower reliable one?",
+        "Demonstrate the replacement catches the same critical failure on controlled fixtures and passes stable valid cases.",
+        "failure",
+        "stable/valid"
+      ]
+    ]
+  },
+  "cloud": {
+    "Beginner": [
+      [
+        "What is uploading a photo to object storage?",
+        "Sending and saving the photo as a named object.",
+        "saving/storing/named"
+      ],
+      [
+        "What does downloading a photo require from a storage service?",
+        "Reading and transferring the stored object.",
+        "read/transfer"
+      ],
+      [
+        "Why choose a region deliberately when storing club photos?",
+        "Location affects access time and where the files reside.",
+        "location/time/latency"
+      ],
+      [
+        "What is a backup intended to support after accidental deletion?",
+        "Restoring the lost data.",
+        "restore/restoring/recover"
+      ],
+      [
+        "Which identity should a website use for its own automated requests?",
+        "An application or service identity.",
+        "service/application"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A curator overwrites front.jpg and wants yesterday's photo. Which storage feature could help if enabled beforehand?",
+        "Object version history or a prior backup.",
+        "version/backup"
+      ],
+      [
+        "Most users view previews, and originals are ten times larger. Which asset should the public catalogue initially load?",
+        "Serve a smaller thumbnail or preview, keeping the original for explicit access.",
+        "thumbnail/preview"
+      ],
+      [
+        "The app reads published photos but fails to upload new ones. Is this necessarily a defect for a read-only role? Explain.",
+        "No. Denying upload is expected for a read-only identity.",
+        "expected/read-only/denying"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A multi-region system writes captions in two places and readers see different latest text. What data property should the design specify?",
+        "Define consistency and conflict resolution for concurrent caption updates.",
+        "consistency/conflict",
+        "updates/caption"
+      ],
+      [
+        "A photo object is private but its preview copy is public. Why can access review limited to originals miss a disclosure?",
+        "Derivatives can reveal the same private content and need their own permissions.",
+        "derivative/preview/copy",
+        "permission"
+      ],
+      [
+        "Storage is cheap but sending many high-resolution photos out of a region is costly. Which component of unit cost deserves separate accounting?",
+        "Outbound or inter-region data transfer per delivered image.",
+        "transfer/egress",
+        "image/region"
+      ],
+      [
+        "A regional outage makes the catalogue unavailable though photos survive elsewhere. What recovery test would verify more than file durability?",
+        "Restore catalogue metadata, routing and authorized reads in a second available location.",
+        "catalogue/metadata",
+        "routing/read"
+      ],
+      [
+        "A team relies on a hosted database's default backups. Which target and measurement determine whether those backups satisfy an event-booking service?",
+        "Specify acceptable data loss and recovery time, then measure both in a restore rehearsal.",
+        "data loss",
+        "recovery time/restore"
+      ]
+    ]
+  },
+  "app-deployment": {
+    "Beginner": [
+      [
+        "What is a software version in a release comparison?",
+        "An identifiable edition of the application.",
+        "edition/version/release"
+      ],
+      [
+        "What is a traffic router deciding between two healthy versions?",
+        "Which instance receives each incoming request.",
+        "instance/version/request"
+      ],
+      [
+        "What does an unhealthy response indicate about the tested check?",
+        "The checked condition was not satisfied.",
+        "condition/failed/fail"
+      ],
+      [
+        "Why store a known-good release before replacing it?",
+        "It provides a rollback target.",
+        "rollback/restore"
+      ],
+      [
+        "What does evaluating the candidate in staging mean?",
+        "Trying it in a pre-release environment.",
+        "pre-release/test/staging"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Three of four app copies are ready. How many should receive new customer traffic under a readiness-based rule?",
+        "Three copies.",
+        "three/3"
+      ],
+      [
+        "The first rollout tests only staff accounts. Which risk remains for ordinary lunch buyers?",
+        "Staff traffic may miss ordinary users' data, permissions or workload patterns.",
+        "staff/representative",
+        "user/workload"
+      ],
+      [
+        "A release went out at noon and errors rose at 11:50. Why is deployment timing alone weak evidence of causation?",
+        "The error increase began before the deployment.",
+        "before/earlier"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A mixed fleet writes orders in two formats. What behavior should readers demonstrate before increasing the share of new writers?",
+        "Readers should correctly handle both old and new formats on real representative records.",
+        "both/old",
+        "new"
+      ],
+      [
+        "A canary gets few weekend orders, so a clean one-hour run contains no refund attempts. Which release conclusion remains untested?",
+        "Refund behavior on the candidate remains unmeasured until relevant cases run.",
+        "refund",
+        "untested/unmeasured/no"
+      ],
+      [
+        "Database writes succeed during a rollout, but background invoice workers process events twice. Which additional rollout dimension should be coordinated?",
+        "Worker ownership and event idempotency across old and new worker versions.",
+        "worker",
+        "idempoten/duplicate"
+      ],
+      [
+        "An operator wants to redeploy a known image after an outage, but externally supplied configuration changed. Why can the identical image still produce a new failure?",
+        "Runtime configuration is part of effective release behavior and needs compatible version tracking.",
+        "configuration",
+        "version/compatib"
+      ],
+      [
+        "A new app requires ten seconds to warm up during a surge. Replacing every instance simultaneously causes an outage. What capacity-aware sequence reduces the gap?",
+        "Start and verify ready replacements in batches before removing enough old capacity to serve traffic.",
+        "ready",
+        "batch/capacity"
+      ]
+    ]
+  },
+  "secrets": {
+    "Beginner": [
+      [
+        "Is a public product ID usually the secret used to authorize a private service request? Explain.",
+        "No. A product ID identifies an item; a credential authorizes the request.",
+        "identifier/identifies/id",
+        "credential"
+      ],
+      [
+        "What is leaking a secret?",
+        "Exposing its usable value to someone outside the intended access scope.",
+        "exposing/revealing/unauthorized"
+      ],
+      [
+        "What does revoking a key do at the issuing service?",
+        "Disables its future authorized use.",
+        "disable/invalidat/revoke"
+      ],
+      [
+        "What is the consumer of a credential?",
+        "The application or person using the credential.",
+        "application/user/person"
+      ],
+      [
+        "Why use a made-up key in a tutorial?",
+        "Readers can learn the configuration without receiving a usable credential.",
+        "usable/real/credential"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A developer accidentally shares a configuration example containing a live token. How should the public example be corrected?",
+        "Replace the value with a placeholder and rotate the exposed token.",
+        "placeholder",
+        "rotate/revoke"
+      ],
+      [
+        "A successful key test uses a status endpoint but production still cannot unlock lockers. What permission difference might explain it?",
+        "The new key may allow reads but lack unlock permission.",
+        "read",
+        "unlock"
+      ],
+      [
+        "A service reports only “unauthorized.” Which nonsecret metadata could identify an incorrect deployment configuration?",
+        "The deployed environment name and configured key version label.",
+        "environment",
+        "version/label"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two independent integrations share a key and their uses are indistinguishable in audit logs. What would separate responsibility and revocation impact?",
+        "Give each integration its own scoped credential and auditable identifier.",
+        "each/separate",
+        "credential/identifier"
+      ],
+      [
+        "A team removes a secret from source, but a built client bundle still contains it. Which artifact boundary was overlooked?",
+        "The distributed frontend build includes the secret; rotate it and move credential use to the server.",
+        "frontend/client",
+        "server/rotate"
+      ],
+      [
+        "An app gets secrets at startup and holds them forever. Why can a successful change in the secret store fail to rotate running clients?",
+        "Running processes retain the old value until they reload or refresh it.",
+        "running/process",
+        "reload/refresh"
+      ],
+      [
+        "A pipeline masks a raw token but exposes its encoded equivalent in diagnostics. What test should secret redaction include?",
+        "Exercise realistic encoded or formatted representations through diagnostic paths and verify they cannot be recovered.",
+        "encoded/format",
+        "diagnostic/recover"
+      ],
+      [
+        "A temporary service credential expires after a short interval. What balance should its renewal system address?",
+        "Renew early enough for continuity while keeping lifetimes and permissions appropriately limited.",
+        "renew/continuity",
+        "limit/lifetime"
+      ]
+    ]
+  },
+  "production-logging": {
+    "Beginner": [
+      [
+        "What is the event name in the record event=parcel_packed?",
+        "parcel_packed.",
+        "parcel_packed"
+      ],
+      [
+        "What is a log level such as warning used to express?",
+        "The intended severity or importance of an event.",
+        "severity/importance"
+      ],
+      [
+        "What does filtering logs by one order ID do?",
+        "Selects records associated with that order.",
+        "order/associated"
+      ],
+      [
+        "What does a log viewer display when events are sorted from oldest to newest?",
+        "Chronological order.",
+        "chronological/time order"
+      ],
+      [
+        "What does aggregating dispatch failure events by day produce?",
+        "A daily summary or count of failures.",
+        "daily/day",
+        "count/summary"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A field called duration contains 400 in one service and 0.4 in another for the same wait. What convention is missing?",
+        "A shared and explicit time unit, such as milliseconds.",
+        "unit/milliseconds/seconds"
+      ],
+      [
+        "A packed event exists with no dispatched event yet. Why shouldn't support immediately promise the order was never dispatched?",
+        "Missing logs can reflect delay or lost events; verify dispatch state.",
+        "delay/missing/lost",
+        "verify/check"
+      ],
+      [
+        "A shop's logs change “carrierTimeout” to “carrier_timeout.” What downstream feature needs updating to keep totals correct?",
+        "The query or aggregation grouping those failure events.",
+        "query/aggregation/dashboard"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A team logs raw answers to debug errors, and a user requests their data be removed. Why does retention alone fail to handle immediate deletion?",
+        "Scheduled retention may keep identifiable copies until expiry; locate and handle affected records according to the deletion policy.",
+        "expiry/retention",
+        "records/cop"
+      ],
+      [
+        "One request fans out into four parallel deliveries. Why can sharing only a single request ID make component timing unclear?",
+        "The ID groups the request but separate span or child identifiers distinguish the parallel operations.",
+        "child/span",
+        "parallel/operation"
+      ],
+      [
+        "A log pipeline drops messages when its queue fills. Why might recorded error counts decrease during the worst outage?",
+        "Overload can discard the evidence itself; monitor dropped-event counters and independent availability signals.",
+        "drop/discard",
+        "counter/independent"
+      ],
+      [
+        "A log formatter allows newline characters in customer input to create fake event lines. How might structured encoding reduce confusion?",
+        "Encode untrusted values as fields and escape control characters so one event remains one record.",
+        "field/encode",
+        "escape/control"
+      ],
+      [
+        "An organization changes its log retention from 30 days to 7. Which investigation capability should be tested before accepting the saving?",
+        "Recreate a realistic delayed incident and verify enough historical evidence remains for diagnosis.",
+        "incident/historical",
+        "diagnos/evidence"
+      ]
+    ]
+  },
+  "monitoring": {
+    "Beginner": [
+      [
+        "What does an alert threshold specify?",
+        "The boundary value that can trigger an alert rule.",
+        "boundary/limit/value"
+      ],
+      [
+        "Which unit might describe a web request's latency?",
+        "Milliseconds or seconds.",
+        "milliseconds/seconds"
+      ],
+      [
+        "What is an observation interval?",
+        "The time between successive measurements.",
+        "time/period"
+      ],
+      [
+        "A count rises from 8 to 11 in one minute. How many new events were counted?",
+        "Three events.",
+        "three/3"
+      ],
+      [
+        "At a kiosk, what is an attempted purchase in the denominator of purchase failure rate?",
+        "Every relevant purchase attempt, including successes and failures.",
+        "success",
+        "fail"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An hourly dashboard uses yesterday's timezone while an incident record uses local time. What needs alignment before comparing the spike?",
+        "Convert both to a common time basis and matching window.",
+        "time",
+        "window/zone"
+      ],
+      [
+        "A monitor records response time but ignores failed requests. Why could a fast chart coexist with an outage?",
+        "It describes only the surviving measured responses and excludes failures.",
+        "exclude/surviv",
+        "failure"
+      ],
+      [
+        "A sales app receives 50 successful and 2 failed orders. What total attempt count belongs under the error fraction?",
+        "52 attempts.",
+        "52/fifty-two"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An alarm fires when memory rises for ten minutes, although the service still meets user goals. What evidence would justify paging rather than recording a warning?",
+        "Demonstrate a link to current or imminent user impact with a validated time-to-exhaustion or service threshold.",
+        "user/impact",
+        "threshold/exhaustion"
+      ],
+      [
+        "Latency percentiles from two locations are averaged into a global p95. Why may that value be wrong, and what should be combined?",
+        "Percentiles are nonlinear; combine underlying distributions or compatible histograms before estimating the global percentile.",
+        "distribution/histogram",
+        "percentile"
+      ],
+      [
+        "A service sends periodic heartbeats even when the checkout dependency stalls. Which probe would detect the more meaningful failure?",
+        "An end-to-end synthetic checkout exercising the dependent operation.",
+        "synthetic/end-to-end",
+        "checkout"
+      ],
+      [
+        "The same dependency outage causes dozens of component alerts. What notification policy can reduce noise without discarding diagnosis?",
+        "Group related alerts by incident or dependency while retaining component-level evidence.",
+        "group",
+        "component/evidence"
+      ],
+      [
+        "A monitor treats all 4xx responses as service failure. What distinction could prevent legitimate user input errors from hiding a real problem?",
+        "Separate expected validation rejections from unexpected or system-induced client errors and inspect rates by endpoint.",
+        "validation/expected",
+        "unexpected/endpoint"
+      ]
+    ]
+  },
+  "performance": {
+    "Beginner": [
+      [
+        "What does throughput count in an ordering app?",
+        "Completed orders per unit of time.",
+        "orders/work",
+        "time"
+      ],
+      [
+        "What is waiting time in a request queue?",
+        "Time spent before processing starts.",
+        "before/start"
+      ],
+      [
+        "What is a cache miss?",
+        "The requested usable result is absent and must be fetched or computed.",
+        "absent/missing/fetch"
+      ],
+      [
+        "In a measured request, which is shorter, 5 milliseconds or 0.5 seconds?",
+        "Five milliseconds.",
+        "five/5"
+      ],
+      [
+        "What is a workload in a performance test?",
+        "The mix and volume of work submitted to the system.",
+        "work/request",
+        "mix/volume/load"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A single order waits 300 ms and executes for 50 ms. Which stage is the larger improvement opportunity in that sample?",
+        "Queue waiting time dominates.",
+        "queue/wait"
+      ],
+      [
+        "A menu cache refreshes every minute. What stale interval could a just-changed menu experience under periodic refresh alone?",
+        "Nearly one minute.",
+        "minute/60"
+      ],
+      [
+        "An optimization speeds up checkout but doubles memory usage. Which user load must be tested before calling it deployable?",
+        "Representative peak concurrent traffic within the actual memory capacity.",
+        "peak/concurrent",
+        "memory"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A profiler itself adds measurable overhead. How could you distinguish a real slowdown from measurement effects?",
+        "Compare instrumented and lightly instrumented runs with matched workloads and use sampling where appropriate.",
+        "compare/matched",
+        "instrument/sample"
+      ],
+      [
+        "An A/B test gives the new code smaller baskets by chance. Why could its lower latency be misleading?",
+        "Basket size changes the amount of work; compare matched sizes or stratify workloads.",
+        "size",
+        "matched/stratif"
+      ],
+      [
+        "A queue receives 120 orders per minute and reliably serves 100. Ignoring abandonment, what growth should you expect in five minutes?",
+        "A backlog increase of 100 orders.",
+        "100/one hundred"
+      ],
+      [
+        "A popular product's cache expires for all workers at noon. Why can origin load jump and which policy can smooth it?",
+        "Simultaneous misses create a stampede; coordinate refresh or stagger expiries.",
+        "simultaneous/stampede",
+        "refresh/stagger"
+      ],
+      [
+        "A database index improves reads but adds write cost. What representative evidence should decide whether the change helps the whole service?",
+        "Measure end-to-end read and write performance under the real operation mix and concurrency.",
+        "read",
+        "write"
+      ]
+    ]
+  },
+  "api-security": {
+    "Beginner": [
+      [
+        "What is a principal in a system checking access rights?",
+        "The identified user or service making the request.",
+        "user/service/caller"
+      ],
+      [
+        "Why is an order number considered an identifier?",
+        "It names which order the operation targets.",
+        "order/target/record"
+      ],
+      [
+        "What does denying a request mean?",
+        "Refusing to carry out the requested operation.",
+        "refus/reject/block"
+      ],
+      [
+        "What does least privilege mean for a parcel lookup role?",
+        "Grant only the permissions needed for the lookup.",
+        "only/minimum"
+      ],
+      [
+        "Which is a read operation, viewing a parcel or changing its address?",
+        "Viewing a parcel.",
+        "view/read"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A customer may view a parcel but only staff may change its route. Which access rule should distinguish the requests?",
+        "Check the permitted action as well as the parcel identity.",
+        "action/operation",
+        "parcel/object"
+      ],
+      [
+        "A token's stated expiry passed yesterday. Which basic authentication test should reject it?",
+        "Verify the credential's expiry time before accepting the request.",
+        "expir"
+      ],
+      [
+        "An app receives a valid object ID in an unexpected sort expression. Why should order-by choices be allowlisted?",
+        "Sort identifiers can alter the database query and must be restricted to approved fields.",
+        "query/database",
+        "approved/allowlist"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A service authorizes a parent order but returns attachments linked from another tenant. What additional path requires a permission check?",
+        "Check access to each related attachment or constrain the join to the same tenant scope.",
+        "attachment/related",
+        "tenant/access"
+      ],
+      [
+        "A public endpoint returns different messages for nonexistent and unauthorized private order IDs. What information could enumeration reveal?",
+        "It may reveal which private orders exist; choose a disclosure policy and consistent responses.",
+        "exist",
+        "response/disclosure"
+      ],
+      [
+        "A limit of ten simultaneous reports is enforced on the browser. An API caller bypasses the UI. Which boundary must own resource admission?",
+        "Enforce the concurrency limit on the server before report work is admitted.",
+        "server",
+        "concurrency/limit"
+      ],
+      [
+        "An account sends many cheap requests and one expensive report. Why might one identical request quota misrepresent load?",
+        "Operations consume unequal resources; use weighted budgets or separate limits for expensive work.",
+        "resource/unequal",
+        "weighted/separate"
+      ],
+      [
+        "A gateway validates tokens and forwards a user header to an internal service. What stops callers forging that identity on a direct internal request?",
+        "Restrict trusted gateway paths and authenticate or verify the identity assertion at the receiving boundary.",
+        "gateway/trusted",
+        "authenticate/verify"
+      ]
+    ]
+  },
+  "testing": {
+    "Beginner": [
+      [
+        "What is an assertion in a test for one remaining bag?",
+        "A check that the observed value equals the expected value.",
+        "check/expected"
+      ],
+      [
+        "What is the expected result for buying an item with zero stock under a no-backorder rule?",
+        "The purchase is refused.",
+        "refuse/reject/unavailable"
+      ],
+      [
+        "What does test setup prepare?",
+        "The starting data and environment for the case.",
+        "starting/data/environment"
+      ],
+      [
+        "What is cleanup after a test order used for?",
+        "Restoring or isolating state so later activity is not affected.",
+        "restor/isolat"
+      ],
+      [
+        "What does a test failure indicate about the checked expectation?",
+        "The observed behavior did not satisfy the expected behavior.",
+        "observed/expected/mismatch"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A checkout response has HTTP success but no saved order. What second assertion would expose the defect?",
+        "Reload and verify the expected stored order record.",
+        "stored/saved/record"
+      ],
+      [
+        "A test uses the live clock and sometimes crosses midnight. Which input would make date-boundary cases repeatable?",
+        "Supply a fixed test time or controllable clock.",
+        "fixed/controlled/controllable"
+      ],
+      [
+        "A function passes with quantity 2. Which smallest unavailable quantity tests an empty-stock boundary?",
+        "Zero available stock.",
+        "zero/0"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A fault test triggers real emails to customer addresses. How should boundaries be configured so the recovery logic remains meaningful?",
+        "Isolate delivery with a test recipient or controlled service while preserving realistic success and failure contracts.",
+        "isolate/test",
+        "contract/realistic"
+      ],
+      [
+        "A smoke test succeeds by reading an old cached order. How could it prove the current deployment can persist new data?",
+        "Create a uniquely identified test order and verify that exact record through a fresh read.",
+        "unique/exact",
+        "read"
+      ],
+      [
+        "A suite uses retries to hide occasional checkout failures. Which rates should reporting preserve?",
+        "Report first-attempt failure and eventual pass after retry separately.",
+        "first",
+        "retry/eventual"
+      ],
+      [
+        "A developer adds a test that exactly reproduces a fixed incident. What neighbouring case increases confidence in the general fix?",
+        "Test a meaningful boundary or alternate ordering related to the original failure mechanism.",
+        "boundary/order",
+        "failure/mechanism"
+      ],
+      [
+        "A test asserts the exact wording of every success message when only the order amount is contractually fixed. Why could this inhibit safe change?",
+        "It binds tests to incidental wording; assert the required amount and other actual contract fields.",
+        "wording",
+        "contract/amount"
+      ]
+    ]
+  },
+  "cost": {
+    "Beginner": [
+      [
+        "What is a fixed monthly charge?",
+        "A charge that stays the same over the stated usage range for the month.",
+        "same/fixed"
+      ],
+      [
+        "What is a variable usage charge?",
+        "A cost that changes with consumption.",
+        "consumption/usage"
+      ],
+      [
+        "If each of two successful calls costs 1 unit, how many units were spent?",
+        "Two units.",
+        "two/2"
+      ],
+      [
+        "What is a cost estimate?",
+        "A prediction of likely spending under stated assumptions.",
+        "prediction/expected/likely"
+      ],
+      [
+        "Why specify units when quoting cost per document?",
+        "The reader needs to know how spending and work are measured.",
+        "units/measured/spending"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A budget is 30 units and 18 are spent. How much remains before further reservations?",
+        "12 units.",
+        "12/twelve"
+      ],
+      [
+        "Two providers charge the same per request, but one needs more retries. Which provider can cost more per completed job?",
+        "The provider needing more retries.",
+        "more retries/repeated"
+      ],
+      [
+        "A museum sends the full catalogue for each opening-hours query. What smaller input could serve that specific task?",
+        "The current opening-hours passage with its applicable date.",
+        "opening/hours",
+        "date/current"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A 200-unit optimization project saves 10 units per week with no other changes. When would cumulative savings cover the project cost?",
+        "After 20 weeks.",
+        "20/twenty"
+      ],
+      [
+        "The cheapest model meets quality targets for simple lookups and fails on exception cases. What evidence would justify routing work between models?",
+        "Measure routing errors and quality and cost by difficulty on representative labeled cases.",
+        "routing",
+        "quality/cost"
+      ],
+      [
+        "Caching an answer reduces model cost but its storage may contain private customer facts. What total decision must include more than financial savings?",
+        "Include permission isolation, retention obligations and the risk of serving private data to another user.",
+        "permission/privacy/private",
+        "retention/isolation"
+      ],
+      [
+        "Two teams share an account and one releases a large batch, exhausting the month's budget. What control preserves capacity for time-sensitive work?",
+        "Use per-workload budgets or reservations with a protected allowance for critical requests.",
+        "budget/reservation",
+        "critical/protected"
+      ],
+      [
+        "A sample cost study excludes timed-out requests that still incur provider charges. How should its numerator and denominator change?",
+        "Include all incurred spending while counting only defined successful outcomes in cost per success.",
+        "all/incurred",
+        "successful/success"
+      ]
+    ]
+  },
+  "agents": {
+    "Beginner": [
+      [
+        "What is an action when a helper searches a timetable?",
+        "The search operation it performs.",
+        "search/operation"
+      ],
+      [
+        "Who defines the allowed travel budget in the planning task?",
+        "The user or application's task policy.",
+        "user/policy"
+      ],
+      [
+        "What is the environment an agent observes in a room-booking task?",
+        "The room calendar or booking system it can inspect.",
+        "calendar/booking"
+      ],
+      [
+        "Why is “find a route costing at most 20” easier to check than “find something nice”?",
+        "It gives a measurable price condition.",
+        "measurable/price/limit"
+      ],
+      [
+        "What does reaching a stop condition tell the controller?",
+        "End or hand off the current run.",
+        "end/stop/hand off"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A planner considers a 12-credit bus and an 11-credit train segment under a 20-credit whole-trip budget. Why do individually affordable legs fail together?",
+        "Their total cost is 23 credits, exceeding 20.",
+        "23/twenty-three"
+      ],
+      [
+        "A lookup returns an empty list. What distinction matters before declaring no route exists?",
+        "Distinguish a completed empty search from a failed or incomplete lookup.",
+        "empty",
+        "failed/incomplete"
+      ],
+      [
+        "A traveller changes destination after two searches. Which part of agent state should be reconsidered?",
+        "The goal and prior observations tied to the old destination.",
+        "goal",
+        "observations/destination"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An agent creates a subtask for itself that keeps extending its budget. Where must the nonnegotiable overall limit live?",
+        "In the external controller across all subtasks, outside the agent's ability to enlarge it.",
+        "controller",
+        "all/subtasks"
+      ],
+      [
+        "A planning score rewards cheap routes and ignores impossible transfers. How could that objective produce a bad recommendation and what constraint repairs it?",
+        "A low-cost route may be infeasible; enforce feasible connection times before comparing prices.",
+        "feasible/connection",
+        "time"
+      ],
+      [
+        "An agent requests two long-running tools in parallel but abandons the task after the first answer. What should happen to unfinished work?",
+        "Cancel remaining work when supported and track any external side effects or outstanding costs.",
+        "cancel",
+        "side effects/costs"
+      ],
+      [
+        "One agent sees a discount offer requiring immediate purchase. Why should urgency in the observation not expand its permissions?",
+        "Observations provide facts; only authorized policy or the user can grant spending authority.",
+        "observations/facts",
+        "authority/permission"
+      ],
+      [
+        "A test agent can inspect an answer hidden in its simulation configuration. Why will strong test performance misstate real-world capability?",
+        "Privileged access leaks the target state; restrict observations to information the deployed agent could actually obtain.",
+        "leak",
+        "observations/deployed"
+      ]
+    ]
+  },
+  "tool-calling": {
+    "Beginner": [
+      [
+        "In add(item, quantity), what does a function name identify?",
+        "The operation to perform.",
+        "operation/action"
+      ],
+      [
+        "What is a required argument?",
+        "A value the operation needs before it can run.",
+        "required/needs/must"
+      ],
+      [
+        "A read tool requests today's weather. What should its result contain?",
+        "The observed weather information or a clear lookup error.",
+        "weather/error"
+      ],
+      [
+        "Who actually executes a catalogue lookup after a model proposes it?",
+        "The application or tool service.",
+        "application/service"
+      ],
+      [
+        "What does limiting tool names to an allowed list accomplish?",
+        "Only approved operations can be dispatched.",
+        "approved/allowed",
+        "operation"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A renewal request supplies quantity “many” to a numeric field. What correction is needed before calling the tool?",
+        "Obtain and validate a numeric quantity.",
+        "numeric/number"
+      ],
+      [
+        "A tool result says book BK17 is available at West. Which argument would a follow-up branch-hours tool need?",
+        "The identifier for the West branch.",
+        "west"
+      ],
+      [
+        "A lookup tool needs only an item code. Why avoid sending the full conversation as its argument?",
+        "The code is sufficient and unnecessary conversation details would be exposed.",
+        "sufficient/unnecessary",
+        "conversation/details"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A new tool returns a web page containing another proposed tool call. How should the dispatcher interpret that embedded text?",
+        "Treat it as untrusted result data and require a separately validated, authorized action.",
+        "untrusted/data",
+        "authorized/validated"
+      ],
+      [
+        "A tool proposal passes argument validation but would return 100,000 records. Which second safeguard should operate before execution?",
+        "Enforce result-size or work budgets in addition to the schema checks.",
+        "size/budget"
+      ],
+      [
+        "A dispatcher retries calls by tool name alone. Two legitimate renewals for different loans arrive. Why is that key incorrect?",
+        "The key conflates distinct loans; use an operation identity tied to the intended arguments and caller.",
+        "loan/arguments",
+        "identity/key"
+      ],
+      [
+        "A mail tool accepts a valid address but the model substitutes an unapproved recipient. Which test exercises the right boundary?",
+        "Bind the approved recipient to the action and reject a changed address at dispatch.",
+        "recipient/address",
+        "changed/reject"
+      ],
+      [
+        "Models often omit an optional argument whose default changed in a new tool version. What compatibility test reveals the effect?",
+        "Replay calls without that argument against both versions and compare the actual default behavior.",
+        "without/omit",
+        "versions/default"
+      ]
+    ]
+  },
+  "orchestration": {
+    "Beginner": [
+      [
+        "What first step must finish before approving a newly created invitation proof?",
+        "Generate or prepare the proof to inspect.",
+        "proof"
+      ],
+      [
+        "Which is a state and which is an action: “approved” and “print”?",
+        "Approved is the state and print is the action.",
+        "approved",
+        "print"
+      ],
+      [
+        "What does a blocked job lack at the moment it is waiting?",
+        "A required condition, input or prerequisite.",
+        "prerequisite/condition/input"
+      ],
+      [
+        "What is a terminal state in the life of one print job?",
+        "A final state with no further normal steps.",
+        "final/complete/end"
+      ],
+      [
+        "Why record a job identifier with its stage?",
+        "To know which specific job the stage describes.",
+        "job/identify"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Steps A and B can run independently, but C needs both. Which condition should release C?",
+        "Successful completion of both A and B.",
+        "both",
+        "success/completion"
+      ],
+      [
+        "An ordered job receives an approval event while still in Draft with no proof. Which rule should prevent printing?",
+        "Its transition requires an approved existing proof version.",
+        "proof",
+        "required/transition/version"
+      ],
+      [
+        "A printer failure is permanent because the requested paper size is unsupported. Why stop repeated identical attempts?",
+        "Retries cannot change the unsupported paper requirement.",
+        "unsupported/paper",
+        "retries/unchanged"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A delayed “approved” message arrives after the job was cancelled. Which transition guard prevents resurrection?",
+        "Check current state and version and disallow approval of a cancelled job.",
+        "state/version",
+        "cancelled"
+      ],
+      [
+        "One workflow step takes an hour and its worker temporarily loses network contact. Why is a fixed very short claim timeout risky?",
+        "Another worker can take over while the first still runs, causing duplicate external work.",
+        "worker",
+        "duplicate"
+      ],
+      [
+        "A workflow's definition changes while earlier jobs are waiting for approval. What information lets old jobs resume under consistent rules?",
+        "Pin or migrate the workflow definition version recorded with each job.",
+        "version",
+        "workflow/definition"
+      ],
+      [
+        "A payment and print reservation involve separate services. Why is a single local job-state transaction insufficient to guarantee both happened?",
+        "The external services have independent outcomes; use reconciliation and compensation for partially completed steps.",
+        "external/independent",
+        "reconciliation/compensation"
+      ],
+      [
+        "An audit shows states Draft and Printed but no evidence of the approval transition. What should be recorded to investigate the gap?",
+        "Record transition events with previous and next states, proof version and approving actor.",
+        "transition",
+        "actor/version"
+      ]
+    ]
+  },
+  "memory-state": {
+    "Beginner": [
+      [
+        "What does “forget this preference” request from a memory store?",
+        "Remove the stored preference from use.",
+        "remove/delete/forget"
+      ],
+      [
+        "What is a session identifier used to group?",
+        "Actions and state belonging to one session.",
+        "session"
+      ],
+      [
+        "What is state restoration after a restart?",
+        "Loading previously saved state to continue work.",
+        "saved/loading/restore"
+      ],
+      [
+        "A message states “blue scarf.” Which attribute is blue?",
+        "The scarf colour.",
+        "colour/color"
+      ],
+      [
+        "Why put an account ID on a durable preference?",
+        "To associate it with the correct person or account.",
+        "account/person"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A new account opens the same browser after a guest left. Should it inherit the guest's private order history automatically? Explain.",
+        "No. The history belongs to a different identity without authorization.",
+        "different/private",
+        "identity/authorization"
+      ],
+      [
+        "A user changes their preferred language from Hindi to English. Which record should future visits read?",
+        "The current authorized preference for English.",
+        "english"
+      ],
+      [
+        "A checkout checkpoint includes two items and a delivery slot. Why restore them together?",
+        "They describe one consistent basket state for resuming checkout.",
+        "consistent",
+        "basket/state"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A summary says a user “always wants blue” after one basket contained a blue gift. How could a memory system preserve evidence strength?",
+        "Store the observed event and its scope separately from confirmed durable preferences.",
+        "event/scope",
+        "confirmed/preference"
+      ],
+      [
+        "A user updates a profile on a second device while the first holds a stale local copy. How should the first device avoid overwriting the newer preference?",
+        "Compare revisions and refresh or resolve the conflict before writing.",
+        "revision/version",
+        "refresh/conflict"
+      ],
+      [
+        "A service exports durable preferences but excludes temporary sensitive session transcripts. Which restore test ensures separation survives the transfer?",
+        "Restore the preferences into a fresh account scope and verify no private transcript or old basket appears.",
+        "preferences",
+        "transcript/basket"
+      ],
+      [
+        "A memory retrieval query finds an old address with high text similarity. Why is relevance alone insufficient to reuse it for shipping?",
+        "Delivery requires current verified address and user scope, while semantic similarity only signals related text.",
+        "current/verified",
+        "address/scope"
+      ],
+      [
+        "A checkpoint saves a workflow's next step but omits the external operation reference. What recovery risk follows a crash after that external action?",
+        "Recovery cannot reconcile the earlier action and may repeat its side effect.",
+        "reconcile",
+        "repeat/duplicate"
+      ]
+    ]
+  },
+  "automation": {
+    "Beginner": [
+      [
+        "What does an event payload carry in a donation notification?",
+        "Data about that event, such as donation ID and amount.",
+        "donation/event",
+        "data/id"
+      ],
+      [
+        "What is a duplicate notification?",
+        "Another delivery referring to the same underlying event.",
+        "same/event"
+      ],
+      [
+        "What is the goal of recording a receipt status?",
+        "To know whether sending is pending, complete or failed.",
+        "pending/complete/sent/failed"
+      ],
+      [
+        "What does scheduled automation use in place of a new donation event to start work?",
+        "A scheduled time or timer.",
+        "time/schedule"
+      ],
+      [
+        "What does manual review mean for an uncertain automated job?",
+        "A person checks its state before deciding what to do next.",
+        "person/human"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A donor's receipt needs a corrected email address after the first send. Is that automatically the same work as replaying the original notification? Explain.",
+        "It is a changed operation with a new intended recipient or correction.",
+        "changed/new",
+        "recipient/correction"
+      ],
+      [
+        "A batch processor has 10 pending donations and finishes four. How many remain pending if no new ones arrive?",
+        "Six jobs.",
+        "six/6"
+      ],
+      [
+        "A trigger fires whenever a spreadsheet is edited, and the workflow edits the same spreadsheet. What risk needs a guard?",
+        "Its own write can trigger a repeated loop.",
+        "loop/repeat/trigger"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A deduplication record expires after one hour while the provider retries events for a day. What late failure can occur and how should retention be chosen?",
+        "A late duplicate can be processed again; retain identities across the documented retry or replay window.",
+        "duplicate",
+        "window/retain"
+      ],
+      [
+        "An automation processes two event versions with the same business ID but different corrections. What distinction should its identity model preserve?",
+        "Distinguish duplicate deliveries of one version from legitimate later event versions.",
+        "duplicate",
+        "version"
+      ],
+      [
+        "A deadline-triggered job runs in multiple time zones and accidentally sends two reminders when daylight saving time repeats an hour. What scheduling record helps?",
+        "Use a defined zone and a unique occurrence identity for each intended reminder.",
+        "zone",
+        "occurrence/identity"
+      ],
+      [
+        "A job is marked successful after placing a message on a queue, but nobody has yet sent the receipt. Which status distinction matters to the donor?",
+        "Queued acceptance and confirmed receipt delivery are separate outcomes.",
+        "queue",
+        "delivery"
+      ],
+      [
+        "A team claims exactly-once email because its database has a unique job ID. Why is provider behavior still relevant?",
+        "Uniqueness protects local records; external delivery can repeat without idempotency or reconciliation at the provider.",
+        "local",
+        "provider/external"
+      ]
+    ]
+  },
+  "multi-agent": {
+    "Beginner": [
+      [
+        "In a tour-planning team, who collects the reviewers' reports?",
+        "The coordinator.",
+        "coordinator"
+      ],
+      [
+        "What does a common venue identifier help two helpers agree about?",
+        "Which exact venue they describe.",
+        "venue/place"
+      ],
+      [
+        "What does parallel review mean for two independent checks?",
+        "They can run at the same time.",
+        "same time/concurrent/simultaneous"
+      ],
+      [
+        "What is a conflict between two reports?",
+        "Their claims disagree for the same subject and conditions.",
+        "disagree/incompatible"
+      ],
+      [
+        "What is evidence accompanying a review result used for?",
+        "Checking how the result was established.",
+        "check/verify/support"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "The route planner combines “closed Tuesday” and “step-free entrance.” Which additional fact matters before listing it for Tuesday?",
+        "It must actually be open on Tuesday.",
+        "open"
+      ],
+      [
+        "A tour helper returns coordinates for a different venue with the same name. What field could disambiguate the handoff?",
+        "A stable venue ID or verified address.",
+        "id/address"
+      ],
+      [
+        "One agent checks a venue on Monday and the other checks it on Friday. What should the coordinator align before combining their answers?",
+        "The intended visit date and applicable schedule.",
+        "date/schedule"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Four agents vote on an evacuation route, all using the same faulty floor plan. Which property of evidence is missing?",
+        "Independent verified evidence about the actual available route.",
+        "independent",
+        "verified/actual"
+      ],
+      [
+        "A multi-agent plan divides a task by building, but one permit covers all buildings together. What cross-cutting condition must the coordinator check?",
+        "Validate the shared permit limit or scope across the combined plan.",
+        "permit",
+        "combined/shared"
+      ],
+      [
+        "A review result arrives after the coordinator finalized a plan with an older result. How can the system avoid silent inconsistency?",
+        "Version handoffs and invalidate or explicitly revise finalized plans when late evidence changes them.",
+        "version",
+        "revise/invalidat"
+      ],
+      [
+        "A coordinator forwards all shared notes to every helper, including private supplier details. How should the handoff contract limit exposure?",
+        "Share only role-required fields with authorized reviewers and preserve source access scope.",
+        "role/required",
+        "access/authorized"
+      ],
+      [
+        "A system pays two specialist reviewers for every query although most questions require only opening hours. What evaluation would justify selective dispatch?",
+        "Compare routing accuracy, task success and per-query cost against always invoking both reviewers.",
+        "routing/success",
+        "cost"
+      ]
+    ]
+  },
+  "human-approval": {
+    "Beginner": [
+      [
+        "What is the proposed action in “pay invoice 43”?",
+        "Pay the specified invoice.",
+        "pay/payment"
+      ],
+      [
+        "What does a rejection from the reviewer require the workflow to do with the proposed transfer?",
+        "Stop or hold the transfer.",
+        "stop/hold/cancel"
+      ],
+      [
+        "Why show the currency beside an approval amount?",
+        "The currency determines what that amount represents.",
+        "currency/unit/value"
+      ],
+      [
+        "What is an approver's role?",
+        "A person authorized to accept or reject a stated action.",
+        "person/authorized",
+        "accept/reject"
+      ],
+      [
+        "What does “pending review” say about a payment's current status?",
+        "The approval decision has not been made yet.",
+        "pending/awaiting/not been"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A receipt says an employee approved a draft, but gives no version. What cannot be established after the draft changes?",
+        "Which exact draft content the employee approved.",
+        "draft/version/content"
+      ],
+      [
+        "A staff member can review supplier invoices but cannot authorize payments. Which action should remain unavailable to that role?",
+        "Executing or approving the transfer of money.",
+        "transfer/payment/money"
+      ],
+      [
+        "A manager decides an amount is wrong and requests an edit. What should happen before the revised payment is executed?",
+        "Present the corrected amount for approval.",
+        "corrected/revised",
+        "approval"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An approval UI displays a rounded total of 100 but the actual transfer is 100.49. Which binding and presentation issue deserves attention?",
+        "Show the actual amount and precision used for execution and bind approval to that exact value.",
+        "precision/exact",
+        "amount/value"
+      ],
+      [
+        "A manager reviews 20 transactions in one batch and one recipient is later replaced. What contract could allow safe handling of the remaining 19?",
+        "Bind approvals to individual immutable transaction identities or invalidate and reapprove the changed batch.",
+        "individual/batch",
+        "bind/immutable/reapprove"
+      ],
+      [
+        "An automated reminder can trigger a payment again after an approval was consumed. Which state transition should be atomic?",
+        "Mark the approval consumed and initiate the uniquely identified payment execution through a durable coordinated step.",
+        "consumed",
+        "payment"
+      ],
+      [
+        "A company requires two independent signers. Why is counting two clicks by one account insufficient?",
+        "The policy requires distinct authorized identities, not merely two recorded actions.",
+        "distinct",
+        "identities/authorized"
+      ],
+      [
+        "An approver consents under a spending limit later lowered before execution. Which policy evaluation belongs at execution time?",
+        "Recheck current authority and applicable spending limit against the exact transfer.",
+        "current",
+        "limit"
+      ]
+    ]
+  },
+  "agent-evaluation": {
+    "Beginner": [
+      [
+        "What is an observed tool result in a room-search test?",
+        "Data the test tool actually returned during the run.",
+        "returned/observed/data"
+      ],
+      [
+        "What does a benchmark task specify for an agent?",
+        "A goal, starting conditions and criteria for judging the run.",
+        "goal",
+        "criteria/conditions"
+      ],
+      [
+        "What is a prohibited action in a search-only test?",
+        "Creating or modifying a booking.",
+        "creat/modify/book/write"
+      ],
+      [
+        "Why record the initial calendar before the agent acts?",
+        "It provides a baseline for detecting changes.",
+        "baseline/change"
+      ],
+      [
+        "What does checking capacity four mean for a suggested room?",
+        "Verify that it holds at least four people.",
+        "four/4"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A planner returns a suitable room but uses a real purchase tool on the way. What should the action-policy score record?",
+        "A violation for the unauthorized purchase action.",
+        "violation/unauthorized"
+      ],
+      [
+        "An agent checks the calendar twice and the second result shows a booking collision. Which observation should guide its final availability claim?",
+        "The latest applicable verified calendar result.",
+        "latest/current",
+        "calendar"
+      ],
+      [
+        "A search budget permits 10 steps and the helper stops after four with a correct supported answer. Is using fewer than ten necessarily a failure? Explain.",
+        "No. A budget is a maximum; the goal was already met.",
+        "maximum/upper",
+        "goal"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A trajectory evaluator rewards short paths. An agent learns to skip authorization checks to gain points. How should the evaluation priorities change?",
+        "Make authorization a required constraint before optimizing efficiency among compliant runs.",
+        "authorization/compliance",
+        "efficiency/required"
+      ],
+      [
+        "An evaluator compares final room IDs but ignores the user's requested date. Which counterexample tests that omission?",
+        "Present a room available on a different date but unavailable on the requested date and require rejection.",
+        "date",
+        "unavailable/reject"
+      ],
+      [
+        "A sandbox blocks all real writes, concealing whether an agent would send duplicate messages. How can test instrumentation expose the latent behavior?",
+        "Record attempted calls and arguments and count repeated intended sends separately from actual side effects.",
+        "attempted",
+        "repeated/duplicate"
+      ],
+      [
+        "Three scenarios reuse the same room inventory and each agent leaves a booking behind. What experimental defect can distort comparative scores?",
+        "State contamination changes the starting world; reset or isolate fixtures per run.",
+        "state/fixture",
+        "reset/isolate"
+      ],
+      [
+        "A benchmark score jumps after a tool description starts mentioning the ideal answer. What ablation would test whether apparent reasoning improved?",
+        "Remove the leaked hint and rerun matched cases while keeping tools and goals fixed.",
+        "remove/leak",
+        "matched/fixed"
+      ]
+    ]
+  },
+  "llmops": {
+    "Beginner": [
+      [
+        "What is a model identifier recorded in a release?",
+        "A name or version reference for the model used.",
+        "model/version"
+      ],
+      [
+        "What is a prompt revision?",
+        "A changed version of the task instructions.",
+        "changed/version"
+      ],
+      [
+        "What is live monitoring of an AI assistant intended to observe?",
+        "Its actual operational behavior and outcomes over time.",
+        "behavior/outcome/time"
+      ],
+      [
+        "Why record the evaluation dataset version?",
+        "To know which exact questions and references produced the scores.",
+        "questions/reference/cases"
+      ],
+      [
+        "What is the candidate in a model release comparison?",
+        "The proposed new configuration being considered.",
+        "proposed/new"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A team promotes release R6 but answer logs still say R5. Which observation should be checked before comparing quality by version?",
+        "Verify the actual deployed release and trace version labeling.",
+        "actual/deployed",
+        "label/version"
+      ],
+      [
+        "The test guide relies on a deleted museum page. Which asset should be corrected before using that case as a regression gate?",
+        "Update the evaluation reference and its applicable document source.",
+        "reference",
+        "source/document"
+      ],
+      [
+        "A team wants to revisit a weekend failure. Which single-request trace detail separates missing information from a model wording error?",
+        "The actual evidence passages delivered for that request.",
+        "evidence/passage",
+        "request"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A shadow model receives copied live requests for comparison but its output stays hidden. Which risk exists even without user-visible replies?",
+        "Private inputs may reach an unapproved model service; enforce the same data-access and provider policies.",
+        "private/data",
+        "provider/policy"
+      ],
+      [
+        "A vendor changes safety behavior between releases and the overall pass rate remains flat. What slice-specific evidence could reveal an important shift?",
+        "Compare refusal quality on allowed and disallowed requests separately under consistent labels.",
+        "refusal",
+        "allowed/disallowed"
+      ],
+      [
+        "An evaluation threshold is repeatedly adjusted after viewing the candidate score. How could the release process preserve a meaningful gate?",
+        "Predefine the gate on independent calibration evidence and evaluate candidates on held-out cases.",
+        "predefined/predefine",
+        "held-out/independent"
+      ],
+      [
+        "Some traces are unreadable because every component records a different version label for the same release. What mapping would support reliable diagnosis?",
+        "Maintain a release manifest linking component-specific versions to one release identity.",
+        "manifest/mapping",
+        "identity/version"
+      ],
+      [
+        "A rollback succeeds operationally but restores an old privacy defect. What should recovery eligibility require beyond historical uptime?",
+        "Verify the rollback configuration still meets current privacy policies and critical evaluation gates.",
+        "privacy/policy",
+        "gate/evaluation"
+      ]
+    ]
+  },
+  "advanced-rag": {
+    "Beginner": [
+      [
+        "What is lexical retrieval looking for in a text query?",
+        "Words, phrases or exact identifiers.",
+        "words/phrases/identifiers"
+      ],
+      [
+        "What is a candidate pool?",
+        "The collected results available for later selection or reranking.",
+        "results/candidates"
+      ],
+      [
+        "What does a result list's rank express?",
+        "Its position in an ordering.",
+        "position/order"
+      ],
+      [
+        "What is a query rewrite?",
+        "Another wording of a search request intended to improve retrieval.",
+        "wording/rephrase/search"
+      ],
+      [
+        "What is a labeled relevant document used for in a retrieval experiment?",
+        "Checking whether search found a known useful source.",
+        "checking/measure",
+        "source/found"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An exact search returns A and B, and meaning search returns B and C. How many distinct candidate documents remain after merging duplicates?",
+        "Three documents, A, B and C.",
+        "three/3"
+      ],
+      [
+        "A ranker moves the correct repair note from eighth to second. What changes for an interface showing only the top three?",
+        "The correct note becomes visible.",
+        "visible/shown/top three"
+      ],
+      [
+        "A query rewrite adds “pump” to a question about “E17.” What should be retained to preserve the original identifier?",
+        "Keep E17 intact in the search or an original-query branch.",
+        "e17"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A user asks two related questions: “Which part and what torque?” One passage has the part and another has the torque. Which retrieval metric could miss the failure to cover both?",
+        "Single-hit success can pass with one passage; evaluate support coverage for each required subquestion.",
+        "single/one",
+        "coverage/subquestion"
+      ],
+      [
+        "A reranker is trained on top results from an old retriever. A new retriever supplies a different candidate distribution. What real-world risk should offline testing reproduce?",
+        "Ranking quality may shift on those new candidates; evaluate the reranker on realistic new-retriever pools.",
+        "new/candidate",
+        "quality/ranking"
+      ],
+      [
+        "A fusion rule rewards documents appearing in both branches, but several documents are duplicated under different IDs. How can identity normalization change the score meaningfully?",
+        "Map equivalent passages to a common identity before fusion so duplicate IDs do not split or multiply votes.",
+        "identity/duplicate",
+        "fusion/votes"
+      ],
+      [
+        "A staff team asks whether an extra ranking stage earns its latency cost. Which paired measurements provide decision evidence?",
+        "Compare answer or passage quality and end-to-end latency on the same test queries with the stage on and off.",
+        "quality",
+        "latency"
+      ],
+      [
+        "A query includes an access-sensitive building name and an external rewriting service is optional. What must routing decide before issuing the rewrite?",
+        "Determine whether the data may leave its authorized boundary and use an approved local route if required.",
+        "authorized/data",
+        "local/boundary"
+      ]
+    ]
+  },
+  "ai-architecture": {
+    "Beginner": [
+      [
+        "Which part of a help desk identifies a signed-in tenant?",
+        "The authentication or identity component.",
+        "authentication/identity"
+      ],
+      [
+        "What is a responsibility of the answer-writing component?",
+        "Compose a user-readable reply using the permitted facts.",
+        "reply/answer"
+      ],
+      [
+        "What does a fallback response provide during a component outage?",
+        "A limited but usable alternative response.",
+        "alternative/limited/usable"
+      ],
+      [
+        "Why attach a source reference to a maintenance status?",
+        "To locate and verify the origin of that status.",
+        "origin/source/verify"
+      ],
+      [
+        "What is a component dependency?",
+        "Another component or service it relies on to do its job.",
+        "relies/needs/uses"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A housing policy notice is public but work orders are private. Which route should “when are bins collected?” normally use?",
+        "The public notice lookup route.",
+        "public/notice"
+      ],
+      [
+        "A repair-history service returns an unavailable status. Which wording would preserve the meaning to a tenant?",
+        "Report that current repair history cannot be retrieved now.",
+        "cannot retrieve/unavailable/cannot be retrieved"
+      ],
+      [
+        "A search system returns text for two flats with identical boiler types. Which identifier must remain attached to private repair records?",
+        "The authorized tenant or flat identifier.",
+        "tenant/flat",
+        "identifier/id"
+      ]
+    ],
+    "Advanced": [
+      [
+        "The retriever returns an empty evidence list while the private lookup times out. Why should these be distinct interface outcomes?",
+        "Empty results can follow a completed search; timeout leaves the underlying record status unknown.",
+        "completed/empty",
+        "unknown/timeout"
+      ],
+      [
+        "A secure component accepts only approved fields, but a downstream debug endpoint exposes the raw input. How should an architecture review follow the information flow?",
+        "Trace every copy and output path, including diagnostics, and enforce access and minimization at each boundary.",
+        "trace/copy",
+        "diagnostic/boundary"
+      ],
+      [
+        "A system routes every tenant query through an expensive model even when a confirmed public rule directly answers it. What policy could cut cost while preserving correctness?",
+        "Route verified straightforward public lookups to direct evidence and evaluate routing errors before wider use.",
+        "verified/public",
+        "evaluate/routing"
+      ],
+      [
+        "A housing app requires replies within two seconds while a dependency can retry for ten. How should component deadlines relate to the user-facing contract?",
+        "Allocate bounded component timeouts inside the overall deadline and choose a truthful fallback when time runs out.",
+        "timeout/deadline",
+        "fallback"
+      ],
+      [
+        "Three teams independently change the meaning of unknown, unavailable and forbidden. How would executable interface examples protect the user experience?",
+        "Use shared contract tests for each distinct outcome and verify the UI renders the corresponding authorized explanation.",
+        "contract/test",
+        "distinct/outcome"
+      ]
+    ]
+  }
+}

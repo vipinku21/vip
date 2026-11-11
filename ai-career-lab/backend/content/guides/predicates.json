@@ -1,0 +1,61 @@
+{
+  "predicates": {
+    "title": "Can Meera reserve the last library book?",
+    "story": "Meera taps Reserve on a library app. Her card is valid and the shelf shows one copy. The librarian asks a question you can answer without a computer. Does Meera have a valid card AND is at least one copy available? A rule you can ask about a particular person or item and answer yes or no is called a predicate.",
+    "steps": [
+      "Look at the facts for this request. The card is valid. The shelf count is 1. Neither fact alone settles whether Meera can reserve the book.",
+      "Ask the stock question first. Is 1 greater than 0? Yes. Python writes that answer as True. With 0 copies the same question gives False.",
+      "Join the two answers with AND. Both are yes, so the whole rule returns True. If Meera's card expired yesterday, the whole rule returns False even with a book on the shelf.",
+      "The yes-or-no answer tells the app whether to offer a reservation. Actually creating the reservation is a separate action. This lets the library reuse the question to filter a list of books without placing holds."
+    ],
+    "outcome": "Translate an everyday rule into a precise yes-or-no test, check its boundary, and use that answer to choose, filter or validate items.",
+    "terms": [
+      [
+        "Predicate",
+        "A question about an item with a yes-or-no answer, such as “Does this book have any available copies?”"
+      ],
+      [
+        "Boolean",
+        "The kind of value used for a yes-or-no answer. In Python the two values are True and False."
+      ],
+      [
+        "Input",
+        "A fact handed to the rule, such as a shelf count of 1."
+      ],
+      [
+        "Boundary",
+        "The point where the answer changes. For a positive number of copies, the change happens between 0 and 1."
+      ],
+      [
+        "Filter",
+        "Keep each item for which a question answers yes. The other items are left out of the result."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The catalogue offers a hold for a title with zero copies because the stock test reads copies >= 0.",
+        "action": "Change the test to copies > 0.",
+        "reason": "Zero means the shelf is empty. The >= symbol includes zero, while > requires at least one copy for a nonnegative whole-number count.",
+        "check": "Try counts of 0 and 1 with a valid card. The first should decline and the second should accept.",
+        "tradeoff": "This rule works for physical copies. A library that permits waiting lists needs a separate rule for joining the queue.",
+        "alternative": "Keep copies >= 0 because the count can never be negative."
+      },
+      {
+        "situation": "A new theatre gives a discount to members OR children under 12. A 40-year-old member is refused.",
+        "action": "Join the member and age tests with or.",
+        "reason": "Either qualifying fact earns this discount. Requiring both excludes adults who are members and children who are guests.",
+        "check": "Test an adult member, a child guest and an adult guest. Only the adult guest should pay full price.",
+        "tradeoff": "An either-condition rule is too broad for an offer reserved exclusively for child members.",
+        "alternative": "Require membership and age below 12 for every discount."
+      },
+      {
+        "situation": "A delivery app receives three parcel weights: 4 kg, 5 kg and an unfilled weight. The locker accepts known weights up to and including 5 kg.",
+        "action": "Check for a missing weight first, then compare each known weight with 5 using <=.",
+        "reason": "A missing measurement cannot establish that a parcel fits. Five is allowed because the posted limit includes the endpoint.",
+        "check": "4 and 5 should qualify, 6 should fail, and an unfilled weight should request a measurement.",
+        "tradeoff": "Measuring an unknown parcel takes time, but silently assigning zero could approve an overweight parcel.",
+        "alternative": "Replace every missing weight with zero, then accept any weight strictly below 5."
+      }
+    ]
+  }
+}

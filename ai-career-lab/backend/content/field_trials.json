@@ -1,0 +1,4202 @@
+{
+  "python-fundamentals": {
+    "context": "A till prints a receipt line. Predict the text shown to the shopper.",
+    "rules": [
+      "Print the result of adding the two numbers.",
+      "Print the two digits side by side as text.",
+      "Print the first number twice, separated by a space."
+    ],
+    "samples": [
+      {
+        "input": "Prices 2 and 3",
+        "values": [
+          "5",
+          "23",
+          "2 2"
+        ]
+      },
+      {
+        "input": "Prices 4 and 1",
+        "values": [
+          "5",
+          "41",
+          "4 4"
+        ]
+      },
+      {
+        "input": "Prices 0 and 7",
+        "values": [
+          "7",
+          "07",
+          "0 0"
+        ]
+      },
+      {
+        "input": "Prices 0 and 0",
+        "values": [
+          "0",
+          "00",
+          "0 0"
+        ]
+      }
+    ]
+  },
+  "variables": {
+    "context": "A badge printer stores an employee ID exactly as it appears on the form.",
+    "rules": [
+      "Keep the ID as text, including leading zeros.",
+      "Convert the ID to a whole number and then back to text.",
+      "Use the number of typed characters as the ID."
+    ],
+    "samples": [
+      {
+        "input": "Typed ID '007'",
+        "values": [
+          "007",
+          "7",
+          "3"
+        ]
+      },
+      {
+        "input": "Typed ID '42'",
+        "values": [
+          "42",
+          "42",
+          "2"
+        ]
+      },
+      {
+        "input": "Typed ID '1'",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Typed ID '00'",
+        "values": [
+          "00",
+          "0",
+          "2"
+        ]
+      }
+    ]
+  },
+  "strings": {
+    "context": "A bakery prints names on cake boxes. Only the outer blank spaces should be removed.",
+    "rules": [
+      "Remove spaces from both ends; preserve internal spaces and letter case.",
+      "Remove every space in the name.",
+      "Remove spaces from the ends and change every letter to lowercase."
+    ],
+    "samples": [
+      {
+        "input": "Name '  Ana Li  '",
+        "values": [
+          "Ana Li",
+          "AnaLi",
+          "ana li"
+        ]
+      },
+      {
+        "input": "Name ' jo '",
+        "values": [
+          "jo",
+          "jo",
+          "jo"
+        ]
+      },
+      {
+        "input": "Name 'LEE'",
+        "values": [
+          "LEE",
+          "LEE",
+          "lee"
+        ]
+      },
+      {
+        "input": "Name 'a b'",
+        "values": [
+          "a b",
+          "ab",
+          "a b"
+        ]
+      }
+    ]
+  },
+  "numbers": {
+    "context": "A grocer packs eggs in boxes of six. The order screen asks how many completely filled boxes can be sent.",
+    "rules": [
+      "Divide by six and round down to a whole box.",
+      "Round up so a partly filled box also counts.",
+      "Report the number of loose eggs left after filling boxes."
+    ],
+    "samples": [
+      {
+        "input": "13 eggs",
+        "values": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "12 eggs",
+        "values": [
+          "2",
+          "2",
+          "0"
+        ]
+      },
+      {
+        "input": "5 eggs",
+        "values": [
+          "0",
+          "1",
+          "5"
+        ]
+      },
+      {
+        "input": "0 eggs",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "conditions": {
+    "context": "A museum sells tickets by age. A child's ticket is £4, a senior ticket £6 and an adult ticket £10.",
+    "rules": [
+      "Charge £4 below age 12, £6 at age 65 or above, otherwise £10.",
+      "Include 12-year-olds in the child rate; keep the senior rule.",
+      "Apply the senior rate only above 65; keep the child rule."
+    ],
+    "samples": [
+      {
+        "input": "Age 11",
+        "values": [
+          "£4",
+          "£4",
+          "£4"
+        ]
+      },
+      {
+        "input": "Age 12",
+        "values": [
+          "£10",
+          "£4",
+          "£10"
+        ]
+      },
+      {
+        "input": "Age 65",
+        "values": [
+          "£6",
+          "£6",
+          "£10"
+        ]
+      },
+      {
+        "input": "Age 70",
+        "values": [
+          "£6",
+          "£6",
+          "£6"
+        ]
+      }
+    ]
+  },
+  "predicates": {
+    "context": "The library accepts a hold when the member has a valid card and at least one copy is available. Decide whether each hold qualifies.",
+    "rules": [
+      "Require both a valid card and a positive copy count.",
+      "Accept if either condition holds.",
+      "Require a valid card and at least two copies."
+    ],
+    "samples": [
+      {
+        "input": "Valid card; 1 copy",
+        "values": [
+          "Accept",
+          "Accept",
+          "Decline"
+        ]
+      },
+      {
+        "input": "Expired card; 2 copies",
+        "values": [
+          "Decline",
+          "Accept",
+          "Decline"
+        ]
+      },
+      {
+        "input": "Valid card; 0 copies",
+        "values": [
+          "Decline",
+          "Accept",
+          "Decline"
+        ]
+      },
+      {
+        "input": "Valid card; 3 copies",
+        "values": [
+          "Accept",
+          "Accept",
+          "Accept"
+        ]
+      }
+    ]
+  },
+  "loops": {
+    "context": "A volunteer counts every donated tin. Zero means an empty crate which the volunteer should walk past.",
+    "rules": [
+      "Add all crate counts, including crates after the first empty one.",
+      "Stop counting at the first empty crate.",
+      "Count nonempty crates instead of tins."
+    ],
+    "samples": [
+      {
+        "input": "Crates [3, 0, 2]",
+        "values": [
+          "5",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "input": "Crates [1, 1]",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "Crates [0, 4]",
+        "values": [
+          "4",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "No crates",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "lists": {
+    "context": "A ticket queue serves one person at a time, in arrival order. Report the name served first.",
+    "rules": [
+      "Take the first name, keeping arrival order.",
+      "Take the most recently added name.",
+      "Sort the names alphabetically and take the first."
+    ],
+    "samples": [
+      {
+        "input": "Arrivals Bea, Ali, Dev",
+        "values": [
+          "Bea",
+          "Dev",
+          "Ali"
+        ]
+      },
+      {
+        "input": "Arrivals Ali, Bea",
+        "values": [
+          "Ali",
+          "Bea",
+          "Ali"
+        ]
+      },
+      {
+        "input": "Arrivals Dev",
+        "values": [
+          "Dev",
+          "Dev",
+          "Dev"
+        ]
+      },
+      {
+        "input": "Arrivals Zara, Mo, Bea",
+        "values": [
+          "Zara",
+          "Bea",
+          "Bea"
+        ]
+      }
+    ]
+  },
+  "tuples": {
+    "context": "A warehouse scanner sends a pair (aisle, shelf). Write the location label as aisle/shelf.",
+    "rules": [
+      "Read the first value as aisle and the second as shelf.",
+      "Swap aisle and shelf.",
+      "Use the aisle number in both positions."
+    ],
+    "samples": [
+      {
+        "input": "Location (2, 7)",
+        "values": [
+          "2/7",
+          "7/2",
+          "2/2"
+        ]
+      },
+      {
+        "input": "Location (3, 3)",
+        "values": [
+          "3/3",
+          "3/3",
+          "3/3"
+        ]
+      },
+      {
+        "input": "Location (0, 4)",
+        "values": [
+          "0/4",
+          "4/0",
+          "0/0"
+        ]
+      },
+      {
+        "input": "Location (9, 1)",
+        "values": [
+          "9/1",
+          "1/9",
+          "9/9"
+        ]
+      }
+    ]
+  },
+  "sets": {
+    "context": "Two classes send attendance lists. The organizer needs the number of different people who attended both.",
+    "rules": [
+      "Count distinct names in the intersection of the lists.",
+      "Count distinct names in either list.",
+      "Count each matching entry in the first list, including duplicates."
+    ],
+    "samples": [
+      {
+        "input": "First [Jo, Jo, Bea]; second [Jo, Mo]",
+        "values": [
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "input": "First [Ali]; second [Ali]",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "First []; second [Mo]",
+        "values": [
+          "0",
+          "1",
+          "0"
+        ]
+      },
+      {
+        "input": "First [Jo, Bea]; second [Mo]",
+        "values": [
+          "0",
+          "3",
+          "0"
+        ]
+      }
+    ]
+  },
+  "dictionaries": {
+    "context": "A reception desk looks up extensions by employee name. A stored blank extension means the phone is pending.",
+    "rules": [
+      "If the name exists, return its stored value; use 'unknown' only for an absent key.",
+      "Treat both a blank stored value and a missing key as 'unknown'.",
+      "Return the name itself whenever it is found."
+    ],
+    "samples": [
+      {
+        "input": "Jo exists with extension 204",
+        "values": [
+          "204",
+          "204",
+          "Jo"
+        ]
+      },
+      {
+        "input": "Bea exists with a blank extension",
+        "values": [
+          "blank",
+          "unknown",
+          "Bea"
+        ]
+      },
+      {
+        "input": "Mo has no entry",
+        "values": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ]
+      },
+      {
+        "input": "Ali exists with extension 0 stored as text",
+        "values": [
+          "0",
+          "0",
+          "Ali"
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "context": "A catering calculator should return the bill, allowing its caller to use the number in another calculation.",
+    "rules": [
+      "Return quantity multiplied by price.",
+      "Print the bill but return no value; the caller receives None.",
+      "Return quantity plus price."
+    ],
+    "samples": [
+      {
+        "input": "3 meals at £4",
+        "values": [
+          "12",
+          "None",
+          "7"
+        ]
+      },
+      {
+        "input": "2 meals at £2",
+        "values": [
+          "4",
+          "None",
+          "4"
+        ]
+      },
+      {
+        "input": "0 meals at £5",
+        "values": [
+          "0",
+          "None",
+          "5"
+        ]
+      },
+      {
+        "input": "1 meal at £7",
+        "values": [
+          "7",
+          "None",
+          "8"
+        ]
+      }
+    ]
+  },
+  "recursion": {
+    "context": "In this folder notation a name is a file and square brackets contain a folder's contents. Count files in the entire tree.",
+    "rules": [
+      "Count one per file and recursively sum each folder's contents.",
+      "Count only files directly inside the outer folder.",
+      "Count every immediate entry of the outer folder, including subfolders."
+    ],
+    "samples": [
+      {
+        "input": "[a, [b, c]]",
+        "values": [
+          "3",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "[[], [d]]",
+        "values": [
+          "1",
+          "0",
+          "2"
+        ]
+      },
+      {
+        "input": "[a, b]",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "[]",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "comprehensions": {
+    "context": "A store wants a new list of discounted prices. Keep prices of £10 or more and subtract £2 from each qualifying price.",
+    "rules": [
+      "Filter using the original price, then subtract £2.",
+      "Subtract £2 first and keep only final prices of £10 or more.",
+      "Filter at £10 but leave prices unchanged."
+    ],
+    "samples": [
+      {
+        "input": "Prices [9, 10, 12]",
+        "values": [
+          "[8, 10]",
+          "[10]",
+          "[10, 12]"
+        ]
+      },
+      {
+        "input": "Prices [15]",
+        "values": [
+          "[13]",
+          "[13]",
+          "[15]"
+        ]
+      },
+      {
+        "input": "Prices [4, 6]",
+        "values": [
+          "[]",
+          "[]",
+          "[]"
+        ]
+      },
+      {
+        "input": "Prices [10, 10]",
+        "values": [
+          "[8, 8]",
+          "[]",
+          "[10, 10]"
+        ]
+      }
+    ]
+  },
+  "file-handling": {
+    "context": "A shop file contains a line for each cash adjustment. Blank lines separate shifts. The report asks for the sum of all signed adjustments.",
+    "rules": [
+      "Skip blank lines and add every signed amount.",
+      "Stop reading at the first blank line.",
+      "Skip blanks and add only positive amounts."
+    ],
+    "samples": [
+      {
+        "input": "Lines 12, blank, -3, 5",
+        "values": [
+          "14",
+          "12",
+          "17"
+        ]
+      },
+      {
+        "input": "Lines blank, 6",
+        "values": [
+          "6",
+          "0",
+          "6"
+        ]
+      },
+      {
+        "input": "Lines 4, 2",
+        "values": [
+          "6",
+          "6",
+          "6"
+        ]
+      },
+      {
+        "input": "Lines -5, 2",
+        "values": [
+          "-3",
+          "-3",
+          "2"
+        ]
+      }
+    ]
+  },
+  "exceptions": {
+    "context": "A stock counter converts a field to an integer. Invalid input must be reported as missing, while a genuine zero remains zero.",
+    "rules": [
+      "Return the converted integer, or missing when conversion fails.",
+      "Replace failed conversions with zero.",
+      "Convert valid values but treat zero as missing too."
+    ],
+    "samples": [
+      {
+        "input": "Text '0'",
+        "values": [
+          "0",
+          "0",
+          "missing"
+        ]
+      },
+      {
+        "input": "Text 'twelve'",
+        "values": [
+          "missing",
+          "0",
+          "missing"
+        ]
+      },
+      {
+        "input": "Text '12'",
+        "values": [
+          "12",
+          "12",
+          "12"
+        ]
+      },
+      {
+        "input": "Text '-2'",
+        "values": [
+          "-2",
+          "-2",
+          "-2"
+        ]
+      }
+    ]
+  },
+  "oop": {
+    "context": "A library models two books as separate objects. Both begin on the shelf. Report how many are available after the actions.",
+    "rules": [
+      "Keep borrowed status separately on each book.",
+      "Share one borrowed flag across both books.",
+      "Ignore returns and keep each borrowed book unavailable."
+    ],
+    "samples": [
+      {
+        "input": "Borrow A",
+        "values": [
+          "1",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "Borrow A, return A",
+        "values": [
+          "2",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Borrow A, borrow B, return A",
+        "values": [
+          "1",
+          "2",
+          "0"
+        ]
+      },
+      {
+        "input": "No action",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      }
+    ]
+  },
+  "modules": {
+    "context": "A program imports a delivery fee from a module. The module's price is per parcel. Compute this batch's charge.",
+    "rules": [
+      "Call the module's public fee function for each parcel.",
+      "Use a copied constant of £2 per parcel, even if the module changes.",
+      "Call the fee function once for the entire batch."
+    ],
+    "samples": [
+      {
+        "input": "3 parcels; module fee £2",
+        "values": [
+          "£6",
+          "£6",
+          "£2"
+        ]
+      },
+      {
+        "input": "2 parcels; module fee £3",
+        "values": [
+          "£6",
+          "£4",
+          "£3"
+        ]
+      },
+      {
+        "input": "1 parcel; module fee £2",
+        "values": [
+          "£2",
+          "£2",
+          "£2"
+        ]
+      },
+      {
+        "input": "0 parcels; module fee £3",
+        "values": [
+          "£0",
+          "£0",
+          "£3"
+        ]
+      }
+    ]
+  },
+  "virtual-environments": {
+    "context": "A developer has two Python projects. Which version of a library will an import find? Assume each named interpreter has one installed version and no shared packages.",
+    "rules": [
+      "Use the library installed for the interpreter running the script.",
+      "Always use the version installed for the system Python.",
+      "Always use the version installed in project A."
+    ],
+    "samples": [
+      {
+        "input": "Run A; A=1, B=2, system=3",
+        "values": [
+          "1",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Run B; A=1, B=2, system=3",
+        "values": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Run system; A=1, B=2, system=3",
+        "values": [
+          "3",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Run B; A=2, B=2, system=2",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      }
+    ]
+  },
+  "git": {
+    "context": "A writer makes one commit after editing a file. Which text enters that commit? Assume the commit command only commits staged changes.",
+    "rules": [
+      "Commit the version last added to the staging area.",
+      "Commit the latest text in the working file.",
+      "Commit the version from the previous commit."
+    ],
+    "samples": [
+      {
+        "input": "Previous A; staged B; edited again to C",
+        "values": [
+          "B",
+          "C",
+          "A"
+        ]
+      },
+      {
+        "input": "Previous A; staged B; working B",
+        "values": [
+          "B",
+          "B",
+          "A"
+        ]
+      },
+      {
+        "input": "Previous A; staged A; working C",
+        "values": [
+          "A",
+          "C",
+          "A"
+        ]
+      },
+      {
+        "input": "Previous B; staged C; working D",
+        "values": [
+          "C",
+          "D",
+          "B"
+        ]
+      }
+    ]
+  },
+  "dsa": {
+    "context": "A screen validates brackets. Round and square brackets must close the most recent unmatched opening bracket of the same kind.",
+    "rules": [
+      "Track a stack of unmatched opening brackets and match types at each close.",
+      "Check only that total opening and closing counts agree.",
+      "Check only that each bracket type has matching counts, ignoring order."
+    ],
+    "samples": [
+      {
+        "input": "Text ([)]",
+        "values": [
+          "Invalid",
+          "Valid",
+          "Valid"
+        ]
+      },
+      {
+        "input": "Text (]",
+        "values": [
+          "Invalid",
+          "Valid",
+          "Invalid"
+        ]
+      },
+      {
+        "input": "Text ] [ (ignoring spaces)",
+        "values": [
+          "Invalid",
+          "Valid",
+          "Valid"
+        ]
+      },
+      {
+        "input": "Text ([])",
+        "values": [
+          "Valid",
+          "Valid",
+          "Valid"
+        ]
+      }
+    ]
+  },
+  "complexity": {
+    "context": "A store compares different products in pairs. Estimate how many comparisons a full scan performs for n products.",
+    "rules": [
+      "Compare each unordered pair once, giving n × (n−1) / 2 comparisons.",
+      "Count each order of the same pair separately, giving n × (n−1).",
+      "Compare every product with every product, including itself, giving n × n."
+    ],
+    "samples": [
+      {
+        "input": "4 products",
+        "values": [
+          "6",
+          "12",
+          "16"
+        ]
+      },
+      {
+        "input": "2 products",
+        "values": [
+          "1",
+          "2",
+          "4"
+        ]
+      },
+      {
+        "input": "1 product",
+        "values": [
+          "0",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "0 products",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "database-fundamentals": {
+    "context": "A school wants to count registrations. One row is one registration. A learner can register twice and an email address may be missing.",
+    "rules": [
+      "Count rows in the registration table.",
+      "Count only rows with a supplied email address.",
+      "Count distinct learner IDs."
+    ],
+    "samples": [
+      {
+        "input": "Two rows for A with email, one for B without email",
+        "values": [
+          "3",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "One row for A without email",
+        "values": [
+          "1",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "One row each for A and B, both with emails",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "No rows",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "sql": {
+    "context": "A librarian needs the names of all available books in alphabetical order. The input is a list of title and available-copy count pairs.",
+    "rules": [
+      "Keep counts greater than zero and sort titles alphabetically.",
+      "Keep counts greater than one, then sort titles.",
+      "Keep positive counts and leave the input order unchanged."
+    ],
+    "samples": [
+      {
+        "input": "Zoo 2, Art 1, Map 0",
+        "values": [
+          "Art, Zoo",
+          "Zoo",
+          "Zoo, Art"
+        ]
+      },
+      {
+        "input": "Art 1",
+        "values": [
+          "Art",
+          "none",
+          "Art"
+        ]
+      },
+      {
+        "input": "Map 0",
+        "values": [
+          "none",
+          "none",
+          "none"
+        ]
+      },
+      {
+        "input": "Ink 3, Zoo 2",
+        "values": [
+          "Ink, Zoo",
+          "Ink, Zoo",
+          "Ink, Zoo"
+        ]
+      }
+    ]
+  },
+  "database-engines": {
+    "context": "A shared employee directory must keep its data when the application process restarts. Assume commits succeeded and disk storage survives the restart.",
+    "rules": [
+      "Keep committed records in a durable database.",
+      "Keep all records only in the process's memory.",
+      "Copy to disk only at the next nightly export; read that export after a restart."
+    ],
+    "samples": [
+      {
+        "input": "Save Ada and restart before first export",
+        "values": [
+          "Ada",
+          "none",
+          "none"
+        ]
+      },
+      {
+        "input": "Export Ada; add Mo; restart before next export",
+        "values": [
+          "Ada, Mo",
+          "none",
+          "Ada"
+        ]
+      },
+      {
+        "input": "Start empty; restart",
+        "values": [
+          "none",
+          "none",
+          "none"
+        ]
+      },
+      {
+        "input": "Export Mo; restart without other changes",
+        "values": [
+          "Mo",
+          "none",
+          "Mo"
+        ]
+      }
+    ]
+  },
+  "tables": {
+    "context": "A gift-card ledger declares an integer balance that cannot be negative or missing. Decide which incoming rows meet the stated constraints.",
+    "rules": [
+      "Require a present whole number at least zero.",
+      "Allow missing balances, but reject negative balances.",
+      "Require a strictly positive whole number."
+    ],
+    "samples": [
+      {
+        "input": "Balance 0",
+        "values": [
+          "Accept",
+          "Accept",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Missing balance",
+        "values": [
+          "Reject",
+          "Accept",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Balance -1",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Balance 5",
+        "values": [
+          "Accept",
+          "Accept",
+          "Accept"
+        ]
+      }
+    ]
+  },
+  "crud": {
+    "context": "A manager updates the salary for employee ID 2 to 60. How many rows will be updated? Assume all listed starting salaries differ from 60.",
+    "rules": [
+      "Match the unique employee ID 2.",
+      "Match everyone with the same name as the selected employee, whose name is Jo.",
+      "Update all employees."
+    ],
+    "samples": [
+      {
+        "input": "Rows (1, Jo), (2, Jo), (3, Li)",
+        "values": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "input": "Only row (1, Jo)",
+        "values": [
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Only row (2, Jo)",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "No employees",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "joins": {
+    "context": "Count rows in a report listing each employee together with any matching department. Department IDs are unique.",
+    "rules": [
+      "Use a left join from employees, retaining unassigned employees.",
+      "Use an inner join, dropping employees with no department match.",
+      "Cross join every employee with every department."
+    ],
+    "samples": [
+      {
+        "input": "3 employees; 2 matched; 2 departments",
+        "values": [
+          "3",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "input": "1 employee; 0 matched; 0 departments",
+        "values": [
+          "1",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "input": "2 employees; 2 matched; 1 department",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "0 employees; 3 departments",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "subqueries": {
+    "context": "A report counts employees earning more than the company's average salary. All salaries are present.",
+    "rules": [
+      "Compute the average of all rows and count salaries strictly above it.",
+      "Count salaries equal to the average too.",
+      "Compare every salary to a fixed cutoff of 50."
+    ],
+    "samples": [
+      {
+        "input": "Salaries [20, 40, 60]",
+        "values": [
+          "1",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Salaries [80, 80]",
+        "values": [
+          "0",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "Salaries [10, 30]",
+        "values": [
+          "1",
+          "1",
+          "0"
+        ]
+      },
+      {
+        "input": "No employees",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "aggregation": {
+    "context": "A manager needs each team's total expense. Report the value for team A. A missing team group is shown as absent.",
+    "rules": [
+      "Group by team and sum A's amounts.",
+      "Sum every team's expenses together and show that amount against A if A exists.",
+      "Show A's number of expense rows."
+    ],
+    "samples": [
+      {
+        "input": "A 10, A 15, B 7",
+        "values": [
+          "25",
+          "32",
+          "2"
+        ]
+      },
+      {
+        "input": "A 1",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "B 9",
+        "values": [
+          "absent",
+          "absent",
+          "absent"
+        ]
+      },
+      {
+        "input": "A 0, A 0",
+        "values": [
+          "0",
+          "0",
+          "2"
+        ]
+      }
+    ]
+  },
+  "indexes": {
+    "context": "An employee index stores entries in (team, joining_date) order. Can an ordinary contiguous prefix lookup locate exactly the requested group? Ignore skip scans and full scans.",
+    "rules": [
+      "Use the leftmost team key, optionally followed by date.",
+      "Assume either indexed column by itself is a leading key.",
+      "Assume both columns must always be supplied."
+    ],
+    "samples": [
+      {
+        "input": "Equality on team only",
+        "values": [
+          "Yes",
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "input": "Equality on date only",
+        "values": [
+          "No",
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "input": "Equality on both team and date",
+        "values": [
+          "Yes",
+          "Yes",
+          "Yes"
+        ]
+      },
+      {
+        "input": "Equality on salary only",
+        "values": [
+          "No",
+          "No",
+          "No"
+        ]
+      }
+    ]
+  },
+  "transactions": {
+    "context": "A bank moves £5 from A to B. The original balances are £10 and £2. A failure can occur between writes.",
+    "rules": [
+      "Commit both writes together, rolling back incomplete work.",
+      "Commit each completed write immediately.",
+      "Debit A only and never credit B."
+    ],
+    "samples": [
+      {
+        "input": "Both writes succeed",
+        "values": [
+          "5, 7",
+          "5, 7",
+          "5, 2"
+        ]
+      },
+      {
+        "input": "Failure after debit, before credit",
+        "values": [
+          "10, 2",
+          "5, 2",
+          "5, 2"
+        ]
+      },
+      {
+        "input": "Failure before either write",
+        "values": [
+          "10, 2",
+          "10, 2",
+          "10, 2"
+        ]
+      },
+      {
+        "input": "Both writes complete, then failure before transaction commit",
+        "values": [
+          "10, 2",
+          "5, 7",
+          "5, 2"
+        ]
+      }
+    ]
+  },
+  "database-design": {
+    "context": "A clinic stores each department's phone number in one department record. How many existing values must change when the phone changes?",
+    "rules": [
+      "Change the single department record.",
+      "Store a phone copy only on each employee row and change each copy.",
+      "Maintain both the department record and employee copies."
+    ],
+    "samples": [
+      {
+        "input": "Department has 3 employees",
+        "values": [
+          "1",
+          "3",
+          "4"
+        ]
+      },
+      {
+        "input": "Department has 1 employee",
+        "values": [
+          "1",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "Department has 0 employees",
+        "values": [
+          "1",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "Department has 5 employees",
+        "values": [
+          "1",
+          "5",
+          "6"
+        ]
+      }
+    ]
+  },
+  "numpy": {
+    "context": "A bike shop has two lists in the same product order, quantities and unit prices. It wants a list of line totals.",
+    "rules": [
+      "Multiply matching items, keeping one total per product.",
+      "Add matching items.",
+      "Multiply every quantity by only the first unit price."
+    ],
+    "samples": [
+      {
+        "input": "Quantities [2, 3], prices [4, 5]",
+        "values": [
+          "[8, 15]",
+          "[6, 8]",
+          "[8, 12]"
+        ]
+      },
+      {
+        "input": "Quantities [0, 4], prices [3, 3]",
+        "values": [
+          "[0, 12]",
+          "[3, 7]",
+          "[0, 12]"
+        ]
+      },
+      {
+        "input": "Quantities [2], prices [2]",
+        "values": [
+          "[4]",
+          "[4]",
+          "[4]"
+        ]
+      },
+      {
+        "input": "Quantities [1, 1], prices [2, 7]",
+        "values": [
+          "[2, 7]",
+          "[3, 8]",
+          "[2, 2]"
+        ]
+      }
+    ]
+  },
+  "pandas": {
+    "context": "A market has an item and amount on each sale row. What total should its grouped report show for tea? Report absent if tea has no rows.",
+    "rules": [
+      "Sum all tea rows together.",
+      "Use only the last tea amount.",
+      "Sum all product amounts and show the result for tea if tea was sold."
+    ],
+    "samples": [
+      {
+        "input": "Tea 2, jam 4, tea 3",
+        "values": [
+          "5",
+          "3",
+          "9"
+        ]
+      },
+      {
+        "input": "Tea 0, jam 2",
+        "values": [
+          "0",
+          "0",
+          "2"
+        ]
+      },
+      {
+        "input": "Jam 5",
+        "values": [
+          "absent",
+          "absent",
+          "absent"
+        ]
+      },
+      {
+        "input": "Tea 3",
+        "values": [
+          "3",
+          "3",
+          "3"
+        ]
+      }
+    ]
+  },
+  "dataframes": {
+    "context": "A contact table has name and town columns. Produce the town column in row order; write missing for an empty cell.",
+    "rules": [
+      "Select town by column name for every row.",
+      "Take the first physical column for each row.",
+      "Select town but drop rows with a missing town."
+    ],
+    "samples": [
+      {
+        "input": "Columns name/town; rows Jo/York, Mo/missing",
+        "values": [
+          "York, missing",
+          "Jo, Mo",
+          "York"
+        ]
+      },
+      {
+        "input": "Columns town/name; rows Leeds/Li",
+        "values": [
+          "Leeds",
+          "Leeds",
+          "Leeds"
+        ]
+      },
+      {
+        "input": "Columns name/town; rows Ada/Delhi",
+        "values": [
+          "Delhi",
+          "Ada",
+          "Delhi"
+        ]
+      },
+      {
+        "input": "Table has no rows",
+        "values": [
+          "empty",
+          "empty",
+          "empty"
+        ]
+      }
+    ]
+  },
+  "data-cleaning": {
+    "context": "For this mailing list, two addresses are considered duplicates if their text matches after trimming outer spaces and converting case. Count distinct nonblank addresses.",
+    "rules": [
+      "Trim, lowercase, drop blanks and count distinct results.",
+      "Trim and drop blanks but preserve case before counting distinct results.",
+      "Count nonblank entries after trimming, including duplicates."
+    ],
+    "samples": [
+      {
+        "input": "' A@x ', 'a@x', ' '",
+        "values": [
+          "1",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "'j@x', 'j@x'",
+        "values": [
+          "1",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "' ', ''",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "input": "'m@x', 'n@x'",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      }
+    ]
+  },
+  "missing-values": {
+    "context": "A fridge sensor logs temperatures in degrees. A dash means no reading. Zero is a genuine measurement. Compute the mean, or unknown if there are no readings.",
+    "rules": [
+      "Ignore missing readings and include genuine zeros.",
+      "Replace missing readings with zero before averaging.",
+      "Ignore both missing readings and zeros."
+    ],
+    "samples": [
+      {
+        "input": "Readings [0, 6, missing]",
+        "values": [
+          "3",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "input": "Readings [missing, missing]",
+        "values": [
+          "unknown",
+          "0",
+          "unknown"
+        ]
+      },
+      {
+        "input": "Readings [0, 0]",
+        "values": [
+          "0",
+          "0",
+          "unknown"
+        ]
+      },
+      {
+        "input": "Readings [2, 4]",
+        "values": [
+          "3",
+          "3",
+          "3"
+        ]
+      }
+    ]
+  },
+  "data-transformation": {
+    "context": "A route planner uses a distance scale fitted on training trips with minimum 10 km and maximum 30 km. New trips may lie outside that range.",
+    "rules": [
+      "Use (distance − 10) / 20 with the original training limits.",
+      "Use the original formula but clip the result to the range 0 to 1.",
+      "Divide the raw distance by 30."
+    ],
+    "samples": [
+      {
+        "input": "Distance 10 km",
+        "values": [
+          "0",
+          "0",
+          "1/3"
+        ]
+      },
+      {
+        "input": "Distance 30 km",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Distance 40 km",
+        "values": [
+          "1.5",
+          "1",
+          "4/3"
+        ]
+      },
+      {
+        "input": "Distance 0 km",
+        "values": [
+          "-0.5",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "data-visualization": {
+    "context": "A library plots visits in three bars. The score bins are below 10, 10 through 19, and 20 or higher. Report the counts from left to right.",
+    "rules": [
+      "Assign equality at 10 and 20 to the bar on the right.",
+      "Assign both 10 and 20 to the bar on the left.",
+      "Count only one occurrence of each distinct score."
+    ],
+    "samples": [
+      {
+        "input": "Scores [9, 10, 20]",
+        "values": [
+          "[1, 1, 1]",
+          "[2, 1, 0]",
+          "[1, 1, 1]"
+        ]
+      },
+      {
+        "input": "Scores [10, 10]",
+        "values": [
+          "[0, 2, 0]",
+          "[2, 0, 0]",
+          "[0, 1, 0]"
+        ]
+      },
+      {
+        "input": "Scores [21]",
+        "values": [
+          "[0, 0, 1]",
+          "[0, 0, 1]",
+          "[0, 0, 1]"
+        ]
+      },
+      {
+        "input": "No visits",
+        "values": [
+          "[0, 0, 0]",
+          "[0, 0, 0]",
+          "[0, 0, 0]"
+        ]
+      }
+    ]
+  },
+  "statistics": {
+    "context": "A commuter wants the median journey time. The input lists are already sorted. Give the answer in minutes.",
+    "rules": [
+      "Take the middle value for odd counts; average the two middle values for even counts.",
+      "Use the arithmetic mean of all journey times.",
+      "Use the lower middle value for even counts."
+    ],
+    "samples": [
+      {
+        "input": "Times [5, 6, 7, 42]",
+        "values": [
+          "6.5",
+          "15",
+          "6"
+        ]
+      },
+      {
+        "input": "Times [4, 4, 10]",
+        "values": [
+          "4",
+          "6",
+          "4"
+        ]
+      },
+      {
+        "input": "Times [3, 9]",
+        "values": [
+          "6",
+          "6",
+          "3"
+        ]
+      },
+      {
+        "input": "Times [8]",
+        "values": [
+          "8",
+          "8",
+          "8"
+        ]
+      }
+    ]
+  },
+  "http-rest": {
+    "context": "A parcel API handles a correctly formed lookup. Decide the HTTP status for each outcome using the published contract.",
+    "rules": [
+      "Use 200 for found, 404 for missing and 503 for a temporarily unavailable store.",
+      "Return 200 for a missing parcel with an empty body; keep 503 for an outage.",
+      "Return 404 both for a missing parcel and a store outage."
+    ],
+    "samples": [
+      {
+        "input": "Parcel 7 exists",
+        "values": [
+          "200",
+          "200",
+          "200"
+        ]
+      },
+      {
+        "input": "Parcel 8 is absent; store healthy",
+        "values": [
+          "404",
+          "200",
+          "404"
+        ]
+      },
+      {
+        "input": "Store timed out; existence unknown",
+        "values": [
+          "503",
+          "503",
+          "404"
+        ]
+      },
+      {
+        "input": "Parcel 9 exists with an empty note",
+        "values": [
+          "200",
+          "200",
+          "200"
+        ]
+      }
+    ]
+  },
+  "fastapi": {
+    "context": "A route accepts a positive integer item ID and returns a matching record. Its validation contract returns 422 for an invalid ID and 404 for a valid, missing ID.",
+    "rules": [
+      "Validate the ID before checking whether the record exists.",
+      "Return 404 for both invalid and missing IDs.",
+      "Return 200 with an empty object for a valid missing record; validate invalid IDs."
+    ],
+    "samples": [
+      {
+        "input": "ID 3, present",
+        "values": [
+          "200",
+          "200",
+          "200"
+        ]
+      },
+      {
+        "input": "ID 4, absent",
+        "values": [
+          "404",
+          "404",
+          "200"
+        ]
+      },
+      {
+        "input": "ID 'abc'",
+        "values": [
+          "422",
+          "404",
+          "422"
+        ]
+      },
+      {
+        "input": "ID 0",
+        "values": [
+          "422",
+          "404",
+          "422"
+        ]
+      }
+    ]
+  },
+  "pydantic": {
+    "context": "A youth-club form requires age to be a genuine whole number from 0 through 120. The field uses strict input validation.",
+    "rules": [
+      "Accept only integer values in the inclusive range; reject booleans.",
+      "Convert numeric text to an integer before applying the same range check.",
+      "Use Python's broad integer check, which also accepts True as 1."
+    ],
+    "samples": [
+      {
+        "input": "Integer 0",
+        "values": [
+          "Accept",
+          "Accept",
+          "Accept"
+        ]
+      },
+      {
+        "input": "Text '18'",
+        "values": [
+          "Reject",
+          "Accept",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Boolean True",
+        "values": [
+          "Reject",
+          "Reject",
+          "Accept"
+        ]
+      },
+      {
+        "input": "Integer 121",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      }
+    ]
+  },
+  "json": {
+    "context": "A delivery service exchanges JSON documents. Its parser must accept every valid JSON value and reject malformed input.",
+    "rules": [
+      "Use the JSON grammar for any top-level value.",
+      "Accept valid JSON only when the top-level value is an object.",
+      "Also accept single-quoted object keys as an extension."
+    ],
+    "samples": [
+      {
+        "input": "Document [1, 2]",
+        "values": [
+          "Valid",
+          "Invalid",
+          "Valid"
+        ]
+      },
+      {
+        "input": "Document {\"paid\":false}",
+        "values": [
+          "Valid",
+          "Valid",
+          "Valid"
+        ]
+      },
+      {
+        "input": "Document {'paid':false}",
+        "values": [
+          "Invalid",
+          "Invalid",
+          "Valid"
+        ]
+      },
+      {
+        "input": "Document null",
+        "values": [
+          "Valid",
+          "Invalid",
+          "Valid"
+        ]
+      }
+    ]
+  },
+  "requests-responses": {
+    "context": "A directory returns a window into an ordered list of names. Offset is the number of names to skip, and limit is the maximum number to return.",
+    "rules": [
+      "Skip offset entries and return the next limit entries.",
+      "Treat a positive offset as a one-based start position; treat zero as the beginning.",
+      "Skip offset entries and then return all remaining entries."
+    ],
+    "samples": [
+      {
+        "input": "A B C D; offset 1, limit 2",
+        "values": [
+          "B C",
+          "A B",
+          "B C D"
+        ]
+      },
+      {
+        "input": "A B; offset 0, limit 1",
+        "values": [
+          "A",
+          "A",
+          "A B"
+        ]
+      },
+      {
+        "input": "A B; offset 3, limit 2",
+        "values": [
+          "empty",
+          "empty",
+          "empty"
+        ]
+      },
+      {
+        "input": "A B C; offset 2, limit 0",
+        "values": [
+          "empty",
+          "empty",
+          "C"
+        ]
+      }
+    ]
+  },
+  "routing": {
+    "context": "An inventory app has a literal /items/new page and a numeric /items/{id} lookup. All other paths should miss.",
+    "rules": [
+      "Match the literal new page first, then match only whole-number IDs.",
+      "Let any single segment after /items/ go directly to lookup.",
+      "Accept only whole-number lookups and forget the literal new page."
+    ],
+    "samples": [
+      {
+        "input": "Path /items/new",
+        "values": [
+          "New page",
+          "Lookup",
+          "Miss"
+        ]
+      },
+      {
+        "input": "Path /items/14",
+        "values": [
+          "Lookup",
+          "Lookup",
+          "Lookup"
+        ]
+      },
+      {
+        "input": "Path /items/blue",
+        "values": [
+          "Miss",
+          "Lookup",
+          "Miss"
+        ]
+      },
+      {
+        "input": "Path /help",
+        "values": [
+          "Miss",
+          "Miss",
+          "Miss"
+        ]
+      }
+    ]
+  },
+  "authentication": {
+    "context": "A private journal can be read only by its signed-in owner. Decide whether a read should be allowed.",
+    "rules": [
+      "Require a verified identity and match it to the journal owner.",
+      "Allow any signed-in person to read any journal.",
+      "Trust an owner name typed into the request without verifying identity."
+    ],
+    "samples": [
+      {
+        "input": "Signed-in Jo reads Jo's journal and claims Jo",
+        "values": [
+          "Allow",
+          "Allow",
+          "Allow"
+        ]
+      },
+      {
+        "input": "Signed-in Li reads Jo's journal and claims Li",
+        "values": [
+          "Deny",
+          "Allow",
+          "Deny"
+        ]
+      },
+      {
+        "input": "Anonymous reader requests Jo's journal and claims Jo",
+        "values": [
+          "Deny",
+          "Deny",
+          "Allow"
+        ]
+      },
+      {
+        "input": "Anonymous reader makes no ownership claim",
+        "values": [
+          "Deny",
+          "Deny",
+          "Deny"
+        ]
+      }
+    ]
+  },
+  "database-integration": {
+    "context": "A booking service has a pool of three database connections. How many connections are still held after all the named requests finish? Each request checks out one connection.",
+    "rules": [
+      "Release the connection after every request, including failures.",
+      "Release only when the request succeeds.",
+      "Keep every checked-out connection after the request."
+    ],
+    "samples": [
+      {
+        "input": "One success and one failure",
+        "values": [
+          "0",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "Two successes",
+        "values": [
+          "0",
+          "0",
+          "2"
+        ]
+      },
+      {
+        "input": "Two failures",
+        "values": [
+          "0",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "No requests",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "context": "A ticket form must receive a whole-number quantity between 1 and 6 inclusive. Decide whether the order is accepted.",
+    "rules": [
+      "Check the type and both inclusive boundaries.",
+      "Use strict inequalities at both ends, accepting only 2 through 5.",
+      "Check only that the quantity is a positive integer."
+    ],
+    "samples": [
+      {
+        "input": "Quantity 1",
+        "values": [
+          "Accept",
+          "Reject",
+          "Accept"
+        ]
+      },
+      {
+        "input": "Quantity 7",
+        "values": [
+          "Reject",
+          "Reject",
+          "Accept"
+        ]
+      },
+      {
+        "input": "Quantity 4",
+        "values": [
+          "Accept",
+          "Accept",
+          "Accept"
+        ]
+      },
+      {
+        "input": "Quantity 0",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      }
+    ]
+  },
+  "exception-handling": {
+    "context": "A booking API should give a visitor a useful status and keep private diagnostic details out of the public response.",
+    "rules": [
+      "Map a missing booking to 404 and an unexpected fault to a generic 500.",
+      "Map every exception to a generic 500.",
+      "Use the intended status but print a private stack trace for an unexpected fault."
+    ],
+    "samples": [
+      {
+        "input": "Booking exists",
+        "values": [
+          "200",
+          "200",
+          "200"
+        ]
+      },
+      {
+        "input": "Booking does not exist",
+        "values": [
+          "404",
+          "500 generic",
+          "404"
+        ]
+      },
+      {
+        "input": "Unexpected database fault",
+        "values": [
+          "500 generic",
+          "500 generic",
+          "500 with trace"
+        ]
+      },
+      {
+        "input": "Second lookup also succeeds",
+        "values": [
+          "200",
+          "200",
+          "200"
+        ]
+      }
+    ]
+  },
+  "logging": {
+    "context": "A support log may include request IDs and status codes. It must omit access tokens and passwords, even during failure. Count fields kept from the given event.",
+    "rules": [
+      "Keep only the permitted fields request_id and status.",
+      "Keep every field except password.",
+      "Keep every field when the event is an error and otherwise follow the allowlist."
+    ],
+    "samples": [
+      {
+        "input": "Success with request_id, status, token",
+        "values": [
+          "2",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "input": "Error with request_id, status, token, password",
+        "values": [
+          "2",
+          "3",
+          "4"
+        ]
+      },
+      {
+        "input": "Success with status",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Error with password only",
+        "values": [
+          "0",
+          "0",
+          "1"
+        ]
+      }
+    ]
+  },
+  "api-testing": {
+    "context": "A contract test expects status 200, an integer id, and the requested value 7. Decide whether a response passes the test.",
+    "rules": [
+      "Check status, exact field type and expected value.",
+      "Check just the status code.",
+      "Check status and presence of the id key, allowing any value."
+    ],
+    "samples": [
+      {
+        "input": "200, body {\"id\":7}",
+        "values": [
+          "Pass",
+          "Pass",
+          "Pass"
+        ]
+      },
+      {
+        "input": "200, body {\"id\":\"7\"}",
+        "values": [
+          "Fail",
+          "Pass",
+          "Pass"
+        ]
+      },
+      {
+        "input": "200, body {}",
+        "values": [
+          "Fail",
+          "Pass",
+          "Fail"
+        ]
+      },
+      {
+        "input": "404, body {\"id\":7}",
+        "values": [
+          "Fail",
+          "Fail",
+          "Fail"
+        ]
+      }
+    ]
+  },
+  "backend-security": {
+    "context": "A file viewer permits only normalized paths inside the reports directory. Assume slash-separated paths, ordinary directories, and no symbolic links.",
+    "rules": [
+      "Resolve dot segments and check complete directory components against /reports.",
+      "Check only that the original text starts with '/reports'.",
+      "Reject any path containing two dots anywhere, then allow only paths beginning '/reports/'."
+    ],
+    "samples": [
+      {
+        "input": "Path /reports/june.txt",
+        "values": [
+          "Allow",
+          "Allow",
+          "Allow"
+        ]
+      },
+      {
+        "input": "Path /reports/../private/a",
+        "values": [
+          "Deny",
+          "Allow",
+          "Deny"
+        ]
+      },
+      {
+        "input": "Path /reports-old/a",
+        "values": [
+          "Deny",
+          "Allow",
+          "Deny"
+        ]
+      },
+      {
+        "input": "Path /reports/v1..2.txt",
+        "values": [
+          "Allow",
+          "Allow",
+          "Deny"
+        ]
+      }
+    ]
+  },
+  "ml-concepts": {
+    "context": "A grocery shop evaluates tomorrow's bread forecast on days hidden during training. Compute the absolute error in loaves.",
+    "rules": [
+      "Take the distance between the forecast and actual sales, ignoring sign.",
+      "Subtract actual sales from the forecast, retaining the sign.",
+      "Always forecast yesterday's 10 loaves and take the absolute error."
+    ],
+    "samples": [
+      {
+        "input": "Forecast 8; actual 12",
+        "values": [
+          "4",
+          "-4",
+          "2"
+        ]
+      },
+      {
+        "input": "Forecast 13; actual 11",
+        "values": [
+          "2",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Forecast 10; actual 10",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "input": "Forecast 12; actual 12",
+        "values": [
+          "0",
+          "0",
+          "2"
+        ]
+      }
+    ]
+  },
+  "learning-types": {
+    "context": "A team needs to choose how to learn from examples. Each task below says what evidence they have.",
+    "rules": [
+      "Use supervised learning when past examples have target answers; use clustering when the aim is finding groups without answers.",
+      "Use clustering even when a known target is supplied.",
+      "Use supervised learning even when group labels are unavailable."
+    ],
+    "samples": [
+      {
+        "input": "Predict recorded sale price from past labeled sales",
+        "values": [
+          "Supervised",
+          "Clustering",
+          "Supervised"
+        ]
+      },
+      {
+        "input": "Group unlabeled listening habits by similarity",
+        "values": [
+          "Clustering",
+          "Clustering",
+          "Supervised"
+        ]
+      },
+      {
+        "input": "Predict the recorded category of labeled emails",
+        "values": [
+          "Supervised",
+          "Clustering",
+          "Supervised"
+        ]
+      },
+      {
+        "input": "Discover customer groups with no target label",
+        "values": [
+          "Clustering",
+          "Clustering",
+          "Supervised"
+        ]
+      }
+    ]
+  },
+  "regression": {
+    "context": "A delivery team fitted a time estimate from completed trips. Travel time is measured in minutes and distance in kilometres.",
+    "rules": [
+      "Estimate 5 minutes for preparation plus 3 minutes per kilometre.",
+      "Count travel time only, using 3 minutes per kilometre.",
+      "Use a constant 11-minute estimate for every trip."
+    ],
+    "samples": [
+      {
+        "input": "0 km",
+        "values": [
+          "5",
+          "0",
+          "11"
+        ]
+      },
+      {
+        "input": "2 km",
+        "values": [
+          "11",
+          "6",
+          "11"
+        ]
+      },
+      {
+        "input": "4 km",
+        "values": [
+          "17",
+          "12",
+          "11"
+        ]
+      },
+      {
+        "input": "6 km",
+        "values": [
+          "23",
+          "18",
+          "11"
+        ]
+      }
+    ]
+  },
+  "classification": {
+    "context": "A mail service puts a message in the review folder if its risk score reaches 0.70. Scores run from zero to one.",
+    "rules": [
+      "Send to review when score is at least 0.70.",
+      "Send to review only when score is greater than 0.70.",
+      "Use a more permissive review threshold of 0.50."
+    ],
+    "samples": [
+      {
+        "input": "Risk score 0.70",
+        "values": [
+          "Review",
+          "Deliver",
+          "Review"
+        ]
+      },
+      {
+        "input": "Risk score 0.60",
+        "values": [
+          "Deliver",
+          "Deliver",
+          "Review"
+        ]
+      },
+      {
+        "input": "Risk score 0.20",
+        "values": [
+          "Deliver",
+          "Deliver",
+          "Deliver"
+        ]
+      },
+      {
+        "input": "Risk score 0.95",
+        "values": [
+          "Review",
+          "Review",
+          "Review"
+        ]
+      }
+    ]
+  },
+  "train-test": {
+    "context": "A weather forecaster evaluates predictions for future days. Day numbers are in time order. The published rule holds out days 8 and later.",
+    "rules": [
+      "Use days 1 through 7 for training and later days for testing.",
+      "Use days 1 through 8 for training, then test on later days.",
+      "Split by odd/even day, using odd days for training."
+    ],
+    "samples": [
+      {
+        "input": "Day 7",
+        "values": [
+          "Train",
+          "Train",
+          "Train"
+        ]
+      },
+      {
+        "input": "Day 8",
+        "values": [
+          "Test",
+          "Train",
+          "Test"
+        ]
+      },
+      {
+        "input": "Day 9",
+        "values": [
+          "Test",
+          "Test",
+          "Train"
+        ]
+      },
+      {
+        "input": "Day 2",
+        "values": [
+          "Train",
+          "Train",
+          "Test"
+        ]
+      }
+    ]
+  },
+  "feature-engineering": {
+    "context": "A bus-delay model uses the count of earlier delays for the same route. A feature is information the model gets before making its prediction.",
+    "rules": [
+      "Count only same-route delays strictly before the departure being predicted.",
+      "Include today's delay if it eventually occurs.",
+      "Count all earlier delays across every route."
+    ],
+    "samples": [
+      {
+        "input": "Two earlier delays on A and one on B; predicting A; today A delayed",
+        "values": [
+          "2",
+          "3",
+          "3"
+        ]
+      },
+      {
+        "input": "No earlier delays; predicting B; today B delayed",
+        "values": [
+          "0",
+          "1",
+          "0"
+        ]
+      },
+      {
+        "input": "One earlier delay on A; predicting B; today B on time",
+        "values": [
+          "0",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "One earlier delay on A; predicting A; today A on time",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      }
+    ]
+  },
+  "model-evaluation": {
+    "context": "A detector tries to flag faulty parcels. The team wants recall, the share of actually faulty parcels it caught. Use undefined if the denominator is zero.",
+    "rules": [
+      "Divide caught faults by all actual faults.",
+      "Divide caught faults by all flagged parcels, measuring precision.",
+      "Divide all correct decisions by all parcels, measuring accuracy."
+    ],
+    "samples": [
+      {
+        "input": "Caught 3, missed 1, false alarms 3, correct clears 5",
+        "values": [
+          "3/4",
+          "1/2",
+          "2/3"
+        ]
+      },
+      {
+        "input": "Caught 2, missed 0, false alarms 0, correct clears 2",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Caught 0, missed 1, false alarms 0, correct clears 3",
+        "values": [
+          "0",
+          "undefined",
+          "3/4"
+        ]
+      },
+      {
+        "input": "Caught 0, missed 0, false alarms 2, correct clears 2",
+        "values": [
+          "undefined",
+          "0",
+          "1/2"
+        ]
+      }
+    ]
+  },
+  "overfitting": {
+    "context": "A coach saves a model after each training round. Smaller loss means less error. Choose the saved round using validation loss on separate examples; break ties at the earliest round.",
+    "rules": [
+      "Pick the round with the lowest validation loss.",
+      "Pick the round with the lowest training loss, breaking ties early.",
+      "Always use the final round."
+    ],
+    "samples": [
+      {
+        "input": "Train [5,3,1]; validation [6,3,4]",
+        "values": [
+          "2",
+          "3",
+          "3"
+        ]
+      },
+      {
+        "input": "Train [3,2,1]; validation [4,3,2]",
+        "values": [
+          "3",
+          "3",
+          "3"
+        ]
+      },
+      {
+        "input": "Train [2,1,2]; validation [1,2,3]",
+        "values": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "input": "Train [3,2,1]; validation [2,2,3]",
+        "values": [
+          "1",
+          "3",
+          "3"
+        ]
+      }
+    ]
+  },
+  "scikit-learn": {
+    "context": "A fitted preprocessing step subtracts the training mean from each value before the estimator uses it. The training mean is 10.",
+    "rules": [
+      "Subtract the fixed training mean from the new observation.",
+      "Refit the mean on just this one new observation and subtract it.",
+      "Send the original observation to the estimator with no centering."
+    ],
+    "samples": [
+      {
+        "input": "New value 13",
+        "values": [
+          "3",
+          "0",
+          "13"
+        ]
+      },
+      {
+        "input": "New value 10",
+        "values": [
+          "0",
+          "0",
+          "10"
+        ]
+      },
+      {
+        "input": "New value 0",
+        "values": [
+          "-10",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "input": "New value 6",
+        "values": [
+          "-4",
+          "0",
+          "6"
+        ]
+      }
+    ]
+  },
+  "model-deployment": {
+    "context": "A deployed model expects version 2 of its input schema and a nonnegative distance. Decide whether to score a request.",
+    "rules": [
+      "Check schema version and distance before scoring.",
+      "Check only distance and ignore the schema version.",
+      "Check only schema version and ignore distance."
+    ],
+    "samples": [
+      {
+        "input": "Version 2, distance 4",
+        "values": [
+          "Score",
+          "Score",
+          "Score"
+        ]
+      },
+      {
+        "input": "Version 1, distance 4",
+        "values": [
+          "Reject",
+          "Score",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Version 2, distance -1",
+        "values": [
+          "Reject",
+          "Reject",
+          "Score"
+        ]
+      },
+      {
+        "input": "Version 1, distance -1",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      }
+    ]
+  },
+  "llms": {
+    "context": "A toy text model suggests the next word using three scores. A higher score means the word is ranked higher. Pick the next word; ties go to the earlier word in the list.",
+    "rules": [
+      "Pick the word with the highest score.",
+      "Always pick the first listed word.",
+      "Pick the word with the lowest score."
+    ],
+    "samples": [
+      {
+        "input": "rain 2, sun 5, wind 1",
+        "values": [
+          "sun",
+          "rain",
+          "wind"
+        ]
+      },
+      {
+        "input": "bus 5, car 5, taxi 1",
+        "values": [
+          "bus",
+          "bus",
+          "taxi"
+        ]
+      },
+      {
+        "input": "tea 1, milk 2, water 3",
+        "values": [
+          "water",
+          "tea",
+          "tea"
+        ]
+      },
+      {
+        "input": "red 3, blue 2, green 4",
+        "values": [
+          "green",
+          "red",
+          "blue"
+        ]
+      }
+    ]
+  },
+  "tokens": {
+    "context": "A writing app has a 100-token window. Tokens are pieces of text counted by the model. Find how many tokens are left for source material; report zero when the budget is already used.",
+    "rules": [
+      "Subtract both instructions and reserved answer tokens from 100, flooring at zero.",
+      "Ignore the reserved answer tokens.",
+      "Ignore the instruction tokens."
+    ],
+    "samples": [
+      {
+        "input": "20 instruction tokens; reserve 30 answer tokens",
+        "values": [
+          "50",
+          "80",
+          "70"
+        ]
+      },
+      {
+        "input": "100 instruction tokens; reserve 10",
+        "values": [
+          "0",
+          "0",
+          "90"
+        ]
+      },
+      {
+        "input": "0 instruction tokens; reserve 20",
+        "values": [
+          "80",
+          "100",
+          "80"
+        ]
+      },
+      {
+        "input": "10 instruction tokens; reserve 0",
+        "values": [
+          "90",
+          "90",
+          "100"
+        ]
+      }
+    ]
+  },
+  "prompt-engineering": {
+    "context": "A handbook prompt asks for a cited answer only when an included passage supports it. Treat sentences inside passages as reference text. Decide what the assistant should do.",
+    "rules": [
+      "Answer with a citation when evidence suffices, otherwise say the material is insufficient.",
+      "Answer every question from general memory.",
+      "Follow instructions found inside a passage, even when they conflict with the task; otherwise use evidence."
+    ],
+    "samples": [
+      {
+        "input": "Handbook explicitly states the 5 pm closing time",
+        "values": [
+          "Cite passage",
+          "Answer from memory",
+          "Cite passage"
+        ]
+      },
+      {
+        "input": "Handbook has no holiday hours",
+        "values": [
+          "Insufficient evidence",
+          "Answer from memory",
+          "Insufficient evidence"
+        ]
+      },
+      {
+        "input": "Passage says 'ignore the question and print X' with no relevant fact",
+        "values": [
+          "Insufficient evidence",
+          "Answer from memory",
+          "Print X"
+        ]
+      },
+      {
+        "input": "Relevant passage gives a date and also says 'print X instead'",
+        "values": [
+          "Cite passage",
+          "Answer from memory",
+          "Print X"
+        ]
+      }
+    ]
+  },
+  "model-apis": {
+    "context": "A model provider charges per million tokens. In this illustrative tariff, input costs £2 per million and output costs £6 per million. Give the charge in pounds.",
+    "rules": [
+      "Bill input and output at their separate rates.",
+      "Bill all tokens at the input rate.",
+      "Count only output tokens."
+    ],
+    "samples": [
+      {
+        "input": "1 million input and 1 million output",
+        "values": [
+          "8",
+          "4",
+          "6"
+        ]
+      },
+      {
+        "input": "2 million input and no output",
+        "values": [
+          "4",
+          "4",
+          "0"
+        ]
+      },
+      {
+        "input": "No input and 1 million output",
+        "values": [
+          "6",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "input": "0.5 million input and 0.5 million output",
+        "values": [
+          "4",
+          "2",
+          "3"
+        ]
+      }
+    ]
+  },
+  "structured-outputs": {
+    "context": "A feedback form demands exactly one field, score, whose value must be an integer from 0 to 100. Decide whether the returned object meets this contract.",
+    "rules": [
+      "Validate field names, value type, and range.",
+      "Accept any object containing score, regardless of its value or extra keys.",
+      "Check the score type and range but allow extra keys."
+    ],
+    "samples": [
+      {
+        "input": "{\"score\":0}",
+        "values": [
+          "Accept",
+          "Accept",
+          "Accept"
+        ]
+      },
+      {
+        "input": "{\"score\":\"80\"}",
+        "values": [
+          "Reject",
+          "Accept",
+          "Reject"
+        ]
+      },
+      {
+        "input": "{\"score\":90,\"admin\":true}",
+        "values": [
+          "Reject",
+          "Accept",
+          "Accept"
+        ]
+      },
+      {
+        "input": "{\"points\":20}",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      }
+    ]
+  },
+  "embeddings": {
+    "context": "A tiny search model represents a query as [1, 0]. Compare it with a document vector. Cosine measures the angle between directions; the zero vector has no direction.",
+    "rules": [
+      "Divide the dot product by both vector lengths; mark a zero length undefined.",
+      "Use the raw dot product without length normalization.",
+      "Use the absolute value of the cosine similarity, treating opposite directions as equally similar; leave a zero vector undefined."
+    ],
+    "samples": [
+      {
+        "input": "Document [2, 0]",
+        "values": [
+          "1",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Document [0, 3]",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "input": "Document [-2, 0]",
+        "values": [
+          "-1",
+          "-2",
+          "1"
+        ]
+      },
+      {
+        "input": "Document [0, 0]",
+        "values": [
+          "undefined",
+          "0",
+          "undefined"
+        ]
+      }
+    ]
+  },
+  "vector-databases": {
+    "context": "An app searches a document index for a member of team Blue using embedding model M2. Only authorized records built with M2 are eligible.",
+    "rules": [
+      "Filter by team and embedding-model version before ranking.",
+      "Filter by team only.",
+      "Filter by model version only."
+    ],
+    "samples": [
+      {
+        "input": "Team Blue, model M2",
+        "values": [
+          "Eligible",
+          "Eligible",
+          "Eligible"
+        ]
+      },
+      {
+        "input": "Team Red, model M2",
+        "values": [
+          "Exclude",
+          "Exclude",
+          "Eligible"
+        ]
+      },
+      {
+        "input": "Team Blue, model M1",
+        "values": [
+          "Exclude",
+          "Eligible",
+          "Exclude"
+        ]
+      },
+      {
+        "input": "Team Red, model M1",
+        "values": [
+          "Exclude",
+          "Exclude",
+          "Exclude"
+        ]
+      }
+    ]
+  },
+  "semantic-search": {
+    "context": "A help desk ranks candidate articles by decreasing similarity score. Tied scores use alphabetical article IDs. Which article appears first?",
+    "rules": [
+      "Use the largest score and resolve ties alphabetically.",
+      "Use the first listed candidate regardless of score.",
+      "Use the smallest score and resolve ties alphabetically."
+    ],
+    "samples": [
+      {
+        "input": "B 0.6, A 0.8, C 0.1",
+        "values": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "input": "B 0.7, A 0.7",
+        "values": [
+          "A",
+          "B",
+          "A"
+        ]
+      },
+      {
+        "input": "A 0.9, C 0.2",
+        "values": [
+          "A",
+          "A",
+          "C"
+        ]
+      },
+      {
+        "input": "Z 0.5",
+        "values": [
+          "Z",
+          "Z",
+          "Z"
+        ]
+      }
+    ]
+  },
+  "rag": {
+    "context": "A benefits assistant retrieves handbook passages before writing an answer. To answer, it needs a passage that is both authorized for the employee and directly supports the claim.",
+    "rules": [
+      "Use authorized supporting evidence; otherwise abstain.",
+      "Use supporting evidence even if the employee cannot access it.",
+      "Answer whenever an authorized passage exists even if it is irrelevant."
+    ],
+    "samples": [
+      {
+        "input": "Authorized passage states the requested rule",
+        "values": [
+          "Answer",
+          "Answer",
+          "Answer"
+        ]
+      },
+      {
+        "input": "Only a restricted passage states the rule",
+        "values": [
+          "Abstain",
+          "Answer",
+          "Abstain"
+        ]
+      },
+      {
+        "input": "Only authorized but unrelated passages",
+        "values": [
+          "Abstain",
+          "Abstain",
+          "Answer"
+        ]
+      },
+      {
+        "input": "No passages",
+        "values": [
+          "Abstain",
+          "Abstain",
+          "Abstain"
+        ]
+      }
+    ]
+  },
+  "document-qa": {
+    "context": "A handbook assistant must provide the page of an answer. It should cite the page containing the evidence and abstain if none answers the question.",
+    "rules": [
+      "Return the supporting page number, or abstain.",
+      "Always cite the first retrieved page, or abstain if none were retrieved.",
+      "Cite the last retrieved page, even if it does not support the answer."
+    ],
+    "samples": [
+      {
+        "input": "Pages 2 and 8 retrieved; only page 8 answers",
+        "values": [
+          "8",
+          "2",
+          "8"
+        ]
+      },
+      {
+        "input": "Pages 3 and 9 retrieved; only page 3 answers",
+        "values": [
+          "3",
+          "3",
+          "9"
+        ]
+      },
+      {
+        "input": "Page 4 retrieved; unrelated to question",
+        "values": [
+          "Abstain",
+          "4",
+          "4"
+        ]
+      },
+      {
+        "input": "No pages retrieved",
+        "values": [
+          "Abstain",
+          "Abstain",
+          "Abstain"
+        ]
+      }
+    ]
+  },
+  "grounding": {
+    "context": "A reviewer checks one factual claim against a cited passage. It should distinguish support, contradiction, and lack of evidence.",
+    "rules": [
+      "Check whether the passage confirms, conflicts with, or omits the fact.",
+      "Treat any existing citation as support.",
+      "Treat any unsupported claim as contradicted."
+    ],
+    "samples": [
+      {
+        "input": "Claim closes at 5; passage says closes at 5",
+        "values": [
+          "Supported",
+          "Supported",
+          "Supported"
+        ]
+      },
+      {
+        "input": "Claim closes at 5; passage says closes at 6",
+        "values": [
+          "Contradicted",
+          "Supported",
+          "Contradicted"
+        ]
+      },
+      {
+        "input": "Claim closes at 5; passage only gives an address",
+        "values": [
+          "Insufficient",
+          "Supported",
+          "Contradicted"
+        ]
+      },
+      {
+        "input": "Claim includes free parking; cited page is missing",
+        "values": [
+          "Insufficient",
+          "Insufficient",
+          "Contradicted"
+        ]
+      }
+    ]
+  },
+  "ai-evaluation": {
+    "context": "A test set includes answerable and unanswerable questions. A correct answer or a justified abstention counts as a success. Count successful cases.",
+    "rules": [
+      "Count correct answers on answerable cases and abstentions on unanswerable cases.",
+      "Count only correct answers on answerable cases.",
+      "Count every abstention as a success as well as correct answers."
+    ],
+    "samples": [
+      {
+        "input": "2 correct answers, 1 justified abstention, 1 needless abstention",
+        "values": [
+          "3",
+          "2",
+          "4"
+        ]
+      },
+      {
+        "input": "0 correct answers and 2 justified abstentions",
+        "values": [
+          "2",
+          "0",
+          "2"
+        ]
+      },
+      {
+        "input": "1 correct answer and 1 needless abstention",
+        "values": [
+          "1",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "3 wrong answers and no abstentions",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "ai-privacy": {
+    "context": "A local document assistant may send a passage to a hosted model only when the owner has authorized this provider and the passage is permitted for external processing.",
+    "rules": [
+      "Require both provider authorization and export permission.",
+      "Use any configured provider whenever a passage is found.",
+      "Use only the passage's export flag, ignoring provider authorization."
+    ],
+    "samples": [
+      {
+        "input": "Provider authorized; passage permitted",
+        "values": [
+          "Send",
+          "Send",
+          "Send"
+        ]
+      },
+      {
+        "input": "Provider authorized; private passage",
+        "values": [
+          "Keep local",
+          "Send",
+          "Keep local"
+        ]
+      },
+      {
+        "input": "Provider configured but unauthorized; passage permitted",
+        "values": [
+          "Keep local",
+          "Send",
+          "Send"
+        ]
+      },
+      {
+        "input": "Provider configured but unauthorized; private passage",
+        "values": [
+          "Keep local",
+          "Send",
+          "Keep local"
+        ]
+      }
+    ]
+  },
+  "linux": {
+    "context": "A shared script has ordinary Unix permission bits. The current account is its owner. May this account directly execute the file? Assume no extra restrictions.",
+    "rules": [
+      "Check the owner's execute bit.",
+      "Check the owner's read bit instead.",
+      "Allow execution if any of owner, group, or others has execute permission."
+    ],
+    "samples": [
+      {
+        "input": "Owner rw-, group r-x, others ---",
+        "values": [
+          "Deny",
+          "Allow",
+          "Allow"
+        ]
+      },
+      {
+        "input": "Owner --x, group ---, others ---",
+        "values": [
+          "Allow",
+          "Deny",
+          "Allow"
+        ]
+      },
+      {
+        "input": "Owner r--, group ---, others ---",
+        "values": [
+          "Deny",
+          "Allow",
+          "Deny"
+        ]
+      },
+      {
+        "input": "Owner rwx, group r--, others ---",
+        "values": [
+          "Allow",
+          "Allow",
+          "Allow"
+        ]
+      }
+    ]
+  },
+  "docker": {
+    "context": "A shop replaces its app container with a fresh container from the same image. Decide whether a file will still be accessible at the same path. Assume named volumes are reattached and no anonymous volume is reused.",
+    "rules": [
+      "Preserve files in the image and in the reattached volume; discard container-only writes.",
+      "Assume every file visible before replacement survives.",
+      "Assume only files baked into the image survive."
+    ],
+    "samples": [
+      {
+        "input": "Receipt saved only in the writable container layer",
+        "values": [
+          "Lost",
+          "Survives",
+          "Lost"
+        ]
+      },
+      {
+        "input": "Receipt saved in the reattached named volume",
+        "values": [
+          "Survives",
+          "Survives",
+          "Lost"
+        ]
+      },
+      {
+        "input": "Unchanged default template in the image",
+        "values": [
+          "Survives",
+          "Survives",
+          "Survives"
+        ]
+      },
+      {
+        "input": "Temporary log written only to container storage",
+        "values": [
+          "Lost",
+          "Survives",
+          "Lost"
+        ]
+      }
+    ]
+  },
+  "ci-cd": {
+    "context": "A release gate requires both tests and the build to pass on the candidate commit.",
+    "rules": [
+      "Release only when both checks pass.",
+      "Release when either check passes.",
+      "Use tests alone and ignore the build."
+    ],
+    "samples": [
+      {
+        "input": "Tests pass; build fails",
+        "values": [
+          "Hold",
+          "Release",
+          "Release"
+        ]
+      },
+      {
+        "input": "Tests fail; build passes",
+        "values": [
+          "Hold",
+          "Release",
+          "Hold"
+        ]
+      },
+      {
+        "input": "Both pass",
+        "values": [
+          "Release",
+          "Release",
+          "Release"
+        ]
+      },
+      {
+        "input": "Both fail",
+        "values": [
+          "Hold",
+          "Hold",
+          "Hold"
+        ]
+      }
+    ]
+  },
+  "cloud": {
+    "context": "A photo app needs uploaded originals after replacing a server. Classify each storage location under the stated service contract.",
+    "rules": [
+      "Recover bytes from durable object storage or a surviving durable volume; instance-temporary storage disappears.",
+      "Assume all storage on the instance survives replacement.",
+      "Assume only object storage survives, even when a durable volume is explicitly reattached."
+    ],
+    "samples": [
+      {
+        "input": "Photo only on temporary instance disk",
+        "values": [
+          "Lost",
+          "Available",
+          "Lost"
+        ]
+      },
+      {
+        "input": "Photo in object storage",
+        "values": [
+          "Available",
+          "Available",
+          "Available"
+        ]
+      },
+      {
+        "input": "Photo on surviving reattached durable volume",
+        "values": [
+          "Available",
+          "Available",
+          "Lost"
+        ]
+      },
+      {
+        "input": "Photo held only in the old process memory",
+        "values": [
+          "Lost",
+          "Lost",
+          "Lost"
+        ]
+      }
+    ]
+  },
+  "app-deployment": {
+    "context": "A new version receives traffic only if its readiness check passes. A separate liveness check reports whether the process is alive.",
+    "rules": [
+      "Route traffic only to a ready instance.",
+      "Route traffic to any live instance.",
+      "Route traffic immediately after process launch."
+    ],
+    "samples": [
+      {
+        "input": "Launched, live, still loading data",
+        "values": [
+          "Wait",
+          "Route",
+          "Route"
+        ]
+      },
+      {
+        "input": "Launched, live, ready",
+        "values": [
+          "Route",
+          "Route",
+          "Route"
+        ]
+      },
+      {
+        "input": "Launched, liveness failed, readiness failed",
+        "values": [
+          "Wait",
+          "Wait",
+          "Route"
+        ]
+      },
+      {
+        "input": "Launched, live, database unavailable, readiness failed",
+        "values": [
+          "Wait",
+          "Route",
+          "Route"
+        ]
+      }
+    ]
+  },
+  "secrets": {
+    "context": "A service verifies an API key against its active-key list. Which old keys can still authorize a request after an incident?",
+    "rules": [
+      "A key works exactly while the verifier still lists it as active.",
+      "Assume deleting a key from a repository revokes it at the provider.",
+      "Assume issuing a new key always revokes the old one, even when rotation permits overlap."
+    ],
+    "samples": [
+      {
+        "input": "Old key active; removed from code; no replacement yet",
+        "values": [
+          "Works",
+          "Revoked",
+          "Works"
+        ]
+      },
+      {
+        "input": "Old key active; new key issued; code still references old key",
+        "values": [
+          "Works",
+          "Works",
+          "Revoked"
+        ]
+      },
+      {
+        "input": "Old key revoked at provider and removed from code",
+        "values": [
+          "Revoked",
+          "Revoked",
+          "Revoked"
+        ]
+      },
+      {
+        "input": "Old key active; unchanged code; no replacement",
+        "values": [
+          "Works",
+          "Works",
+          "Works"
+        ]
+      }
+    ]
+  },
+  "production-logging": {
+    "context": "A team reconstructs one checkout request across services. Count the events that can be linked unambiguously to trace T7 using the recorded trace ID.",
+    "rules": [
+      "Count only events explicitly tagged T7.",
+      "Count every event in the same minute as T7 even if it has a different trace.",
+      "Count T7 events only in the entry service, ignoring downstream services."
+    ],
+    "samples": [
+      {
+        "input": "Same minute: web T7, pay T7, web T8",
+        "values": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Same minute: web T7, pay missing ID",
+        "values": [
+          "1",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Same minute: web T7 only",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Same minute: web T7, stock T7, pay T7, web T9",
+        "values": [
+          "3",
+          "4",
+          "1"
+        ]
+      }
+    ]
+  },
+  "monitoring": {
+    "context": "A shop alerts if its error fraction over a window exceeds 5%. The fraction is errors divided by all requests; an empty window is treated separately.",
+    "rules": [
+      "Alert if errors / requests is strictly greater than 5%; report no data for zero requests.",
+      "Alert when there are more than five errors in total; report no data for an empty window.",
+      "Alert at 5% or above; report no data for an empty window."
+    ],
+    "samples": [
+      {
+        "input": "10 errors in 1000 requests",
+        "values": [
+          "Quiet",
+          "Alert",
+          "Quiet"
+        ]
+      },
+      {
+        "input": "5 errors in 100 requests",
+        "values": [
+          "Quiet",
+          "Quiet",
+          "Alert"
+        ]
+      },
+      {
+        "input": "2 errors in 20 requests",
+        "values": [
+          "Alert",
+          "Quiet",
+          "Alert"
+        ]
+      },
+      {
+        "input": "No requests",
+        "values": [
+          "No data",
+          "No data",
+          "No data"
+        ]
+      }
+    ]
+  },
+  "performance": {
+    "context": "A team reports p95 from 20 sorted response times using the nearest-rank rule. Count positions starting at one. Times are in milliseconds.",
+    "rules": [
+      "Report value number 19.",
+      "Report the largest value, number 20.",
+      "Report the arithmetic mean of the 20 times."
+    ],
+    "samples": [
+      {
+        "input": "18 values of 10, then 100 and 500",
+        "values": [
+          "100",
+          "500",
+          "39"
+        ]
+      },
+      {
+        "input": "20 values of 20",
+        "values": [
+          "20",
+          "20",
+          "20"
+        ]
+      },
+      {
+        "input": "19 values of 10, then 210",
+        "values": [
+          "10",
+          "210",
+          "20"
+        ]
+      },
+      {
+        "input": "18 values of 5, then 25 and 85",
+        "values": [
+          "25",
+          "85",
+          "10"
+        ]
+      }
+    ]
+  },
+  "api-security": {
+    "context": "A user has a shared allowance of two requests per minute across two replicas. How many requests are admitted in this minute?",
+    "rules": [
+      "Use one atomic counter per user across both replicas.",
+      "Give each replica its own two-request allowance for the same user.",
+      "Use one shared two-request allowance for all users combined."
+    ],
+    "samples": [
+      {
+        "input": "User A sends two requests to each replica",
+        "values": [
+          "2",
+          "4",
+          "2"
+        ]
+      },
+      {
+        "input": "A and B each send two requests to replica 1",
+        "values": [
+          "4",
+          "4",
+          "2"
+        ]
+      },
+      {
+        "input": "A sends one request to each replica",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "A and B each send one request to each replica",
+        "values": [
+          "4",
+          "4",
+          "2"
+        ]
+      }
+    ]
+  },
+  "testing": {
+    "context": "A test expects a new cart to be empty. What item count does it see at the start? The preceding test may have used the cart.",
+    "rules": [
+      "Create a fresh empty cart for every test.",
+      "Reuse the preceding test's cart without cleanup.",
+      "Start each test with one demo item."
+    ],
+    "samples": [
+      {
+        "input": "Preceding test left 3 items",
+        "values": [
+          "0",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Preceding test left no items",
+        "values": [
+          "0",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "input": "Preceding test left 1 item",
+        "values": [
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Preceding test left 2 items",
+        "values": [
+          "0",
+          "2",
+          "1"
+        ]
+      }
+    ]
+  },
+  "cost": {
+    "context": "A team tracks pounds spent per successfully completed task. Failed attempts still cost money. Report undefined if no task succeeds.",
+    "rules": [
+      "Divide total spend by successful tasks.",
+      "Divide total spend by all attempted tasks.",
+      "Count spend from successful attempts only and divide by successes."
+    ],
+    "samples": [
+      {
+        "input": "£9 successful spend, £3 failed spend; 3 successes, 1 failed task",
+        "values": [
+          "4",
+          "3",
+          "3"
+        ]
+      },
+      {
+        "input": "£6 successful spend; 3 successes, no failures",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "£0 successful spend, £5 failed spend; no successes, 1 failure",
+        "values": [
+          "undefined",
+          "5",
+          "undefined"
+        ]
+      },
+      {
+        "input": "£2 successful spend, £4 failed spend; 1 success, 2 failures",
+        "values": [
+          "6",
+          "2",
+          "2"
+        ]
+      }
+    ]
+  },
+  "agents": {
+    "context": "An assistant may take at most three tool steps on a task. It stops sooner after completion or two consecutive identical failures. Report how many steps it executes.",
+    "rules": [
+      "Stop at completion, the third step, or the second consecutive identical failure, whichever comes first.",
+      "Ignore repeated failures; stop only at completion or three steps.",
+      "Stop immediately after the first failure even if recovery is possible."
+    ],
+    "samples": [
+      {
+        "input": "Fail A, fail A, success",
+        "values": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Fail A, success that completes task",
+        "values": [
+          "2",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "Success that completes task immediately",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Three distinct nonterminal successes",
+        "values": [
+          "3",
+          "3",
+          "3"
+        ]
+      }
+    ]
+  },
+  "tool-calling": {
+    "context": "A refund tool must receive valid arguments and the user must be authorized for that order. A model's proposal is input to the dispatcher.",
+    "rules": [
+      "Execute only when both the argument schema and order permission checks pass.",
+      "Execute any proposal with a valid shape.",
+      "Execute any proposal from an authorized user even if arguments are invalid."
+    ],
+    "samples": [
+      {
+        "input": "Valid amount; user owns order",
+        "values": [
+          "Execute",
+          "Execute",
+          "Execute"
+        ]
+      },
+      {
+        "input": "Valid amount; user lacks access",
+        "values": [
+          "Reject",
+          "Execute",
+          "Reject"
+        ]
+      },
+      {
+        "input": "Invalid amount; user owns order",
+        "values": [
+          "Reject",
+          "Reject",
+          "Execute"
+        ]
+      },
+      {
+        "input": "Invalid amount; user lacks access",
+        "values": [
+          "Reject",
+          "Reject",
+          "Reject"
+        ]
+      }
+    ]
+  },
+  "orchestration": {
+    "context": "A document workflow can publish only after proofreading and permissions review both finish successfully. Decide whether publish is runnable now.",
+    "rules": [
+      "Require both successful prerequisites.",
+      "Start publishing as soon as either prerequisite succeeds.",
+      "Require both prerequisites to finish, regardless of success."
+    ],
+    "samples": [
+      {
+        "input": "Proofread succeeds; review pending",
+        "values": [
+          "Wait",
+          "Publish",
+          "Wait"
+        ]
+      },
+      {
+        "input": "Proofread fails; review succeeds",
+        "values": [
+          "Wait",
+          "Publish",
+          "Publish"
+        ]
+      },
+      {
+        "input": "Both succeed",
+        "values": [
+          "Publish",
+          "Publish",
+          "Publish"
+        ]
+      },
+      {
+        "input": "Both pending",
+        "values": [
+          "Wait",
+          "Wait",
+          "Wait"
+        ]
+      }
+    ]
+  },
+  "memory-state": {
+    "context": "An event consumer restores its last durable state after a crash. Count new points credited by the events delivered after restart. Each event ID earns one point exactly once.",
+    "rules": [
+      "Keep processed IDs in the checkpoint and ignore repeated IDs.",
+      "Clear all processed IDs at restart, then deduplicate only within the new batch.",
+      "Credit every delivered message without deduplicating."
+    ],
+    "samples": [
+      {
+        "input": "Already applied A; receive A, B, B",
+        "values": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "input": "No prior IDs; receive C, C",
+        "values": [
+          "1",
+          "1",
+          "2"
+        ]
+      },
+      {
+        "input": "Already applied A; receive A",
+        "values": [
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "input": "Already applied A; receive B",
+        "values": [
+          "1",
+          "1",
+          "1"
+        ]
+      }
+    ]
+  },
+  "automation": {
+    "context": "A ticket issuer may receive the same order webhook several times. Different event IDs are distinct purchases even if the buyer is the same. Count tickets issued.",
+    "rules": [
+      "Issue once per event ID using durable deduplication.",
+      "Issue once per delivery, including retries.",
+      "Issue only once per buyer, even across different purchases."
+    ],
+    "samples": [
+      {
+        "input": "Buyer Jo: events A, A, B",
+        "values": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "input": "Jo event A; Li event B",
+        "values": [
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      {
+        "input": "Jo event A repeated twice",
+        "values": [
+          "1",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "input": "No incoming events",
+        "values": [
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    ]
+  },
+  "multi-agent": {
+    "context": "Three reviewers propose answers. The editor may publish only if an answer has verified evidence. Conflicting verified answers need a human. Decide what happens.",
+    "rules": [
+      "Publish the sole evidence-supported answer; escalate incompatible verified answers or no verified answer.",
+      "Publish the majority vote, escalating ties.",
+      "Publish the first reviewer's answer regardless of evidence."
+    ],
+    "samples": [
+      {
+        "input": "First A unsupported, second A unsupported, third B verified",
+        "values": [
+          "Publish B",
+          "Publish A",
+          "Publish A"
+        ]
+      },
+      {
+        "input": "First A verified, second B verified, third A unsupported",
+        "values": [
+          "Escalate",
+          "Publish A",
+          "Publish A"
+        ]
+      },
+      {
+        "input": "First B unsupported, second A unsupported, third A unsupported",
+        "values": [
+          "Escalate",
+          "Publish A",
+          "Publish B"
+        ]
+      },
+      {
+        "input": "Three A answers, at least one verified",
+        "values": [
+          "Publish A",
+          "Publish A",
+          "Publish A"
+        ]
+      }
+    ]
+  },
+  "human-approval": {
+    "context": "A person approves sending one message to a named recipient. The approval binds the recipient, content and action. Decide whether to execute the proposed send.",
+    "rules": [
+      "Require a fresh approval whenever any approved detail changes.",
+      "Approve any send by the same user regardless of changed details.",
+      "Check only the recipient, allowing text or action changes."
+    ],
+    "samples": [
+      {
+        "input": "Same recipient, text and send action",
+        "values": [
+          "Execute",
+          "Execute",
+          "Execute"
+        ]
+      },
+      {
+        "input": "Recipient changed; text unchanged",
+        "values": [
+          "Ask again",
+          "Execute",
+          "Ask again"
+        ]
+      },
+      {
+        "input": "Text changed; same recipient",
+        "values": [
+          "Ask again",
+          "Execute",
+          "Execute"
+        ]
+      },
+      {
+        "input": "Action changed from draft approval to sending; same recipient",
+        "values": [
+          "Ask again",
+          "Execute",
+          "Execute"
+        ]
+      }
+    ]
+  },
+  "agent-evaluation": {
+    "context": "An evaluator separately records task success and permission compliance. For release, the run must satisfy both. Decide whether each run passes.",
+    "rules": [
+      "Pass only a correct outcome reached entirely through permitted actions.",
+      "Pass whenever the final answer is correct.",
+      "Pass whenever all actions are permitted."
+    ],
+    "samples": [
+      {
+        "input": "Correct answer; unauthorized lookup",
+        "values": [
+          "Fail",
+          "Pass",
+          "Fail"
+        ]
+      },
+      {
+        "input": "Wrong answer; permitted actions",
+        "values": [
+          "Fail",
+          "Fail",
+          "Pass"
+        ]
+      },
+      {
+        "input": "Correct answer; permitted actions",
+        "values": [
+          "Pass",
+          "Pass",
+          "Pass"
+        ]
+      },
+      {
+        "input": "Wrong answer; unauthorized action",
+        "values": [
+          "Fail",
+          "Fail",
+          "Fail"
+        ]
+      }
+    ]
+  },
+  "llmops": {
+    "context": "A team is comparing two prompts. Which comparisons isolate the effect of changing the prompt? Assume decoding settings and evaluation procedure are otherwise fixed.",
+    "rules": [
+      "Change only the prompt, holding the model and evaluation examples fixed.",
+      "Accept a comparison whenever the model stays fixed even if examples change.",
+      "Accept a comparison whenever examples stay fixed even if the model changes."
+    ],
+    "samples": [
+      {
+        "input": "Changed prompt; same model and examples",
+        "values": [
+          "Isolated",
+          "Isolated",
+          "Isolated"
+        ]
+      },
+      {
+        "input": "Changed prompt and examples; same model",
+        "values": [
+          "Confounded",
+          "Isolated",
+          "Confounded"
+        ]
+      },
+      {
+        "input": "Changed prompt and model; same examples",
+        "values": [
+          "Confounded",
+          "Confounded",
+          "Isolated"
+        ]
+      },
+      {
+        "input": "Changed prompt, model and examples",
+        "values": [
+          "Confounded",
+          "Confounded",
+          "Confounded"
+        ]
+      }
+    ]
+  },
+  "advanced-rag": {
+    "context": "Two retrievers each return an ordered list. To combine them, this small example gives 2 points for rank 1 and 1 point for rank 2, then chooses the highest total. Alphabetical ID breaks ties.",
+    "rules": [
+      "Sum rank points from both lists.",
+      "Use the first retriever's first result only.",
+      "Use the second retriever's first result only."
+    ],
+    "samples": [
+      {
+        "input": "First [B,A]; second [A,C]",
+        "values": [
+          "A",
+          "B",
+          "A"
+        ]
+      },
+      {
+        "input": "First [A,C]; second [B,C]",
+        "values": [
+          "A",
+          "A",
+          "B"
+        ]
+      },
+      {
+        "input": "First [C,B]; second [B,A]",
+        "values": [
+          "B",
+          "C",
+          "B"
+        ]
+      },
+      {
+        "input": "First [A,B]; second [A,C]",
+        "values": [
+          "A",
+          "A",
+          "A"
+        ]
+      }
+    ]
+  },
+  "ai-architecture": {
+    "context": "A support assistant caches answers. A hit is safe only for the same tenant, permission scope, question and evidence version. Assume the question text always matches.",
+    "rules": [
+      "Require all three remaining dimensions to match.",
+      "Require just tenant and permission scope, ignoring evidence changes.",
+      "Require only evidence version, ignoring tenant and permission scope."
+    ],
+    "samples": [
+      {
+        "input": "Same tenant, scope and evidence version",
+        "values": [
+          "Reuse",
+          "Reuse",
+          "Reuse"
+        ]
+      },
+      {
+        "input": "Evidence updated; same tenant and scope",
+        "values": [
+          "Recompute",
+          "Reuse",
+          "Recompute"
+        ]
+      },
+      {
+        "input": "Different tenant; same scope name and evidence version",
+        "values": [
+          "Recompute",
+          "Recompute",
+          "Reuse"
+        ]
+      },
+      {
+        "input": "Same tenant and evidence; different scope",
+        "values": [
+          "Recompute",
+          "Recompute",
+          "Reuse"
+        ]
+      }
+    ]
+  }
+}

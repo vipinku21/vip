@@ -1,0 +1,237 @@
+.account-loading {
+  display: grid;
+  min-height: 75vh;
+  place-content: center;
+  justify-items: center;
+}
+
+.account-shell {
+  display: grid;
+  grid-template-columns: minmax(355px, 1fr) minmax(0, 0.95fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--surface);
+}
+
+.account-body {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 4vw, 60px);
+}
+
+.account-body .account-brand {
+  padding: 0;
+  align-self: flex-start;
+}
+.account-card {
+  width: min(100%, 405px);
+  margin: auto;
+  padding: 42px 0;
+}
+.account-form {
+  display: grid;
+  gap: 19px;
+}
+.account-form header {
+  margin-bottom: 4px;
+}
+.account-form header p {
+  color: var(--muted);
+  margin-top: 10px;
+}
+.account-form > .btn {
+  width: 100%;
+  min-height: 43px;
+}
+.account-form label,
+.account-invite-form label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  font-weight: 650;
+}
+.account-form input,
+.account-invite input {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  min-width: 0;
+  width: 100%;
+  height: 43px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: var(--surface);
+  font-size: 15px;
+  font-weight: 450;
+}
+.account-form label small {
+  font-weight: normal;
+  line-height: 1.5;
+}
+.account-form small code {
+  overflow-wrap: anywhere;
+}
+.account-error,
+.account-notice {
+  padding: 10px 14px;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+.account-error {
+  color: #772f24;
+  background: #fae9e1;
+}
+:root[data-theme="dark"] .account-error {
+  color: #ffd4ca;
+  background: #432d2b;
+}
+.account-notice {
+  color: var(--accent);
+  background: var(--active);
+}
+.account-switch {
+  text-align: center;
+  color: var(--muted);
+}
+.account-switch a {
+  color: var(--accent);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.account-photo {
+  background: #dbded2 url("/workstation.webp") center / cover no-repeat;
+}
+
+.account-admin {
+  display: grid;
+  gap: 18px;
+  max-width: 940px;
+}
+.account-seats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 20px 24px;
+}
+.account-seats > div + div {
+  border-left: 1px solid var(--border);
+  padding-left: 18px;
+}
+.account-seats div,
+.account-list li > span {
+  display: grid;
+  gap: 4px;
+}
+.account-seats strong {
+  font-size: clamp(20px, 3vw, 27px);
+  line-height: 1.25;
+}
+.account-invite {
+  display: grid;
+  gap: 16px;
+}
+.account-invite p {
+  color: var(--muted);
+}
+.account-invite-form {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+.account-invite-form > button,
+.account-share button {
+  min-height: 43px;
+}
+.account-share {
+  display: grid;
+  gap: 6px;
+  background: var(--faint);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.account-share > div {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+.account-share button {
+  flex-shrink: 0;
+}
+.account-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.account-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 24px;
+}
+.account-list li + li {
+  border-top: 1px solid var(--border);
+}
+.account-list li > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.account-list button {
+  flex-shrink: 0;
+}
+.account-confirm {
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: min(430px, calc(100% - 32px));
+}
+.account-confirm::backdrop {
+  background-color: #17251d80;
+}
+.account-confirm strong {
+  overflow-wrap: anywhere;
+}
+.account-confirm p {
+  margin: 8px 0 20px;
+  color: var(--muted);
+}
+.account-confirm > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .account-shell {
+    display: flex;
+  }
+  .account-body {
+    flex: 1;
+    padding: 24px;
+  }
+  .account-photo {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .account-invite-form {
+    grid-template-columns: 1fr;
+  }
+  .account-invite-form button {
+    width: 100%;
+  }
+  .account-seats {
+    padding: 16px;
+    gap: 8px;
+  }
+  .account-seats > div + div {
+    padding-left: 9px;
+  }
+  .account-list li {
+    padding: 13px 15px;
+  }
+}

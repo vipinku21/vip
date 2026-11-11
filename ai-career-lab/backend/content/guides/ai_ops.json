@@ -1,0 +1,1946 @@
+{
+  "llms": {
+    "title": "Finish a message at a bakery",
+    "story": "Meera types “Your sourdough is ready for …” into a bakery messaging app. Several endings read naturally, including “pickup” and “collection.” A large language model is a computer program that learned patterns in text and uses them to suggest a continuation.",
+    "steps": [
+      "Imagine the next piece has three possible choices for this demonstration. Give pickup 6 tickets, collection 3 and lunch 1.",
+      "Drawing one of the ten tickets gives pickup a 6-in-10 chance. Once pickup is chosen, the next choice uses the whole phrase ending in pickup.",
+      "Compare the finished sentence with the order book. The words sound natural even on a day when the bread is still in the oven."
+    ],
+    "outcome": "You can separate drafting a readable message from checking whether its promise is true.",
+    "terms": [
+      [
+        "Language model",
+        "A program trained to estimate which pieces of text fit together."
+      ],
+      [
+        "Token",
+        "A piece of text the model reads or writes in one step."
+      ],
+      [
+        "Context",
+        "The text available while the model chooses its next piece."
+      ],
+      [
+        "Sampling",
+        "Choosing among possible next pieces using their assigned chances."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two drafts of the same bakery notice use different greetings.",
+        "action": "Keep both drafts and ask the baker to choose one that suits the customer.",
+        "reason": "Several greetings can have high chances for the same opening words.",
+        "check": "Verify that both drafts preserve the stated pickup time of 4 pm.",
+        "tradeoff": "Variation gives the baker choice and requires a final read.",
+        "alternative": "Treat different greetings as evidence that the stored order changed."
+      },
+      {
+        "situation": "A fluent message promises gluten-free bread, although the order information only says sourdough.",
+        "action": "Remove the claim and check the ingredient list before adding it.",
+        "reason": "A likely continuation can include a detail absent from the order.",
+        "check": "Require every dietary claim to match an entry in the ingredient record.",
+        "tradeoff": "Waiting for a checked ingredient list delays the reply.",
+        "alternative": "Regenerate repeatedly and keep the most confidently worded draft."
+      },
+      {
+        "situation": "A draft begins “Your order is ready” and then repeats ready in every sentence.",
+        "action": "Limit the length and check for repetition before offering the draft.",
+        "reason": "Each generated piece becomes part of the text that guides later pieces.",
+        "check": "Run a deliberately repetitive opening and confirm the message ends within the chosen limit.",
+        "tradeoff": "A short limit can cut off a useful instruction.",
+        "alternative": "Give the draft unlimited space to finish the repeated phrase."
+      }
+    ]
+  },
+  "tokens": {
+    "title": "Fit a letter and its reply into one envelope",
+    "story": "Omar's library assistant can work with 1,000 pieces of text at a time in this example. Instructions use 100 pieces, the reader's question uses 50, and Omar wants to leave 150 for the reply. The remaining space determines how much of a handbook it can read.",
+    "steps": [
+      "Subtract the 100 instructions, 50 question pieces and 150 reserved reply pieces from 1,000. The handbook allowance is 700.",
+      "A section with 680 pieces fits. A section with 720 needs shortening by at least 20 pieces before the request goes out.",
+      "Count with the tool for this particular model. One long word can occupy several pieces, so counting words on a page gives a different answer."
+    ],
+    "outcome": "You can budget space for supporting information while leaving enough room for an answer.",
+    "terms": [
+      [
+        "Token",
+        "A unit from the model's own text-splitting dictionary."
+      ],
+      [
+        "Tokenizer",
+        "The tool that turns text into those units and counts them."
+      ],
+      [
+        "Context window",
+        "The upper limit on pieces usable together for a request and its generated text."
+      ],
+      [
+        "Output reserve",
+        "Space set aside for the model's reply."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A 700-word handbook still overflows an allowance of 700 tokens.",
+        "action": "Count the exact request with the intended model's tokenizer.",
+        "reason": "Punctuation and parts of words can each occupy units.",
+        "check": "Compare the counts for one paragraph before and after adding a long catalogue number.",
+        "tradeoff": "Exact counting requires the tokenizer that matches the deployed model.",
+        "alternative": "Count 700 words and assume the request fits."
+      },
+      {
+        "situation": "A refund chatbot can quote six old messages but cuts its answer in the middle.",
+        "action": "Reserve room for the reply before filling the remaining space with history.",
+        "reason": "Input and generated output use the available budget together in this example.",
+        "check": "With a 1,000-piece budget and 200 reserved, confirm at most 800 pieces are supplied.",
+        "tradeoff": "Less history may leave out an earlier preference.",
+        "alternative": "Increase the amount of conversation history until the answer is more detailed."
+      },
+      {
+        "situation": "Two handbook paragraphs fit separately but their combined text is too long.",
+        "action": "Keep the section containing the answer and its exception together.",
+        "reason": "Dropping only the exception can reverse the meaning of an otherwise short rule.",
+        "check": "For a weekend question, confirm the retained passage includes the weekend opening hours.",
+        "tradeoff": "Keeping an exception may force a lower-priority passage out of the request.",
+        "alternative": "Cut all passages at the same character count."
+      }
+    ]
+  },
+  "prompt-engineering": {
+    "title": "Give a sorting instruction a colleague could follow",
+    "story": "Sara has a shop inbox with three messages: “Where is parcel 28?”, “Please exchange my shirt” and “I love the new colours.” She wants software to put each in a tray so the right colleague sees it. A prompt is the written instruction given to the model for this job.",
+    "steps": [
+      "Name the allowed trays Delivery, Returns and Other. Tell the model to choose one tray for each message.",
+      "Show one different example: “It has not arrived” belongs in Delivery. Then present Sara's three messages as the text to sort.",
+      "Check the returned labels in order. Delivery, Returns and Other let staff route these messages without reading a long explanation."
+    ],
+    "outcome": "You can turn a vague request into a repeatable instruction with examples and a checkable result.",
+    "terms": [
+      [
+        "Prompt",
+        "The instructions and material supplied for a task."
+      ],
+      [
+        "Example",
+        "A demonstration pairing a sample input with an acceptable answer."
+      ],
+      [
+        "Constraint",
+        "A rule the answer must satisfy, such as choosing a listed label."
+      ],
+      [
+        "Ambiguity",
+        "Two or more reasonable meanings for the same words."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The model returns “Shipping issue” and the inbox only accepts Delivery, Returns or Other.",
+        "action": "List the three allowed labels and validate the response against that list.",
+        "reason": "Free wording can express the right idea and still fail a program's label check.",
+        "check": "Feed a late-parcel message and verify the stored label is one of the three accepted strings.",
+        "tradeoff": "Fixed labels can hide useful detail for human reviewers.",
+        "alternative": "Accept any phrase containing the word issue."
+      },
+      {
+        "situation": "A customer asks both to return a coat and to track its replacement.",
+        "action": "Define which request takes priority or route mixed requests for review.",
+        "reason": "A single-label instruction leaves two defensible choices until there is a policy.",
+        "check": "Test both orders of the same two requests and compare the assigned tray.",
+        "tradeoff": "Giving one issue priority leaves the other for a later step.",
+        "alternative": "Add a fourth training example about ordinary late parcels."
+      },
+      {
+        "situation": "Ten example messages all concern deliveries, and unrelated praise gets a Delivery label.",
+        "action": "Include contrasting examples covering praise and exchanges.",
+        "reason": "Examples show the boundaries of a label as well as its familiar wording.",
+        "check": "Hold out one new compliment and one new exchange request to check both boundaries.",
+        "tradeoff": "More examples consume space in each model request.",
+        "alternative": "Repeat the delivery examples with different parcel numbers."
+      }
+    ]
+  },
+  "model-apis": {
+    "title": "Send a translation request across a service counter",
+    "story": "Jin runs a café and wants “Soup of the day” translated for a menu. His app sends the phrase and requested language to a separate translation service. An application programming interface, or API, is the agreed way one program asks another program to do a job.",
+    "steps": [
+      "The café sends a request containing the text and the target language French. A private credential identifies the calling application.",
+      "The service returns a response containing an answer such as “Soupe du jour.” The app reads the answer field to fill the menu.",
+      "If no answer arrives within the time limit, mark the translation as pending. The café can keep its original menu while it checks the request."
+    ],
+    "outcome": "You can trace a request from the form through the service and distinguish pending work from a completed result.",
+    "terms": [
+      [
+        "API",
+        "An agreed set of requests and responses between programs."
+      ],
+      [
+        "Payload",
+        "The fields carried inside one request or response."
+      ],
+      [
+        "Timeout",
+        "The point at which the caller stops waiting."
+      ],
+      [
+        "Retry",
+        "Another attempt to perform a request after a failure."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The service rejects every request because the credential expired.",
+        "action": "Correct the credential before attempting the translation again.",
+        "reason": "Repeating the same unauthorized request leaves its cause in place.",
+        "check": "A single authorized test should translate the café phrase after replacement.",
+        "tradeoff": "Repairing the credential may require someone with account access.",
+        "alternative": "Repeat the unauthorized request fifty times."
+      },
+      {
+        "situation": "A provider asks the café to wait 30 seconds before trying again.",
+        "action": "Schedule a bounded retry after the stated delay.",
+        "reason": "Respecting a rate limit gives the service time to accept more work.",
+        "check": "Record the retry time and verify a second attempt occurs no earlier than 30 seconds later.",
+        "tradeoff": "Customers see a pending translation during the delay.",
+        "alternative": "Send more simultaneous translation requests to obtain the first available answer."
+      },
+      {
+        "situation": "A translation request times out after the service may already have charged for it.",
+        "action": "Check its request status or supported duplicate-protection key before retrying.",
+        "reason": "The caller losing the reply does not undo work already completed by the provider.",
+        "check": "Simulate a lost reply and verify one translated item is attached to the order.",
+        "tradeoff": "Some providers lack a status lookup, leaving a manual decision.",
+        "alternative": "Count every timeout as proof the original job never started."
+      }
+    ]
+  },
+  "structured-outputs": {
+    "title": "Turn a grocery note into fields a till can read",
+    "story": "Asha writes “Please pack 3 apples.” Her till needs separate boxes for the product name and the number ordered. A structured output gives each part a named place so another program can check and use it.",
+    "steps": [
+      "Write the order as a record with item equal to apple and quantity equal to 3. Quantity is a whole number so the till can multiply the price by it.",
+      "Check the shape first. A record missing quantity still needs attention even if the item name is clear.",
+      "Check the business rule next. Quantity −3 is a whole number but cannot be packed as a purchase of three apples."
+    ],
+    "outcome": "You can tell a well-formed record from an order your shop can actually fulfil.",
+    "terms": [
+      [
+        "Field",
+        "A named box holding one part of a record."
+      ],
+      [
+        "JSON",
+        "A text format for records, lists, numbers and other simple values."
+      ],
+      [
+        "Schema",
+        "A written description of allowed fields and their types."
+      ],
+      [
+        "Validation",
+        "Checking a record against its format and business rules."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The customer orders two bananas, but the response puts the word two in a field requiring an integer.",
+        "action": "Reject or deliberately convert the value through a documented number parser.",
+        "reason": "A till that sums numeric quantities needs an actual number.",
+        "check": "Confirm accepted records allow adding one to the quantity without a text error.",
+        "tradeoff": "Conversion requires a precise rule for ambiguous phrases such as a couple.",
+        "alternative": "Store the text unchanged in the numeric field."
+      },
+      {
+        "situation": "A valid JSON order contains a product code for an item the shop discontinued.",
+        "action": "Check the code against the current saleable catalogue.",
+        "reason": "Correct field types do not establish that a real item can be sold.",
+        "check": "Try one active and one retired code and verify only the active one can be checked out.",
+        "tradeoff": "The extra check depends on a fresh catalogue.",
+        "alternative": "Accept every record that a JSON reader opens successfully."
+      },
+      {
+        "situation": "An unclear note says “pack some pears” and a model supplies quantity 8.",
+        "action": "Represent the missing quantity explicitly and ask the customer.",
+        "reason": "A schema can force a number even when the note supplies none.",
+        "check": "Check that this note produces a clarification without creating an eight-pear order.",
+        "tradeoff": "Clarification adds a step before checkout.",
+        "alternative": "Use the most common quantity from last week's pear orders."
+      }
+    ]
+  },
+  "embeddings": {
+    "title": "Find two requests that ask for the same help",
+    "story": "Rina's repair desk receives “the display stays black” and “the screen will not light up.” Looking for identical words might separate these reports. An embedding represents a piece of text with a list of numbers learned so that texts used in similar ways can often be found near one another.",
+    "steps": [
+      "Imagine a teaching map with two invented directions, screen trouble and sound trouble. Place the first report at (1, 0) and a silent-speaker report at (0, 1).",
+      "Give the second screen report the position (0.9, 0.1). Its direction points mostly toward the first screen report, so inspect that ticket first.",
+      "Real embedding systems learn many directions whose meanings are usually difficult to name. Check the actual reports before closing them as duplicates."
+    ],
+    "outcome": "You can explain how a help desk finds paraphrases and why a close numerical match still needs checking.",
+    "terms": [
+      [
+        "Embedding",
+        "A learned list of numbers representing an item for comparison."
+      ],
+      [
+        "Vector",
+        "A list of numbers treated as a point or direction."
+      ],
+      [
+        "Similarity",
+        "A measure used to order items by how closely their representations match."
+      ],
+      [
+        "Cosine similarity",
+        "A score comparing the directions of two nonzero vectors."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The help desk switches embedding models and yesterday's matches become strange.",
+        "action": "Rebuild stored representations using the same model as the new queries.",
+        "reason": "Two models can arrange the same meanings in different numerical spaces.",
+        "check": "Test known duplicate reports before and after rebuilding the index.",
+        "tradeoff": "Recomputing old representations takes time and compute.",
+        "alternative": "Mix old and new vectors whenever they have the same length."
+      },
+      {
+        "situation": "A complaint about a silent phone and a complaint about a silent radio score highly together.",
+        "action": "Check product type alongside the text match.",
+        "reason": "Similar descriptions of symptoms can refer to devices needing different repair instructions.",
+        "check": "A radio query should only receive phone procedures if the product policy permits it.",
+        "tradeoff": "A strict product filter can hide a shared fix across devices.",
+        "alternative": "Send both customers the phone repair instructions automatically."
+      },
+      {
+        "situation": "A blank report has no information to compare, and a homemade system produces the vector (0, 0).",
+        "action": "Request a description before computing direction-based similarity.",
+        "reason": "A zero vector has no direction for a cosine comparison.",
+        "check": "Submit whitespace alone and verify the form asks for a symptom description.",
+        "tradeoff": "Requiring a description adds work for a customer with limited time.",
+        "alternative": "Treat a zero-length vector as a perfect match to every ticket."
+      }
+    ]
+  },
+  "vector-databases": {
+    "title": "Find the right manual on a crowded repair shelf",
+    "story": "Leela keeps repair notes for two brands of washing machine. Each note has a list of numbers describing its meaning and a label naming its brand. A vector database stores and searches these numbered descriptions so Leela can quickly find promising notes.",
+    "steps": [
+      "For a Brand A leak, first allow only Brand A notes the technician may read. That leaves A12 and A19 on our small shelf.",
+      "Suppose their match scores are 0.86 and 0.72. Asking for one result brings back A12 and its identifier, which leads to the original instructions.",
+      "When A12 is rewritten for the latest seal, update its numbered description and version together. Search again for the revised leak symptom."
+    ],
+    "outcome": "You can design a searchable manual shelf that respects access, version changes and relevance.",
+    "terms": [
+      [
+        "Vector database",
+        "A store that can find records with nearby numerical descriptions."
+      ],
+      [
+        "Index",
+        "A search structure that helps locate likely matches quickly."
+      ],
+      [
+        "Metadata",
+        "Extra record labels such as brand, owner, language or revision."
+      ],
+      [
+        "Nearest neighbors",
+        "The records closest to the query under the chosen comparison rule."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The closest note belongs to a repair company the technician cannot access.",
+        "action": "Enforce the allowed company scope during retrieval and again before returning the note.",
+        "reason": "Similarity ranks meaning and does not grant access.",
+        "check": "Put identical private notes in two companies and verify each technician sees only their own.",
+        "tradeoff": "Access filtering can leave fewer relevant candidates.",
+        "alternative": "Show the most similar note and hide its company name."
+      },
+      {
+        "situation": "A retired manual still appears after the team replaces its file.",
+        "action": "Remove or supersede its indexed passages using their stable identifiers.",
+        "reason": "An index can keep a representation after the original file changes.",
+        "check": "Search for a phrase unique to the retired revision and inspect every returned version.",
+        "tradeoff": "Replacing passages requires maintaining a map from file versions to passage IDs.",
+        "alternative": "Reindex only newly uploaded manuals and leave older passages in place."
+      },
+      {
+        "situation": "Approximate search responds quickly but misses a known correct repair note.",
+        "action": "Compare results with an exhaustive scan on a small reference collection and tune search effort.",
+        "reason": "A fast index may inspect only part of the possible matches.",
+        "check": "Measure the proportion of known matches recovered at the same result count.",
+        "tradeoff": "Examining more candidates generally costs additional search time.",
+        "alternative": "Increase displayed score precision from two to four decimal places."
+      }
+    ]
+  },
+  "semantic-search": {
+    "title": "Look up a rule using a customer's own words",
+    "story": "Dev asks a bicycle shop site, “Can I bring the helmet back?” The policy page uses the words “returns accepted within seven days.” Semantic search aims to retrieve relevant meaning across this wording difference.",
+    "steps": [
+      "Make a numerical description of Dev's question and compare it with the descriptions of the policy passages.",
+      "Suppose the returns passage scores 0.84, the sizing guide 0.56 and the warranty page 0.41. Sort them and show the first two as candidates.",
+      "Read the returns passage to answer the question. The score orders possibilities and does not itself say whether Dev qualifies."
+    ],
+    "outcome": "You can design a search test using the wording customers actually use and measure whether useful passages reach the results.",
+    "terms": [
+      [
+        "Query",
+        "The words a person enters when searching."
+      ],
+      [
+        "Ranking",
+        "Putting candidate results in an order."
+      ],
+      [
+        "Paraphrase",
+        "A different wording that expresses much the same meaning."
+      ],
+      [
+        "Recall at k",
+        "The fraction of all known relevant items found in the first k results."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A query for part ZX-12 retrieves descriptions of other, similarly shaped parts.",
+        "action": "Combine exact part-code matching with meaning-based search.",
+        "reason": "A small change in an identifier can change the product even when the descriptions sound alike.",
+        "check": "Compare results for ZX-12 and ZX-21 using the parts catalogue.",
+        "tradeoff": "Exact matching needs consistent handling of dashes and letter case.",
+        "alternative": "Drop all digits from the part query before searching."
+      },
+      {
+        "situation": "A shop has four relevant return policies, but the top three results contain only two of them.",
+        "action": "Record recall at three as two divided by four, or 0.5.",
+        "reason": "The denominator for recall is the set of known relevant policies.",
+        "check": "Label each of the four policies and count their IDs in the three returned items.",
+        "tradeoff": "The calculation depends on someone identifying the relevant policies.",
+        "alternative": "Divide two by three and call it recall."
+      },
+      {
+        "situation": "Search was tested only with phrases copied from the staff handbook.",
+        "action": "Add independent customer paraphrases and common local wording to the evaluation questions.",
+        "reason": "Copied phrases hide the very wording difference semantic search must bridge.",
+        "check": "Track whether “bring this back” retrieves the returns rule for a new customer query.",
+        "tradeoff": "Judging many paraphrases takes staff time.",
+        "alternative": "Conclude the search understands customers because every handbook heading matches itself."
+      }
+    ]
+  },
+  "rag": {
+    "title": "Answer a school-bus question using this week's timetable",
+    "story": "Maya asks when bus 7 leaves on Friday. A text-writing model can compose a sentence, but the timetable changes every term. Retrieval-augmented generation, abbreviated RAG, gives the model relevant material to read when composing its answer.",
+    "steps": [
+      "Search the current timetable for route 7 and Friday. Keep the row marked “Friday, 15:40, north gate” with its page number.",
+      "Give that row and Maya's question to the writing model. Ask it to use the supplied row and mention the source page.",
+      "Compare “15:40 from the north gate” with the row before showing it. If the search finds only Monday's table, ask for Friday's timetable."
+    ],
+    "outcome": "You can work out whether a bad answer started in document search, evidence selection or answer writing.",
+    "terms": [
+      [
+        "Retrieval",
+        "Finding material relevant to a question."
+      ],
+      [
+        "Passage",
+        "A selected piece of a source document."
+      ],
+      [
+        "Grounded answer",
+        "A response whose factual claims are supported by supplied evidence."
+      ],
+      [
+        "Citation",
+        "A pointer that lets a reader find the relevant source."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The system answers with last term's departure time although a new timetable is available.",
+        "action": "Filter by the timetable's effective date before selecting a passage.",
+        "reason": "Both versions match the route language while only one applies on the travel date.",
+        "check": "Ask the same question about dates on either side of the timetable change.",
+        "tradeoff": "Historical questions need their own date selection.",
+        "alternative": "Give the model every year's timetable without any version labels."
+      },
+      {
+        "situation": "The Friday row is present in the model's input, but the answer says 16:40.",
+        "action": "Check the generated time against the selected timetable row before displaying it.",
+        "reason": "Retrieval succeeded while the answer introduced a different digit.",
+        "check": "Feed a fixed 15:40 row and confirm 16:40 fails the support check.",
+        "tradeoff": "Comparing dates and time formats requires normalization rules.",
+        "alternative": "Increase the number of retrieved bus routes."
+      },
+      {
+        "situation": "No source states whether the bus takes bicycles.",
+        "action": "Say the supplied timetable does not answer this question and direct the reader to the transport office.",
+        "reason": "A departure table cannot establish a bicycle policy.",
+        "check": "For a bicycle query, verify the system avoids claiming a yes or no policy without evidence.",
+        "tradeoff": "The reader may need another source or a human response.",
+        "alternative": "Infer permission from the lack of a bicycle ban in the timetable."
+      }
+    ]
+  },
+  "document-qa": {
+    "title": "Answer a question someone can check on a page",
+    "story": "Arun wants to borrow a projector from a community hall. Its handbook says on page 6, “Return the projector by 6 pm the following day.” A document question-answering tool should make it easy for Arun to verify that deadline in the original file.",
+    "steps": [
+      "Keep the sentence with its heading “Projector loans” when dividing page 6 into readable pieces. Store the page number and document version with it.",
+      "When Arun asks “When is it due?”, match his projector question to that piece and locate the words “6 pm the following day.”",
+      "Give the deadline and point to page 6. Follow the pointer yourself to see that the heading and quoted words still match."
+    ],
+    "outcome": "You can turn an answer into a checkable reading aid by preserving the location and meaning of the supporting passage.",
+    "terms": [
+      [
+        "Chunk",
+        "A piece of a document kept together for search and reading."
+      ],
+      [
+        "Source location",
+        "The file, version and place where text came from."
+      ],
+      [
+        "Evidence span",
+        "The specific words supporting an answer."
+      ],
+      [
+        "Overlap",
+        "Text repeated between adjacent pieces so a boundary is less likely to cut a useful phrase."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A passage says “six days” but its heading, “Large equipment repairs,” was removed.",
+        "action": "Store the section heading with the passage before using it to answer loan questions.",
+        "reason": "A number without its subject can describe the wrong procedure.",
+        "check": "Ask separately about repair and loan durations and inspect the supporting headings.",
+        "tradeoff": "Repeating headings slightly increases storage and reading space.",
+        "alternative": "Use whichever passage contains a number and the word days."
+      },
+      {
+        "situation": "A room-fee table has prices in one column, while extraction returns only a list of numbers.",
+        "action": "Preserve each row's room label and its column headings together.",
+        "reason": "The same price means different things for weekend and weekday hire.",
+        "check": "For the small hall, compare the extracted Saturday fee with the cell under Saturday in the file.",
+        "tradeoff": "Retaining table layout can require additional extraction work.",
+        "alternative": "Sort all extracted prices and use the cheapest for every room."
+      },
+      {
+        "situation": "A scanned page is missing the decimal point in a £2.50 charge.",
+        "action": "Compare the extracted price with the original page image before answering a fee question.",
+        "reason": "Character recognition can transform a printed value while preserving fluent surrounding text.",
+        "check": "Verify the returned fee is £2.50 and that the cited page shows the decimal point.",
+        "tradeoff": "Manual review adds delay for low-quality scans.",
+        "alternative": "Assume a searchable text layer reproduces all printed amounts exactly."
+      }
+    ]
+  },
+  "grounding": {
+    "title": "Check every promise in a returns reply",
+    "story": "Nora reads a shop policy saying “Unopened lamps may be returned within 14 days.” An assistant writes “Return any lamp within 14 days with free collection.” Grounding means connecting each factual part of that reply to evidence a reader can inspect.",
+    "steps": [
+      "Break the reply into three claims about which lamps, the deadline and collection. This lets you check them one at a time.",
+      "Underline “unopened” and “14 days” in the source. Restrict the answer to unopened lamps and keep the supported 14-day deadline.",
+      "Look for collection wording. Since the source gives none, say collection arrangements need checking and point Nora to the policy."
+    ],
+    "outcome": "You can audit a convincing-sounding answer by testing each promise against the words in a source.",
+    "terms": [
+      [
+        "Claim",
+        "A statement a reader could check for truth."
+      ],
+      [
+        "Evidence",
+        "Information that supports or contradicts a specific claim."
+      ],
+      [
+        "Hallucination",
+        "A plausible model-generated claim that is false or unsupported in context."
+      ],
+      [
+        "Abstention",
+        "Declining to supply a conclusion when the available evidence cannot justify it."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The answer cites the correct shop policy but gives an opening time found nowhere on that page.",
+        "action": "Verify that the cited passage supports the specific time claim.",
+        "reason": "A valid link proves that a page exists, not what the page says.",
+        "check": "Locate the precise opening-time words or remove the time from the answer.",
+        "tradeoff": "Sentence-level checking takes more work than checking links.",
+        "alternative": "Keep the time whenever the cited link opens successfully."
+      },
+      {
+        "situation": "Two dated leaflets give different return windows for the same product.",
+        "action": "Establish which leaflet applies to the purchase date and show any unresolved conflict.",
+        "reason": "Different policies can both be accurate for different dates.",
+        "check": "Test one purchase before and one after the dated policy change.",
+        "tradeoff": "Some older receipts may omit the date needed to decide.",
+        "alternative": "Average the two windows into a new return deadline."
+      },
+      {
+        "situation": "A model labels its answer “99% confident” while the source has no cancellation clause.",
+        "action": "Ask for the missing clause or acknowledge the gap.",
+        "reason": "Confidence wording is generated text and supplies no contractual evidence.",
+        "check": "Keep the source fixed and confirm repeated confident drafts still receive no policy claim.",
+        "tradeoff": "The user may receive a less complete immediate answer.",
+        "alternative": "Treat the stated confidence percentage as proof of support."
+      }
+    ]
+  },
+  "ai-evaluation": {
+    "title": "Compare two versions of a lost-property assistant",
+    "story": "Elena's railway desk has ten example enquiries whose correct outcomes the staff have already checked. One version of an assistant resolves eight correctly and a new version resolves nine. Evaluation means deciding what counts as a good answer, then measuring both versions on comparable cases.",
+    "steps": [
+      "Keep the same ten enquiries and score each answer against a written rule. For a lost umbrella, require the correct counter and opening hours.",
+      "Count nine passes out of ten for the new version, then inspect which case changed. A previously correct answer may have failed even as the total rose.",
+      "Keep additional unseen enquiries for the final comparison. Include cases where the proper response is to ask for a missing station name."
+    ],
+    "outcome": "You can report measurable improvement and explain which kinds of customer request still fail.",
+    "terms": [
+      [
+        "Evaluation set",
+        "A collection of cases used to measure performance."
+      ],
+      [
+        "Rubric",
+        "A written rule for judging an answer."
+      ],
+      [
+        "Regression",
+        "A case that worked before a change and fails afterward."
+      ],
+      [
+        "Held-out case",
+        "An example kept outside the tuning process for a fairer final check."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "An evaluator awards points only for naming a station, and invented stations receive full credit.",
+        "action": "Check the station against the verified answer and require the correct uncertainty response for missing information.",
+        "reason": "A surface feature can earn points without solving the task.",
+        "check": "Give the judge one invented station and one justified request for clarification.",
+        "tradeoff": "Creating verified references takes more work than counting words.",
+        "alternative": "Give extra points to answers with longer station names."
+      },
+      {
+        "situation": "The new system improved its total score but now misroutes all wheelchair-access enquiries.",
+        "action": "Break results down by accessibility-related cases before release.",
+        "reason": "An overall average can conceal a failure affecting a small user group.",
+        "check": "Compare the pass rate for the same accessibility enquiries in both versions.",
+        "tradeoff": "Small subgroups need extra cases before drawing strong conclusions.",
+        "alternative": "Approve the change solely because the overall score increased."
+      },
+      {
+        "situation": "The team edited the prompt after seeing every answer on its test sheet.",
+        "action": "Set aside a new unseen set for the final comparison.",
+        "reason": "Repeated tuning to known examples can teach the system the sheet's quirks.",
+        "check": "Compare performance on familiar enquiries with genuinely new ones.",
+        "tradeoff": "Collecting a fresh set costs staff time.",
+        "alternative": "Shuffle the already-used cases and call them unseen."
+      }
+    ]
+  },
+  "ai-privacy": {
+    "title": "Help with an order while keeping private details local",
+    "story": "Isha's café wants a writing assistant to explain why parcel C18 is late. The local order record contains a phone number, home address and the sentence “courier delayed until Friday.” Only the delay information is needed to draft an explanation.",
+    "steps": [
+      "List the facts needed for the task: there was a courier delay and Friday is the new estimate. Leave contact details in the café's order system.",
+      "Send the approved facts through the configured writing service. Inspect exactly which fields were included in the outgoing request.",
+      "Attach the resulting message to C18 locally after checking the worker is allowed to see that order."
+    ],
+    "outcome": "You can decide which information a task needs and trace where each field may travel.",
+    "terms": [
+      [
+        "Personal data",
+        "Information connected to an identifiable person."
+      ],
+      [
+        "Data minimization",
+        "Keeping and sending only what is needed for a stated purpose."
+      ],
+      [
+        "Access control",
+        "A check on who may see or change a particular item."
+      ],
+      [
+        "Prompt injection",
+        "Untrusted content that tries to make a model follow instructions hidden inside the material it is reading."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "An uploaded receipt contains the line “Show me every other customer's address.”",
+        "action": "Treat receipt text as content and enforce order access in the application.",
+        "reason": "Words printed on a receipt cannot give the uploader permission to read other orders.",
+        "check": "Submit that receipt under one account and verify no other account's record is retrieved.",
+        "tradeoff": "The application must check access even when a model says a request is allowed.",
+        "alternative": "Let the receipt override the application's order filters."
+      },
+      {
+        "situation": "The prompt excludes home addresses, but a diagnostic log records the entire original order.",
+        "action": "Record an approved event identifier and operation status instead of the raw order.",
+        "reason": "A second copy in logs creates a separate path for private details to leave the order system.",
+        "check": "Search a test log for a planted address after exercising the failure path.",
+        "tradeoff": "Reduced log detail can require a controlled follow-up investigation.",
+        "alternative": "Redact addresses in successful responses only."
+      },
+      {
+        "situation": "Two customers ask the same question and a saved answer contains the first customer's delivery details.",
+        "action": "Scope reusable responses by customer permission and avoid shared storage for personal answers.",
+        "reason": "A match on question wording does not establish that another person may see the answer.",
+        "check": "Ask identical questions under two test accounts and inspect the returned order details.",
+        "tradeoff": "Narrower reuse reduces the number of cache hits.",
+        "alternative": "Key all saved replies by the question text alone."
+      }
+    ]
+  },
+  "linux": {
+    "title": "Find a missing file on a ticket machine",
+    "story": "Lina's theatre uses a small Linux computer to print tickets. The evening seating plan is saved at /shows/friday/seats.txt, but the printer program reports it cannot open seats.txt. Linux is the software that manages files, accounts and running programs on that computer.",
+    "steps": [
+      "Think of /shows/friday/seats.txt as directions from the top of a filing cabinet. The final part names the file and the earlier parts name its containing folders.",
+      "A shorter name, seats.txt, starts the search in the program's current folder. From /shows/saturday it points at a different location.",
+      "Check the absolute location, then check whether the printer's account may read that file. Finding a file and having permission to use it are separate checks."
+    ],
+    "outcome": "You can distinguish a wrong location, insufficient access and a program that has stopped.",
+    "terms": [
+      [
+        "Path",
+        "Directions to a file or folder."
+      ],
+      [
+        "Working directory",
+        "The folder used as the starting point for relative names."
+      ],
+      [
+        "Permission",
+        "An allowed operation such as reading, writing or entering a folder."
+      ],
+      [
+        "Process",
+        "A running instance of a program with its own identifying number."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A volunteer can open the plan, while the printer account receives permission denied.",
+        "action": "Check access using the printer's own account and grant the narrow read access it needs.",
+        "reason": "Permissions are checked for the account running the process.",
+        "check": "Read the exact file as the printer account without giving it permission to edit the plan.",
+        "tradeoff": "A future change of service account will require checking access again.",
+        "alternative": "Give every account write access to the entire shows folder."
+      },
+      {
+        "situation": "The printer service runs twice and each sale produces two tickets.",
+        "action": "Identify both printer processes and determine which one is the intended service.",
+        "reason": "Two independent running instances can consume the same work.",
+        "check": "Send one test purchase and confirm a single intended process prints one ticket.",
+        "tradeoff": "Stopping the wrong instance can interrupt the box office.",
+        "alternative": "Delete the seating plan to clear the duplicate tickets."
+      },
+      {
+        "situation": "The same program succeeds from a volunteer's terminal and fails when started at boot.",
+        "action": "Use an explicit plan path or configure the service's starting folder.",
+        "reason": "A startup service can begin in a different directory from an interactive terminal.",
+        "check": "Start it from an unrelated folder and verify it still loads Friday's plan.",
+        "tradeoff": "An absolute path must be updated if the installation moves.",
+        "alternative": "Assume a relative filename always starts next to the program file."
+      }
+    ]
+  },
+  "docker": {
+    "title": "Move a booking desk to a new computer",
+    "story": "Ravi's music school replaces its front-desk computer. He wants the same booking program and libraries on the new machine, and he needs Friday's pupil bookings to survive program updates. Docker can package a program's environment and start isolated instances from that package.",
+    "steps": [
+      "Call the packaged booking program image version 1. Starting it makes a container, a running copy with a writable area of its own.",
+      "Save Friday's bookings in a named storage volume attached to that copy. The bookings now have a lifetime separate from the running copy.",
+      "Replace the container with one made from version 2 and attach the same compatible volume. Look up booking B17 to check it carried across."
+    ],
+    "outcome": "You can explain which files belong in a replaceable app package and which records need separate durable storage.",
+    "terms": [
+      [
+        "Image",
+        "A package containing the files and instructions needed to start an app environment."
+      ],
+      [
+        "Container",
+        "A running or stopped instance created from an image."
+      ],
+      [
+        "Volume",
+        "Storage managed separately from the container's writable layer."
+      ],
+      [
+        "Port mapping",
+        "A rule connecting a network port on the host to a port in the container."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Bookings disappear when the app container is removed and replaced.",
+        "action": "Mount persistent storage at the actual directory where the app writes its database.",
+        "reason": "Removing the container removes its private writable layer.",
+        "check": "Create booking B18, replace the container and read B18 through the app.",
+        "tradeoff": "A named local volume still needs a separate backup for computer failure.",
+        "alternative": "Rebuild the program image after every booking."
+      },
+      {
+        "situation": "The booking service listens on port 5000 inside the container, but the local desk cannot connect.",
+        "action": "Check the service bind address and map the intended host port to container port 5000.",
+        "reason": "A listening port inside an isolated network needs an appropriate route from the desk.",
+        "check": "Open the documented local host port from the desk and fetch a test booking.",
+        "tradeoff": "Publishing a host port changes who may reach the service depending on its bind address.",
+        "alternative": "Copy the database to the desktop to expose the service."
+      },
+      {
+        "situation": "Yesterday's image tag points to different code today.",
+        "action": "Record the exact image digest used for an approved release.",
+        "reason": "A human-friendly tag can be reassigned while a content digest identifies particular image contents.",
+        "check": "Compare the deployed digest with the approved release record on both desks.",
+        "tradeoff": "Pinning a digest requires an explicit change to receive a later fix.",
+        "alternative": "Assume two pulls of a mutable tag necessarily reproduce identical contents."
+      }
+    ]
+  },
+  "ci-cd": {
+    "title": "Release a change to a cinema's seat picker",
+    "story": "Noor changes how a cinema shades booked seats. A customer must never be able to buy an occupied seat, so the team checks the change before sending it to every kiosk. Continuous integration and delivery connect those checks with a repeatable release process.",
+    "steps": [
+      "Commit the change as version 42. An automated check tries selecting booked seat B6 and expects a refusal.",
+      "Build a package from version 42 after the checks pass. Record its identifying fingerprint so the same package can be recognized later.",
+      "Try that package at a test kiosk, then promote the checked package to the public kiosks. A failed B6 check stops promotion until someone fixes it."
+    ],
+    "outcome": "You can follow one change from a developer's edit to the exact package that reached users.",
+    "terms": [
+      [
+        "Integration",
+        "A process that combines code changes and checks they work together."
+      ],
+      [
+        "Build artifact",
+        "A packaged result of building one version of the app."
+      ],
+      [
+        "Quality gate",
+        "A check whose result determines whether delivery can continue."
+      ],
+      [
+        "Promotion",
+        "Moving a checked artifact to another release environment."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The kiosk passes tests but a fresh rebuild for public release includes a changed library.",
+        "action": "Promote the already-tested package by its recorded fingerprint.",
+        "reason": "Two builds can differ even when the application source looks unchanged.",
+        "check": "Compare the tested and released package fingerprints.",
+        "tradeoff": "Environment-specific secrets and addresses must be provided separately.",
+        "alternative": "Rebuild from the newest libraries immediately before every promotion."
+      },
+      {
+        "situation": "An important seat-selection test fails once and passes on a rerun.",
+        "action": "Investigate the changing starting state before treating the result as a release signal.",
+        "reason": "An unreliable test can hide an intermittent booking error.",
+        "check": "Repeat the test with a fresh seat fixture and inspect concurrent booking events.",
+        "tradeoff": "Isolating the cause can slow a release.",
+        "alternative": "Automatically rerun until the first green result."
+      },
+      {
+        "situation": "A proposed change from an unknown contributor runs ordinary tests.",
+        "action": "Run those tests with limited credentials and reserve release credentials for trusted jobs.",
+        "reason": "Test execution can run code supplied in the change.",
+        "check": "Verify an untrusted test job cannot read a deployment token or deploy to kiosks.",
+        "tradeoff": "Trusted release steps need a separate configuration.",
+        "alternative": "Provide the same deployment credential to every test job."
+      }
+    ]
+  },
+  "cloud": {
+    "title": "Rent a computer for a community photo exhibition",
+    "story": "Farah's club needs a website for 300 exhibition photos. A cloud service lets the club rent computing and storage capacity over a network. Farah's task is to decide where the photos should live, what serves the pages and who can add new photos.",
+    "steps": [
+      "Keep photo 17 in durable object storage under a stable name. It can remain there when a rented web computer is replaced.",
+      "Let a small running application serve the exhibition catalogue and link to the approved photos. Give its identity permission to read published images.",
+      "Give the curator a separate upload permission. Test that a visitor can view photo 17 while an attempted visitor upload is denied."
+    ],
+    "outcome": "You can separate computing, durable files and access permissions when planning a small hosted service.",
+    "terms": [
+      [
+        "Compute",
+        "Rented capacity for running programs."
+      ],
+      [
+        "Object storage",
+        "A service that keeps named files or blobs for later retrieval."
+      ],
+      [
+        "Identity",
+        "The account or role a service recognizes as making a request."
+      ],
+      [
+        "Region",
+        "A geographic area containing a provider's facilities and services."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The web machine is replaced and half of the newly uploaded photos vanish.",
+        "action": "Store accepted uploads in durable storage and verify each upload before confirming it.",
+        "reason": "Files kept only on a disposable machine can vanish with that machine.",
+        "check": "Replace a test machine and open the same newly uploaded object by its stable name.",
+        "tradeoff": "Durable storage adds access rules and storage charges.",
+        "alternative": "Keep a second folder on the same disposable machine."
+      },
+      {
+        "situation": "An exhibition visitor can replace a displayed photograph.",
+        "action": "Give visitors read-only access to published items and require a curator identity for writes.",
+        "reason": "Ability to view a photo need not include permission to change it.",
+        "check": "Try downloading and then overwriting the same photo as a visitor.",
+        "tradeoff": "Curator uploads require authentication before publication.",
+        "alternative": "Hide the upload button but leave the storage write permission public."
+      },
+      {
+        "situation": "Most viewers are far from the server and wait several seconds for large photos.",
+        "action": "Measure download times and test closer cached copies for public images.",
+        "reason": "Sending repeated public content from nearer locations can reduce long network trips.",
+        "check": "Compare typical and slow download times for the same image from the viewers' region.",
+        "tradeoff": "Cached images need an expiry or replacement strategy after edits.",
+        "alternative": "Rent more processor cores without checking where the waiting time occurs."
+      }
+    ]
+  },
+  "app-deployment": {
+    "title": "Open a new version of a lunch-ordering counter",
+    "story": "Deepa updates the school lunch app while pupils are ordering. Version 6 needs its menu loaded before it can accept a request. Deployment is the process of putting that version into service and deciding when real orders may reach it.",
+    "steps": [
+      "Start version 6 beside version 5. Ask it for a known menu item as a readiness check.",
+      "Once version 6 can serve the menu, send a small portion of orders there and compare the error rate with version 5.",
+      "If the new version repeatedly refuses valid orders, stop sending it customers and direct traffic back to the healthy version while investigating."
+    ],
+    "outcome": "You can describe a release that checks real behavior before changing every user's experience.",
+    "terms": [
+      [
+        "Deployment",
+        "Putting a version of a program into a target environment."
+      ],
+      [
+        "Readiness",
+        "Whether an instance can accept useful work now."
+      ],
+      [
+        "Canary rollout",
+        "Trying a new version with a small portion of real traffic first."
+      ],
+      [
+        "Rollback",
+        "Returning traffic or software to a previously working version."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The web process starts quickly but its first five menu requests fail.",
+        "action": "Keep the instance out of traffic until its menu-dependent readiness check passes.",
+        "reason": "A running process can still be missing data needed to serve its first customer.",
+        "check": "Start with an empty menu cache and verify customers receive no requests until the menu loads.",
+        "tradeoff": "An overly broad readiness check can delay an otherwise serviceable release.",
+        "alternative": "Mark the service ready as soon as a process ID exists."
+      },
+      {
+        "situation": "Version 6 is sent 5% of orders and its failure rate jumps from 1% to 12%.",
+        "action": "Pause expansion and route new orders back to the known healthy version.",
+        "reason": "The small rollout limits exposure while showing a version-specific regression.",
+        "check": "Confirm version-tagged order errors fall after removing version 6 from traffic.",
+        "tradeoff": "A rollback delays the new feature and requires a compatible previous version.",
+        "alternative": "Increase traffic to 100% so the averages stabilize faster."
+      },
+      {
+        "situation": "The new version drops a database column still read by the previous version.",
+        "action": "Roll out a compatible schema change first and remove old fields only after older readers are retired.",
+        "reason": "Routing back to old code cannot restore a field that code requires.",
+        "check": "Run both versions against the transitional schema and exercise an order read and write.",
+        "tradeoff": "Supporting both formats takes additional release steps.",
+        "alternative": "Treat rolling back the application binary as a complete database rollback."
+      }
+    ]
+  },
+  "secrets": {
+    "title": "Replace a key that opens a parcel locker service",
+    "story": "Tara's delivery app uses a secret key to ask a locker service for door status. Anyone with that key can make the same authorized requests. Tara wants to replace it without printing it on receipts or rebuilding every copy of the app.",
+    "steps": [
+      "Call today's key K1 in our example. Keep its real value in a protected place and supply it to the running service when needed.",
+      "Issue a replacement called K2, configure the app to use it and confirm an allowed status request succeeds.",
+      "Revoke K1 once clients have moved. Verify the old key fails and that logs contain only a harmless key label."
+    ],
+    "outcome": "You can rotate an application credential, check who still uses the old one and keep the value out of ordinary records.",
+    "terms": [
+      [
+        "Secret",
+        "A value that must stay private because possession grants a capability."
+      ],
+      [
+        "Runtime configuration",
+        "Settings supplied when a program starts or runs."
+      ],
+      [
+        "Rotation",
+        "Replacing a credential and retiring the old one."
+      ],
+      [
+        "Redaction",
+        "Omitting or masking a sensitive value before it is recorded or displayed."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A real locker key was committed to a shared code repository.",
+        "action": "Revoke or rotate the exposed key and update legitimate clients.",
+        "reason": "A copied key can keep working after the visible file is edited.",
+        "check": "Make one authorized test with the replacement and confirm the old credential is refused.",
+        "tradeoff": "Emergency rotation can interrupt clients still using the old key.",
+        "alternative": "Delete the key from the latest commit and keep it active."
+      },
+      {
+        "situation": "An error report prints every HTTP request header, including the authorization value.",
+        "action": "Redact credentials at the logging boundary for success and failure paths.",
+        "reason": "Headers copied into logs create credentials accessible outside the intended secret store.",
+        "check": "Send a planted test credential and confirm its value never appears in the captured log.",
+        "tradeoff": "Deep debugging may require a safe identifier for each credential version.",
+        "alternative": "Hide the key only on the application's settings page."
+      },
+      {
+        "situation": "A read-only status app holds a key that can unlock every locker.",
+        "action": "Issue a credential restricted to the status operations and lockers the app needs.",
+        "reason": "Smaller permissions limit what misuse of the key can do.",
+        "check": "Check that the service can read an allowed status but cannot open a door.",
+        "tradeoff": "Adding a legitimate new operation later requires reviewing permissions.",
+        "alternative": "Rename the broad key to status-only without changing its permissions."
+      }
+    ]
+  },
+  "production-logging": {
+    "title": "Follow one flower order through a busy afternoon",
+    "story": "A customer tells Ayla that flower order F42 never reached the driver. Hundreds of other orders moved at the same time. A production log is a series of recorded events that lets Ayla reconstruct what happened to F42.",
+    "steps": [
+      "Record a separate event when F42 is accepted, packed and handed to dispatch. Give every event the same order reference and its own time.",
+      "Filter the records to F42. Suppose accepted appears at 14:05 and packed at 14:09, with a dispatch failure at 14:10.",
+      "Use the stage and failure category to investigate dispatch. Keep card details and the recipient's private note out of the event fields."
+    ],
+    "outcome": "You can reconstruct one order's journey and collect the evidence needed to locate a fault.",
+    "terms": [
+      [
+        "Event",
+        "One recorded occurrence, such as an order being packed."
+      ],
+      [
+        "Structured log",
+        "An event written with named fields that can be searched consistently."
+      ],
+      [
+        "Correlation ID",
+        "A shared identifier connecting events from the same job."
+      ],
+      [
+        "Retention",
+        "How long records are kept before being removed."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Six workers all log “done” and customer service cannot tell which step completed.",
+        "action": "Add stable event names and a shared order or trace identifier at each handoff.",
+        "reason": "Simultaneous jobs interleave their messages in a single time-sorted view.",
+        "check": "Follow one test order and reconstruct its exact packing and dispatch sequence.",
+        "tradeoff": "Propagating identifiers requires every handoff to carry them.",
+        "alternative": "Add more copies of the word done to each message."
+      },
+      {
+        "situation": "A promotion doubles traffic and verbose debugging fills the log disk.",
+        "action": "Set size and retention limits and reserve detailed logging for the suspected component.",
+        "reason": "Unbounded event detail can exhaust storage needed by the service itself.",
+        "check": "Replay peak traffic and verify the disk stays within budget while key failure events remain.",
+        "tradeoff": "Shorter retention can restrict investigations of older incidents.",
+        "alternative": "Keep verbose records forever and enlarge each message."
+      },
+      {
+        "situation": "Dispatch logs contain a customer's entry code because a developer recorded the whole order.",
+        "action": "Write an allowlist of operational fields and omit door codes before storage.",
+        "reason": "Hiding values on a screen leaves copies in the underlying log.",
+        "check": "A test order with a distinctive code should be traceable by order ID without exposing its code.",
+        "tradeoff": "Support teams may need a controlled workflow for detailed order lookups.",
+        "alternative": "Restrict the log viewer's column widths so codes are hard to see."
+      }
+    ]
+  },
+  "monitoring": {
+    "title": "Know when a ticket kiosk needs a person",
+    "story": "During a festival, Mo's kiosk fails on 10 purchases. Ten failures out of 100 attempts would be alarming, whereas ten out of 100,000 describe a much smaller share. Monitoring collects measurements over time so Mo can decide when to act.",
+    "steps": [
+      "For the five minutes before noon, count 10 failed attempts and 100 total attempts. Divide 10 by 100 to get a 10% error rate.",
+      "Count the next five minutes separately. If only one of 200 attempts fails, the later rate is 0.5%.",
+      "Compare each window with the team's chosen alert rule. A sustained rise can justify calling a worker even before someone complains."
+    ],
+    "outcome": "You can turn raw counts into a user-facing measure and explain when an alert should wake someone.",
+    "terms": [
+      [
+        "Metric",
+        "A number collected repeatedly to describe behavior."
+      ],
+      [
+        "Rate",
+        "A count per unit of time or a share of relevant attempts, with its denominator stated."
+      ],
+      [
+        "Latency",
+        "The time a user waits for an operation."
+      ],
+      [
+        "Alert window",
+        "The time period over which an alert rule evaluates measurements."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "An alert pages a worker every time a single request exceeds two seconds.",
+        "action": "Use a sustained or proportion-based rule tied to unacceptable customer delays.",
+        "reason": "An isolated slow request differs from a service-wide slowdown.",
+        "check": "Replay one slow request and a five-minute delay surge to see which triggers the page.",
+        "tradeoff": "Requiring persistence makes the first alert arrive later.",
+        "alternative": "Ignore all delayed requests because the average is usually low."
+      },
+      {
+        "situation": "Error rate appears to be zero after the kiosk stops sending measurements.",
+        "action": "Add a separate missing-data or heartbeat alert.",
+        "reason": "Absence of observations cannot establish that users are succeeding.",
+        "check": "Disconnect the metrics sender and verify it creates a telemetry warning.",
+        "tradeoff": "A silent kiosk outside business hours may need a different alert schedule.",
+        "alternative": "Fill every missing interval with a successful zero-error measurement."
+      },
+      {
+        "situation": "A dashboard combines a quiet kiosk's one failure in one attempt with a busy kiosk's one failure in 99 attempts.",
+        "action": "Add the error counts and total attempts before dividing.",
+        "reason": "The combined user error rate is 2 out of 100, while an unweighted mean gives each kiosk equal influence.",
+        "check": "Check the combined result displays 2% for those two counters.",
+        "tradeoff": "A combined rate can obscure the quiet kiosk's local outage.",
+        "alternative": "Average 100% and about 1% for the overall customer rate."
+      }
+    ]
+  },
+  "performance": {
+    "title": "Find what makes a queue feel slow",
+    "story": "Pia's café orders arrive through a tablet. Saving an order takes 40 milliseconds, loading the menu takes 500 and drawing the receipt takes 60 on one measured request. Performance engineering starts by measuring where the waiting happens.",
+    "steps": [
+      "Add the three measured steps for this sequential request. The 600-millisecond total is dominated by loading the menu.",
+      "Suppose reusing a fresh menu reduces the load to 50 milliseconds. The same three steps would then total 150 milliseconds.",
+      "Measure many orders before and after the change. Slow orders may have different causes from the single example."
+    ],
+    "outcome": "You can choose a likely improvement using timings and verify both ordinary and unusually slow requests.",
+    "terms": [
+      [
+        "Profile",
+        "A breakdown of where a program spends time or resources."
+      ],
+      [
+        "Bottleneck",
+        "The part that most limits performance for the measured workload."
+      ],
+      [
+        "Cache",
+        "A stored result reused to avoid repeating work."
+      ],
+      [
+        "Percentile",
+        "A boundary in ordered measurements, such as the time within which about 95% of requests finish."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The average checkout takes 200 milliseconds, yet occasional customers wait six seconds.",
+        "action": "Examine slow percentiles and trace examples of the long requests.",
+        "reason": "A few long waits can disappear inside an acceptable average.",
+        "check": "Compare the steps in a slow checkout with a typical checkout under the same load.",
+        "tradeoff": "Accurate tail measurements require enough observations.",
+        "alternative": "Optimize the fastest request because it is easiest to reproduce."
+      },
+      {
+        "situation": "Menu caching makes orders quick but a sold-out sandwich can remain orderable.",
+        "action": "Refresh or invalidate availability separately when stock changes, and check stock when accepting the order.",
+        "reason": "A reused menu represents an earlier point in time.",
+        "check": "Mark an item sold out during a cache interval and verify checkout rejects a new order for it.",
+        "tradeoff": "Fresher stock checks add work on the purchase path.",
+        "alternative": "Extend the cache lifetime to reduce the number of availability lookups."
+      },
+      {
+        "situation": "A benchmark sends one request at a time and never shows the lunch-hour slowdown.",
+        "action": "Test with realistic overlapping orders and observe queues and resource use.",
+        "reason": "Contention and waiting appear when requests share scarce resources.",
+        "check": "Increase simultaneous orders and chart when latency rises and throughput stops increasing.",
+        "tradeoff": "Load tests consume capacity and require representative data.",
+        "alternative": "Multiply a single-request timing by the number of customers to estimate every wait."
+      }
+    ]
+  },
+  "api-security": {
+    "title": "Keep neighbours from reading each other's parcels",
+    "story": "Sam signs in to a delivery app and opens parcel P51 using a web request. Changing P51 to P52 should never reveal a neighbour's address. API security checks each requested operation, the caller and the particular parcel it affects.",
+    "steps": [
+      "Identify Sam from a valid sign-in credential. This establishes which account is making the request.",
+      "Look up whether that account may view P51 before returning its delivery details. Repeat the permission check for P52 even on the same connection.",
+      "Bound how many lookups one account can make in a minute and how many parcel records one request can ask for."
+    ],
+    "outcome": "You can test both who a caller is and what that caller is allowed to do with one particular record.",
+    "terms": [
+      [
+        "Authentication",
+        "Verifying the caller's identity."
+      ],
+      [
+        "Authorization",
+        "Checking whether that identity may perform a specific operation."
+      ],
+      [
+        "Object-level access",
+        "Permission checked for the particular record being requested."
+      ],
+      [
+        "Rate limit",
+        "A bound on how often a caller can perform a class of requests."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Sam can retrieve another person's parcel by changing a number in the address bar.",
+        "action": "Authorize the requested parcel against Sam's ownership or assigned access at the server.",
+        "reason": "Signing in establishes identity but does not grant access to every parcel.",
+        "check": "Use two test accounts and exchange their parcel identifiers in otherwise valid requests.",
+        "tradeoff": "Ownership checks must be applied to every relevant endpoint.",
+        "alternative": "Replace sequential parcel numbers with longer random IDs and skip access checks."
+      },
+      {
+        "situation": "Three server copies each independently permit 100 requests per minute for Sam.",
+        "action": "Coordinate counters across copies when the policy is 100 requests per account in total.",
+        "reason": "Independent counters can allow about 300 combined requests.",
+        "check": "Distribute one account's traffic across all three copies and observe its combined allowance.",
+        "tradeoff": "Shared counters add coordination work and can add latency.",
+        "alternative": "Reduce the logging rate to 100 messages per minute."
+      },
+      {
+        "situation": "One authenticated request asks for ten million shipment records.",
+        "action": "Cap page size and resource-heavy work before executing the request.",
+        "reason": "A valid identity can still exhaust shared memory or processing time.",
+        "check": "Submit a request beyond the maximum and verify a bounded error or capped page.",
+        "tradeoff": "Legitimate bulk exports may require a separate scheduled process.",
+        "alternative": "Rely on a request-count limit to bound the size of every individual request."
+      }
+    ]
+  },
+  "testing": {
+    "title": "Rehearse a stockroom failure before the sale",
+    "story": "Ken's store app sells the last backpack in its stockroom. It must record the order, reduce stock from one to zero and refuse a second buyer. Testing a production system includes checking how its real parts work together and what happens during failures.",
+    "steps": [
+      "Give a test store one backpack and submit a purchase. Verify the order record and stock count together.",
+      "Submit a second purchase. The system should report that the bag is unavailable and leave the count at zero.",
+      "In a separate rehearsal, interrupt a dependent service during checkout. Observe whether money, orders and stock finish in the documented recoverable state."
+    ],
+    "outcome": "You can choose a test based on the kind of failure a real customer could experience.",
+    "terms": [
+      [
+        "Integration test",
+        "A check that cooperating components exchange and store data correctly."
+      ],
+      [
+        "Smoke test",
+        "A short check that a deployed system can complete an essential operation."
+      ],
+      [
+        "Fault injection",
+        "Deliberately introducing a controlled failure to observe recovery."
+      ],
+      [
+        "Fixture",
+        "A known starting set of records and settings for a test."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "An inventory test succeeds alone but fails after another test sells its backpack.",
+        "action": "Give each test a fresh known inventory fixture or explicitly restore it.",
+        "reason": "Mutable stock left by the previous test changes the next test's starting conditions.",
+        "check": "Run the tests in both orders and verify each starts with exactly one bag.",
+        "tradeoff": "Isolated fixtures can take longer to prepare.",
+        "alternative": "Require a particular test order and ignore failures in other orders."
+      },
+      {
+        "situation": "Mocks report a successful sale but the actual database rejects the order field type.",
+        "action": "Add an integration check using the supported database schema.",
+        "reason": "A simulated dependency may accept values that the real database rejects.",
+        "check": "Save and reload a representative order using the deployed field definitions.",
+        "tradeoff": "Integration checks are slower than isolated function tests.",
+        "alternative": "Change the mock to always record a successful insert."
+      },
+      {
+        "situation": "A new release returns a healthy status while the buy button cannot create an order.",
+        "action": "Add a small end-to-end purchase smoke test using a designated test item.",
+        "reason": "A responding health endpoint does not exercise checkout's dependencies.",
+        "check": "After deployment, confirm the test order is recorded and its reserved stock is restored.",
+        "tradeoff": "Live smoke tests need isolated test data and careful cleanup.",
+        "alternative": "Poll the same health URL more frequently."
+      }
+    ]
+  },
+  "cost": {
+    "title": "Count the cost of answering one useful question",
+    "story": "Luz runs a museum guide that answers visitor questions. In a sample hour the guide spends 12 accounting units and produces 80 accepted answers plus 20 failures. Cost optimization begins with the unit of work the museum actually values.",
+    "steps": [
+      "Divide 12 by 80 accepted answers to get 0.15 accounting units per accepted answer. Dividing by 100 requests would hide the cost of failed requests.",
+      "Separate the spending on input text, generated replies and repeated attempts. In this sample, repeated attempts use 3 of the 12 units.",
+      "Try one change, such as reusing approved public opening hours, then measure cost per accepted answer and answer quality on comparable traffic."
+    ],
+    "outcome": "You can compare savings against useful work delivered and spot a cheaper change that harms visitors.",
+    "terms": [
+      [
+        "Unit cost",
+        "Spending divided by a named unit of completed work."
+      ],
+      [
+        "Budget",
+        "A planned limit on spending over a period."
+      ],
+      [
+        "Cache hit",
+        "A request served by a usable saved result."
+      ],
+      [
+        "Retry cost",
+        "Resources consumed when work is attempted again."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A cheaper model cuts spending from 12 to 10 units but accepted answers fall from 80 to 50.",
+        "action": "Compare 0.15 with 0.20 units per accepted answer and investigate the lost successes.",
+        "reason": "Cheaper individual requests can produce more expensive successful outcomes.",
+        "check": "Compute both ratios using the same definition of an accepted answer.",
+        "tradeoff": "A quality threshold requires a reliable way to label successes.",
+        "alternative": "Declare the change a saving based solely on total hourly spend."
+      },
+      {
+        "situation": "Most visitors ask today's opening hours, which change on special-event days.",
+        "action": "Reuse an approved public answer keyed to the current date and schedule version.",
+        "reason": "Repeated work is avoidable only while the stored answer remains applicable.",
+        "check": "Change the special-event schedule and confirm the next answer shows the updated hours.",
+        "tradeoff": "Maintaining invalidation rules takes staff and engineering effort.",
+        "alternative": "Cache one answer forever under the words opening hours."
+      },
+      {
+        "situation": "A single oversized museum brochure consumes nearly the entire request allowance.",
+        "action": "Apply an input budget and select relevant sections before requesting an answer.",
+        "reason": "Paying to read irrelevant pages can increase cost without improving an answer.",
+        "check": "Compare cost and answer support on the same brochure question with and without selection.",
+        "tradeoff": "Aggressive selection can omit an exception on a later page.",
+        "alternative": "Lower the displayed word limit while still sending the entire brochure on every request."
+      }
+    ]
+  },
+  "agents": {
+    "title": "Let a helper plan a trip without booking it",
+    "story": "Kiran wants to travel to Oak Station before noon and spend no more than 20 credits. A software agent is a program that can choose a next step, use an allowed tool, inspect the result and decide whether to continue. For this task Kiran allows timetable searches and wants a proposed route.",
+    "steps": [
+      "The helper reads the goal and uses a timetable lookup. It observes a 10:30 train costing 24 credits and an 11:15 train costing 18.",
+      "Compare both arrivals and prices with Kiran's limits. The 11:15 option satisfies the two conditions, so prepare it as a proposal.",
+      "Stop when the permitted goal is complete. If no route fits after the allowed searches, report what was checked and let Kiran decide whether to change a limit."
+    ],
+    "outcome": "You can specify a goal, permitted actions and stopping conditions for a helper that acts in steps.",
+    "terms": [
+      [
+        "Agent",
+        "A program that chooses actions using a goal and observations."
+      ],
+      [
+        "Tool",
+        "A defined operation the application permits the helper to request."
+      ],
+      [
+        "Observation",
+        "Information returned after an action, such as a train fare."
+      ],
+      [
+        "Step budget",
+        "A limit on how many actions the helper may take."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The timetable lookup returns the same unavailable train on every attempt.",
+        "action": "Detect the repeated search state and stop after a bounded number of attempts.",
+        "reason": "Repeating an unchanged action on unchanged information can keep spending time indefinitely.",
+        "check": "Use a fixture that always returns one unavailable train and count the maximum calls.",
+        "tradeoff": "A strict limit can end a search before an infrequent valid route appears.",
+        "alternative": "Increase the budget whenever an identical response arrives."
+      },
+      {
+        "situation": "The helper proposes buying a ticket after Kiran asked only for a route.",
+        "action": "Restrict the available actions to read-only searches and route proposals.",
+        "reason": "A goal to research a trip grants no authority to spend money.",
+        "check": "Try a booking request during planning and verify no purchase reaches the booking service.",
+        "tradeoff": "A later purchase requires an additional authorized step.",
+        "alternative": "Let the helper buy whenever its route meets the price limit."
+      },
+      {
+        "situation": "A seat disappears between the search and a later request to book it.",
+        "action": "Refresh availability and present a changed option for a new decision.",
+        "reason": "An earlier observation describes the world at the time of lookup.",
+        "check": "Remove the proposed seat after search and confirm no substitute is purchased automatically.",
+        "tradeoff": "Rechecking can reveal that the original offer is gone.",
+        "alternative": "Treat the original seat observation as a permanent reservation."
+      }
+    ]
+  },
+  "tool-calling": {
+    "title": "Give a library assistant a controlled catalogue lookup",
+    "story": "Bea asks a library assistant whether book BK17 is on the shelf. The model can propose a call to a catalogue function with book_id set to BK17. The library application decides whether that proposal names an allowed function and contains usable arguments.",
+    "steps": [
+      "Define a lookup operation that accepts one book identifier as text. Explain separately which members may see which branches.",
+      "When the model proposes looking up BK17, validate the arguments and check access to Bea's branch. Then let the actual catalogue read its current status.",
+      "Return the result “BK17, available at East” to the assistant for a plain-language reply. An invented tool result would never establish shelf availability."
+    ],
+    "outcome": "You can trace the difference between a proposed action, permission to run it and its actual outcome.",
+    "terms": [
+      [
+        "Tool call",
+        "A request to run a named operation with supplied values."
+      ],
+      [
+        "Argument",
+        "One value passed into an operation."
+      ],
+      [
+        "Schema",
+        "A description of the required argument names, types and limits."
+      ],
+      [
+        "Dispatcher",
+        "The program component that selects an allowed operation and invokes it."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A tool proposal includes an extra field requesting a full member-address list.",
+        "action": "Reject unexpected fields and validate the proposal against the lookup schema.",
+        "reason": "A book lookup should accept only the values needed for that specific operation.",
+        "check": "Add the extra field to a valid BK17 request and confirm it cannot expand the response.",
+        "tradeoff": "Strict schemas require deliberate updates when the tool gains a legitimate field.",
+        "alternative": "Forward the entire proposed argument object directly to the database."
+      },
+      {
+        "situation": "The assistant proposes borrowing BK17 for a member at a different private branch.",
+        "action": "Verify the authenticated member's permission for that branch and action.",
+        "reason": "Correct argument types identify a possible operation but do not authorize it.",
+        "check": "Try the identical well-formed request from members with and without branch access.",
+        "tradeoff": "Permission lookup adds a dependency to the action path.",
+        "alternative": "Treat a syntactically valid tool request as proof of membership."
+      },
+      {
+        "situation": "The catalogue lookup fails, but the assistant says the book is available.",
+        "action": "Return a clear lookup-failed result and require the reply to reflect the failure.",
+        "reason": "Tool execution and model-generated prose can disagree when a dependency is unavailable.",
+        "check": "Disconnect the test catalogue and verify the answer reports unknown availability.",
+        "tradeoff": "A cautious reply gives less immediate convenience.",
+        "alternative": "Replace failed catalogue results with the most frequently seen status."
+      }
+    ]
+  },
+  "orchestration": {
+    "title": "Coordinate a print shop's proof and press",
+    "story": "Uma's print shop takes a wedding invitation from draft to proof approval to printing. Printing before the couple approves the proof would waste 200 cards. Orchestration is the set of rules that decides which step may run next and what to do if a step fails.",
+    "steps": [
+      "Start job J12 in Draft. After a proof is generated, record Proof ready and keep the proof's version number.",
+      "Approval of that exact proof moves J12 to Approved. Only an approved job is eligible for the Print step.",
+      "If the printer jams, keep the job and its completed steps. Allow a bounded recovery attempt and ask an operator to inspect an uncertain print count."
+    ],
+    "outcome": "You can draw the permissible path through a process and recognize a transition that needs evidence.",
+    "terms": [
+      [
+        "State",
+        "The recorded stage a job is currently in."
+      ],
+      [
+        "Transition",
+        "An allowed move from one state to another."
+      ],
+      [
+        "Dependency",
+        "An earlier result a later step requires."
+      ],
+      [
+        "Retry limit",
+        "The maximum attempts allowed before a job takes another path."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two workers both see J12 as approved and each begins a run of 200 cards.",
+        "action": "Claim the print job with a single coordinated state change before sending it to the press.",
+        "reason": "Checking and claiming in separate steps allows both workers to act on the same observation.",
+        "check": "Start two workers together and verify exactly one enters the printing state.",
+        "tradeoff": "A failed worker holding a claim needs a recovery rule.",
+        "alternative": "Let each worker decide based on its local copy of the approved status."
+      },
+      {
+        "situation": "Proof version 4 is approved and the designer then edits the address to create version 5.",
+        "action": "Invalidate approval for changed content and request approval of version 5.",
+        "reason": "Approval belongs to the proof the couple inspected.",
+        "check": "Approve version 4, edit the address and verify version 5 cannot reach the press without approval.",
+        "tradeoff": "Another review can delay delivery.",
+        "alternative": "Copy the approved flag to every future revision of the same job."
+      },
+      {
+        "situation": "A workflow configuration makes proof generation wait for printing and printing wait for a proof.",
+        "action": "Detect and report the circular dependency before accepting the workflow.",
+        "reason": "Neither waiting step can supply the event needed to start the other.",
+        "check": "Try the two-step circular configuration and verify the blocked steps are identified.",
+        "tradeoff": "Detecting cycles needs additional checks when dependencies are edited.",
+        "alternative": "Increase the timeout on both waiting steps."
+      }
+    ]
+  },
+  "memory-state": {
+    "title": "Remember one shopping session without keeping everything",
+    "story": "Mina adds a blue scarf and a gift-wrap preference to a shopping assistant. The assistant needs them during this order, and Mina separately opts to save her preferred language for later visits. State records what is happening now, while longer-lived memory keeps selected information for future use.",
+    "steps": [
+      "Record the scarf and wrap choice under today's basket B4. A reply about B4 can now refer to the correct items.",
+      "Store the approved language preference under Mina's account with its source and a way to change or remove it. Keep it separate from B4.",
+      "After checkout, close the basket. On a later visit load the permitted language preference and start a new basket with no scarf in it."
+    ],
+    "outcome": "You can decide what a system should remember, whose memory it is and when it should be cleared.",
+    "terms": [
+      [
+        "Session state",
+        "Information needed for one current conversation or task."
+      ],
+      [
+        "Durable memory",
+        "Selected information that survives a process restart or later visit."
+      ],
+      [
+        "Checkpoint",
+        "A saved point from which work can resume."
+      ],
+      [
+        "Retention period",
+        "The length of time a particular item should be kept."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two shoppers use the same tablet and the second sees the first shopper's basket.",
+        "action": "Key basket state to the actual session or account and clear local session details at sign-out.",
+        "reason": "A device identifier alone cannot distinguish different people sharing a device.",
+        "check": "Sign out as Mina and sign in as another shopper on the same tablet.",
+        "tradeoff": "Isolating guests limits convenience when a family intentionally shares a basket.",
+        "alternative": "Use the tablet's name as the key for every shopper's session."
+      },
+      {
+        "situation": "After a restart, a replayed add-scarf event increases the quantity from one to two.",
+        "action": "Store applied event IDs with the checkpoint and ignore a duplicate application.",
+        "reason": "Replaying the same event should recover the previous result without repeating its effect.",
+        "check": "Deliver the same event ID twice across a simulated restart and verify quantity stays one.",
+        "tradeoff": "Tracking event IDs requires storage and a defined retention period.",
+        "alternative": "Treat every delivery after a restart as a brand-new basket change."
+      },
+      {
+        "situation": "Mina once bought a birthday gift, and the assistant assumes every future order is a gift.",
+        "action": "Treat gift wrap as order-specific unless Mina explicitly saves a standing preference.",
+        "reason": "A single action describes its context and may not express a long-term preference.",
+        "check": "Complete a gift order and inspect the default of the next independent basket.",
+        "tradeoff": "Asking before saving preferences adds a choice for the shopper.",
+        "alternative": "Promote every previous basket choice to a permanent account preference."
+      }
+    ]
+  },
+  "automation": {
+    "title": "Send one receipt for one completed donation",
+    "story": "A charity tells Lila that donation D81 succeeded, then sends the same notification again because it did not receive an acknowledgement. A workflow automation performs defined steps when an event arrives. Lila needs one receipt even when the same delivery arrives twice.",
+    "steps": [
+      "Read D81 from the event and use it as the identity of the receipt job. Record the job durably before acknowledging receipt of the notification.",
+      "Generate the receipt using D81 as a duplicate-protection key where the sending service supports it. Store the receipt's status and provider reference.",
+      "On another delivery of D81, inspect the existing job and its outcome. Reuse a confirmed receipt and reconcile an uncertain send before issuing another."
+    ],
+    "outcome": "You can design a repeatable workflow that distinguishes duplicate notifications from distinct donations.",
+    "terms": [
+      [
+        "Trigger",
+        "An event that starts a workflow."
+      ],
+      [
+        "Idempotency",
+        "Repeating the same identified request leaves its intended effect unchanged."
+      ],
+      [
+        "Acknowledgement",
+        "A message confirming the receiver accepted an event."
+      ],
+      [
+        "Compensation",
+        "A later corrective action for an earlier step that already took effect."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A donor makes two equal donations on the same day and only one receipt appears.",
+        "action": "Use the distinct donation IDs to identify jobs.",
+        "reason": "Matching only amount and date confuses two legitimate events with one repeated notification.",
+        "check": "Submit two donation IDs with the same amount and verify one receipt per ID.",
+        "tradeoff": "A reliable scheme depends on stable event identities from the payment service.",
+        "alternative": "Suppress any second receipt with an identical amount."
+      },
+      {
+        "situation": "Mail is sent, then the worker crashes before updating its sent flag.",
+        "action": "Reconcile using the provider's message reference or idempotent send support before retrying.",
+        "reason": "A local database status cannot alone determine whether an external service already acted.",
+        "check": "Simulate the crash between send and record and inspect the provider-side send count.",
+        "tradeoff": "Without provider support some uncertain jobs need human review.",
+        "alternative": "Assume a missing local sent flag means the email never went out."
+      },
+      {
+        "situation": "A catering workflow reserves 40 meals but venue confirmation fails permanently.",
+        "action": "Release the identified meal reservation and record the corrective action.",
+        "reason": "A completed external reservation needs its own reversal when a later required step fails.",
+        "check": "Inject venue rejection and verify the reserved meal count returns to its previous value.",
+        "tradeoff": "The supplier may impose a deadline or cancellation charge.",
+        "alternative": "Delete the local booking record and assume the caterer releases the meals."
+      }
+    ]
+  },
+  "multi-agent": {
+    "title": "Coordinate two reviewers of an accessible walking tour",
+    "story": "Arlo wants a walking tour with both open venues and step-free entrances. One software helper checks opening times and another checks access details. A coordinator must combine their evidence into a route a traveller can actually use.",
+    "steps": [
+      "Give both helpers the same target date and candidate venue IDs. Ask the first for opening intervals and the second for step-free entrance evidence.",
+      "Suppose Gallery A is open and step-free, while Hall B is open but has stairs. Join the two reports by venue ID and retain Gallery A.",
+      "If either report lacks evidence, mark the venue unresolved for a person to check. Two confident opinions cannot turn missing entrance information into a verified route."
+    ],
+    "outcome": "You can split a task into distinct responsibilities and build a rule for combining results.",
+    "terms": [
+      [
+        "Agent role",
+        "The specific job and permissions assigned to one helper."
+      ],
+      [
+        "Handoff",
+        "The transfer of a result and its context to another helper."
+      ],
+      [
+        "Shared state",
+        "Information multiple helpers can read or update under defined rules."
+      ],
+      [
+        "Merge policy",
+        "A rule for accepting, combining or escalating conflicting results."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two reviewers give opposite access verdicts for the same entrance.",
+        "action": "Compare the entrance IDs, source dates and evidence before asking a person to resolve the conflict.",
+        "reason": "A newer renovation or a different entrance can explain disagreement.",
+        "check": "Supply conflicting dated reports and verify neither unsupported verdict silently wins.",
+        "tradeoff": "Human review can slow route planning.",
+        "alternative": "Choose the verdict written in the most confident voice."
+      },
+      {
+        "situation": "Both helpers independently reserve tickets when the planner only needed suggestions.",
+        "action": "Keep reservations under one explicitly authorized owner and give reviewers read-only tools.",
+        "reason": "Giving overlapping write authority to parallel helpers can duplicate real-world effects.",
+        "check": "Run both reviewers concurrently and verify no reservation occurs during research.",
+        "tradeoff": "A single authorized booking step adds a handoff.",
+        "alternative": "Assume separate role names prevent duplicate bookings."
+      },
+      {
+        "situation": "A reviewer returns “open until six” without a venue or date.",
+        "action": "Require venue ID, applicable date and evidence with each handoff.",
+        "reason": "A bare statement cannot be safely joined to the correct tour stop.",
+        "check": "Reject an undated result for Gallery A and accept a properly identified report for the travel date.",
+        "tradeoff": "Structured handoffs take more design effort.",
+        "alternative": "Attach the unlabelled result to the first venue in the coordinator's list."
+      }
+    ]
+  },
+  "human-approval": {
+    "title": "Approve the supplier payment that will actually be sent",
+    "story": "Nia's stationery shop prepares an 85-credit payment to Paper Mill for invoice 43. Nia needs to inspect the recipient and amount before the money moves. Human-in-the-loop approval gives a person a real decision point tied to a particular action.",
+    "steps": [
+      "Show Nia the amount 85, the named supplier account, invoice 43 and the operation pay. Save the approved version of those details.",
+      "Immediately before execution, recheck the current details, Nia's authority, the approval's expiry and whether this payment already ran.",
+      "If someone changes the amount to 850, hold the changed payment for a new decision. Only the reviewed 85-credit instruction was approved."
+    ],
+    "outcome": "You can design an approval that protects the actual target, amount, timing and authority of a consequential action.",
+    "terms": [
+      [
+        "Approval scope",
+        "The exact action and values a person agreed to."
+      ],
+      [
+        "Expiry",
+        "The time after which that approval can no longer be used."
+      ],
+      [
+        "Authorization",
+        "The person's permission to approve the requested action."
+      ],
+      [
+        "Audit record",
+        "A durable account of what was reviewed, by whom and what happened next."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A draft payment changes its bank recipient after the manager has approved its amount.",
+        "action": "Invalidate the approval and show the new recipient and amount together.",
+        "reason": "Recipient identity is part of the consequential action even if the amount stays the same.",
+        "check": "Approve one account, substitute another and verify execution stops.",
+        "tradeoff": "Legitimate corrections require another approval.",
+        "alternative": "Check only that the approved and current amounts match."
+      },
+      {
+        "situation": "A former manager's approval remains pending when their payment role is removed.",
+        "action": "Recheck current approver authority before carrying out the payment.",
+        "reason": "A past decision need not remain executable after authority changes.",
+        "check": "Revoke the role after approval and confirm the pending action is held for review.",
+        "tradeoff": "Execution depends on current access information being available.",
+        "alternative": "Treat every previously issued approval as valid forever."
+      },
+      {
+        "situation": "A browser resends the same approved payment after a slow response.",
+        "action": "Use the payment identity and atomic execution record to prevent a second transfer.",
+        "reason": "Approval permits one identified transfer and a network retry can replay its request.",
+        "check": "Submit the same approved operation twice and inspect the provider's transfer count.",
+        "tradeoff": "Handling uncertain external responses may require reconciliation.",
+        "alternative": "Ask the manager to click approve again after every network timeout."
+      }
+    ]
+  },
+  "agent-evaluation": {
+    "title": "Grade what a booking helper did on its way to an answer",
+    "story": "Joel tests a room-booking helper asked to find a quiet room for four people. Its final sentence says “Room 2 is suitable,” but it also reserved two other rooms during the search. Agent evaluation checks both the delivered outcome and the sequence of actions that produced it.",
+    "steps": [
+      "Set up a test calendar with rooms for two, four and eight, and permit search only. Record the starting bookings.",
+      "Run the task and inspect every tool request along with the final answer. A suggestion of the four-seat room satisfies capacity.",
+      "Compare the calendar before and after. Any new booking violates the read-only task, even when the suggested room is suitable."
+    ],
+    "outcome": "You can evaluate a helper on task success, permitted behavior and the real changes it leaves behind.",
+    "terms": [
+      [
+        "Trajectory",
+        "The sequence of decisions, tool requests and observations in one run."
+      ],
+      [
+        "Side effect",
+        "A change outside the reply, such as a saved booking."
+      ],
+      [
+        "Success criterion",
+        "A testable condition defining whether the requested job was completed."
+      ],
+      [
+        "Test environment",
+        "A controlled setting in which actions and starting conditions can be inspected."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two safe searches find the same correct room through different valid routes.",
+        "action": "Grade the required outcome and policy constraints while permitting alternative valid action sequences.",
+        "reason": "Exact sequence matching can punish a harmless difference in strategy.",
+        "check": "Provide two approved routes and one prohibited write to check the evaluator distinguishes them.",
+        "tradeoff": "Flexible grading needs carefully stated constraints.",
+        "alternative": "Require the exact order of calls from one recorded demonstration."
+      },
+      {
+        "situation": "The assistant reports “booked” after the booking tool returned a failure.",
+        "action": "Verify the actual calendar event and its identifiers against the requested room and time.",
+        "reason": "A success statement in prose does not create a real booking.",
+        "check": "Inject a tool failure and require both an unchanged calendar and an accurate failure report.",
+        "tradeoff": "Checking external state needs a reliable observation point.",
+        "alternative": "Award success whenever the final answer contains the word booked."
+      },
+      {
+        "situation": "One test run succeeds after 97 searches, while another succeeds after three.",
+        "action": "Measure calls and elapsed time alongside correctness and set a task-appropriate effort budget.",
+        "reason": "A correct result can still be too slow or costly to deliver.",
+        "check": "Compare repeated runs on the same calendar and check how often they exceed the budget.",
+        "tradeoff": "A very tight budget can penalize genuinely difficult searches.",
+        "alternative": "Count all correct final answers as equally efficient."
+      }
+    ]
+  },
+  "llmops": {
+    "title": "Find which change made a museum guide forget the closing time",
+    "story": "Rosa's museum guide combines written instructions, a language model and documents about the museum. On Monday it answered “5 pm” correctly, but Tuesday's version says “6 pm.” LLMOps means operating these model-based systems with enough records and checks to understand changes.",
+    "steps": [
+      "Record Monday's model identifier, instruction version P3 and timetable version D8. Keep a small checked set of opening-hours questions.",
+      "Compare Tuesday's system using the same checked questions. If both its model and instructions changed, repeat the comparison changing one part at a time.",
+      "For the failed answer, trace which timetable passage was read and what was generated. Release a candidate only after its measured behavior meets the team's requirements."
+    ],
+    "outcome": "You can reconstruct a model-based release and investigate a change in answer quality using evidence.",
+    "terms": [
+      [
+        "Artifact version",
+        "An identifier for a particular model, instruction, dataset or document collection."
+      ],
+      [
+        "Trace",
+        "A linked account of the steps taken for one request."
+      ],
+      [
+        "Release gate",
+        "A measured requirement a candidate must meet before wider use."
+      ],
+      [
+        "Rollback target",
+        "A known earlier configuration the team can restore."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The team saved a model name but lost the instructions used for last week's successful answer.",
+        "action": "Version the prompt and retrieval settings alongside the model and source collection.",
+        "reason": "The same model can behave differently when given different instructions or passages.",
+        "check": "Reconstruct a known release and compare its actual inputs with the archived configuration.",
+        "tradeoff": "Recording versions requires discipline whenever an artifact changes.",
+        "alternative": "Log only the provider's model family name."
+      },
+      {
+        "situation": "A new prompt improves fluency but fails two critical access-policy questions.",
+        "action": "Gate release on critical policy cases as well as average quality.",
+        "reason": "High scores on frequent easy tasks can outweigh rare serious failures in an average.",
+        "check": "Check that the candidate is held when either required policy case fails.",
+        "tradeoff": "Strict gates require reviewing noisy or outdated test cases.",
+        "alternative": "Approve the release once average style ratings rise."
+      },
+      {
+        "situation": "The model changed and the guide's document collection changed on the same day.",
+        "action": "Run controlled comparisons across old and new models and document versions.",
+        "reason": "Keeping other inputs fixed helps distinguish individual effects and interactions.",
+        "check": "Evaluate all four combinations on the same closing-time questions.",
+        "tradeoff": "Running every combination consumes additional evaluation time.",
+        "alternative": "Attribute every changed answer to whichever component was updated last."
+      }
+    ]
+  },
+  "advanced-rag": {
+    "title": "Find a repair bulletin by both its code and its meaning",
+    "story": "Hassan asks about “E17, water pooling below the washer.” Some bulletins name E17 exactly, while another describes a leaking inlet without that code. An advanced retrieval system can combine searches based on exact words and on related meanings before the answer is written.",
+    "steps": [
+      "Make two short lists. Exact-code search ranks bulletin A first and B second, while meaning-based search ranks C first and A second.",
+      "For an easy hand calculation give 2 points for first place and 1 for second on each list. A gets 3, C gets 2 and B gets 1, moving A to the front of this demonstration.",
+      "Read the top candidates again against Hassan's precise question and machine model. Supply the selected passages with their bulletin IDs to the answer writer."
+    ],
+    "outcome": "You can combine different kinds of search, explain why an item rose in rank and check whether the change helped real repairs.",
+    "terms": [
+      [
+        "Hybrid retrieval",
+        "Combining search methods that catch different kinds of matches."
+      ],
+      [
+        "Rank fusion",
+        "Combining positions from several result lists."
+      ],
+      [
+        "Reranking",
+        "Examining candidates again to order them for the actual question."
+      ],
+      [
+        "Ablation",
+        "Removing one component in a controlled comparison to see what it contributes."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Keyword scores range into hundreds while meaning-match scores range from zero to one in a particular system.",
+        "action": "Use rank-based combination or deliberately calibrate scores before combining them.",
+        "reason": "Raw scores on unrelated scales can let one method overwhelm the other.",
+        "check": "Multiply one method's raw scores by ten and inspect whether a rank-only combination stays unchanged.",
+        "tradeoff": "Rank-only methods discard the sizes of score gaps.",
+        "alternative": "Add both raw scores without examining their scales."
+      },
+      {
+        "situation": "A slow reranker reads 2,000 passages for every repair query.",
+        "action": "Retrieve a smaller candidate pool first and measure its coverage before reranking.",
+        "reason": "Reranking cost grows with the candidates examined, and a missing passage cannot be recovered by reordering.",
+        "check": "Compare correct-bulletin coverage and answer latency at several pool sizes.",
+        "tradeoff": "A smaller pool may exclude the only correct bulletin.",
+        "alternative": "Rerank only the first search result to maximize speed and assume quality is unchanged."
+      },
+      {
+        "situation": "An upgraded system changes chunk size, query rewriting and ranking together, and accuracy rises.",
+        "action": "Remove or vary one component at a time on the same labeled repair cases.",
+        "reason": "A combined improvement does not reveal which change helped or hurt.",
+        "check": "Compare exact-code questions and plain-language symptoms with each component enabled and disabled.",
+        "tradeoff": "Independent tests can miss interactions, so selected combinations may need rechecking.",
+        "alternative": "Credit the entire gain to the most expensive new component."
+      }
+    ]
+  },
+  "ai-architecture": {
+    "title": "Draw the boundaries of a housing association's help desk",
+    "story": "Amal's housing association wants a help desk for shared building rules and private repair requests. A tenant asking about bin collection may see a public notice, while a question about flat 12's repair requires access to that tenant's records. System architecture assigns these jobs to components and defines how they exchange information.",
+    "steps": [
+      "Start with an identity check and determine whether the request needs public rules or a private repair lookup. Record the permitted building and tenant scope.",
+      "Let a search component read only permitted sources. Pass a relevant passage or a scoped repair status to the answer component and keep the source identifier with it.",
+      "If the private repair system is unavailable, report the status lookup as unavailable. Public bin-day questions can still use their own working source."
+    ],
+    "outcome": "You can sketch who owns each job, where permissions are checked and which parts can still work when another part fails.",
+    "terms": [
+      [
+        "Component",
+        "A part of a system with a defined responsibility."
+      ],
+      [
+        "Interface",
+        "The agreed data and behavior across a component boundary."
+      ],
+      [
+        "Trust boundary",
+        "A point where identity, permission or input assumptions must be checked."
+      ],
+      [
+        "Failure domain",
+        "The part of a system affected by one particular failure."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A shared answer cache serves flat 12's repair details to a different tenant with the same question.",
+        "action": "Include tenant and permission scope in private cache keys or avoid caching private answers in the shared store.",
+        "reason": "Identical wording does not imply identical authorization or underlying records.",
+        "check": "Ask the same repair question as two tenants and inspect the identifiers in each response.",
+        "tradeoff": "Scoped caching lowers reuse and requires careful invalidation when access changes.",
+        "alternative": "Remove the tenant's name from a shared reply while leaving the repair details."
+      },
+      {
+        "situation": "The hosted answer service becomes unavailable during a burst of requests about bin days.",
+        "action": "Offer the verified public notice directly when the writing service cannot respond.",
+        "reason": "Public notice retrieval can remain useful without generated prose.",
+        "check": "Disable the writing component and confirm public questions return the correct notice and source.",
+        "tradeoff": "A direct notice is less tailored to the person's wording.",
+        "alternative": "Retry generation indefinitely even when the public source is already available."
+      },
+      {
+        "situation": "A new retrieval component returns passage text but omits the permission scope and source ID.",
+        "action": "Define and test a response contract requiring the evidence identifiers and applicable access information.",
+        "reason": "Downstream answering and auditing depend on knowing where evidence came from and who may use it.",
+        "check": "Run the new component against a contract test with identical text from two private buildings.",
+        "tradeoff": "A richer contract couples components to some shared metadata decisions.",
+        "alternative": "Accept any nonempty passage and reconstruct missing source information from its wording."
+      }
+    ]
+  }
+}

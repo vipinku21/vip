@@ -1,0 +1,1847 @@
+{
+  "ml-concepts": {
+    "title": "How many lunches should Meera cook?",
+    "story": "Meera runs a canteen. On three Mondays with 20, 30 and 40 people in the building, she sold 10, 15 and 20 lunches. Tomorrow 36 people are expected. She would like a sensible starting count before anybody orders.",
+    "steps": [
+      "Write one line per Monday. People in the building is information Meera has before cooking. Lunches sold is the answer she learns afterwards.",
+      "Look for a simple rule that fits the three lines. Half as many lunches as people gives 10, 15 and 20. A machine-learning model is a rule whose settings are learned from examples. Here the setting is one half.",
+      "Apply the rule to 36 people. The estimate is 18 lunches. If 16 sell, the estimate was high by 2. One new day helps check the rule, but several new days give a fairer picture.",
+      "Compare with a simple habit such as always preparing 15. On the day with 16 sales, that habit misses by 1. A more elaborate rule has to earn its place over many days."
+    ],
+    "outcome": "Choose a clue, identify the outcome to record later, and check whether learning a pattern beats an ordinary rule.",
+    "terms": [
+      [
+        "Feature",
+        "A clue available when you must make the estimate, such as the headcount."
+      ],
+      [
+        "Label",
+        "The observed answer attached to an old example, such as lunches sold."
+      ],
+      [
+        "Training",
+        "Using old examples to choose the settings of a rule."
+      ],
+      [
+        "Prediction",
+        "The model's estimate for a case whose answer is still unknown."
+      ],
+      [
+        "Baseline",
+        "A simple rule you can already use, against which you compare a new one."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A lunch spreadsheet includes the cash drawer total at closing time. It predicts that day's sales remarkably well.",
+        "action": "Remove closing cash from the morning forecast.",
+        "reason": "The cash is counted after the decision to cook and depends on the lunches already sold.",
+        "check": "Recreate a past forecast using only fields visible at 9 a.m. and measure later sales against it.",
+        "tradeoff": "Morning-only clues may lower the score on old records, while making the forecast usable at opening time.",
+        "alternative": "Enter closing cash whenever training the model and leave it blank in the morning."
+      },
+      {
+        "situation": "A café wants to compare a predictor with its current habit of making yesterday's number of sandwiches.",
+        "action": "Save both predictions for each of the next ten mornings and compare errors on the same days.",
+        "reason": "Both guesses then face the same holidays, weather and customer counts.",
+        "check": "For each day, subtract the actual sales from each guess, ignore the sign, and average the ten misses for each method.",
+        "tradeoff": "Ten mornings offer quick feedback but may miss a whole holiday season.",
+        "alternative": "Compare the model's quiet-week errors with yesterday's rule during festival week."
+      },
+      {
+        "situation": "An ice-cream shop sold exactly 30 cones every hot afternoon because it stocked only 30. The owner wants demand estimates.",
+        "action": "Record sell-out time and unserved requests alongside sales.",
+        "reason": "A count of 30 sold gives only a lower limit on demand after the stock is gone.",
+        "check": "On a trial day with 40 cones available, compare sales and unserved requests with the old 30-cone record.",
+        "tradeoff": "Counting turned-away customers takes staff time and can still miss people who leave silently.",
+        "alternative": "Treat 30 sold as proof that everyone who wanted a cone bought one."
+      }
+    ]
+  },
+  "learning-types": {
+    "title": "Sort library books or predict their shelf?",
+    "story": "A librarian has 4 books. Two have known shelf labels, Cooking and Travel. She also has a box of donated books with no labels. She can teach a system to copy her shelf choices, or ask it to discover groups of similar descriptions.",
+    "steps": [
+      "For copying shelf choices, pair each old description with its shelf. A recipe book labeled Cooking and a city guide labeled Travel give examples with answers. This is supervised learning.",
+      "For the donated box, compare descriptions without supplying shelf answers. Two books repeatedly mentioning ovens and flour might land together. Finding groups this way is called clustering.",
+      "Read the two books in that group. One might be a novel set in a bakery. Give the group a useful interpretation only after checking its contents.",
+      "To check shelf predictions, hide some known labels, predict them, then compare. To judge a discovered group, inspect whether grouping those books serves a librarian's purpose."
+    ],
+    "outcome": "Choose a learning approach according to the answers you have and the decision you want to make.",
+    "terms": [
+      [
+        "Supervised learning",
+        "Learning from examples that include the outcome to predict."
+      ],
+      [
+        "Unsupervised learning",
+        "Looking for structure in examples that have no supplied answers."
+      ],
+      [
+        "Cluster",
+        "A group of items that look alike under a chosen comparison."
+      ],
+      [
+        "Label",
+        "An answer assigned to a particular example."
+      ],
+      [
+        "Similarity",
+        "The rule that determines when two items count as alike."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A grocer has 800 receipts and wants to discover shopping habits. Nobody assigned customers to habit categories.",
+        "action": "Group baskets by the kinds of goods bought and inspect sample receipts from each group.",
+        "reason": "The grouping can reveal repeated combinations without needing named groups in advance.",
+        "check": "Check whether a breakfast group contains several receipts with cereal, milk and fruit.",
+        "tradeoff": "Grouping by price instead may uncover budget patterns and conceal breakfast habits.",
+        "alternative": "Train a classifier to predict existing habit labels when the receipts have none."
+      },
+      {
+        "situation": "A repair shop has years of tickets labeled fixed or returned. It wants to estimate which new repairs may come back.",
+        "action": "Train on tickets with known outcomes and check predictions on unseen completed tickets.",
+        "reason": "The stored outcomes supply the reference answer for the prediction task.",
+        "check": "Count how many actual returns the predictions catch among the held-out repairs.",
+        "tradeoff": "Earlier repair practices may differ from the current process, so more recent examples matter.",
+        "alternative": "Cluster old ticket lengths and call the largest cluster returned."
+      },
+      {
+        "situation": "Two book clusters swap their numeric IDs after retraining, although the member books stay together.",
+        "action": "Compare the books in each group before interpreting the new IDs.",
+        "reason": "Cluster numbers are arbitrary names and can switch without changing membership.",
+        "check": "Check whether each old pair of grouped books still shares a group in the new result.",
+        "tradeoff": "Stable user-facing shelf names require a separate mapping that someone maintains.",
+        "alternative": "Tell readers that all the books have changed genre because the cluster numbers swapped."
+      }
+    ]
+  },
+  "regression": {
+    "title": "Estimate a taxi fare before the ride",
+    "story": "A cab company gives Asha two receipts with no waiting charges. A 2 km trip cost 60 rupees and a 4 km trip cost 80 rupees. She wants an estimate for 5 km. Regression means estimating an amount, such as a price or a duration, from information already known.",
+    "steps": [
+      "Compare the receipts. Two extra kilometres added 20 rupees. In this small example that is 10 rupees per kilometre.",
+      "Work backwards from the first receipt. Subtract the 20 rupees charged for 2 km from 60. The remaining 40 rupees behaves like a starting charge.",
+      "Use the pattern for 5 km. Start at 40 and add 5 lots of 10 to get 90 rupees. This is a prediction made before the ride.",
+      "Suppose the actual bill is 95. Actual minus predicted is 5 rupees. If another ride misses by 3 rupees in the other direction, the average size of the two misses is (5 + 3) / 2 = 4 rupees."
+    ],
+    "outcome": "Turn a small set of measurements into an estimate and describe its typical miss in the original units.",
+    "terms": [
+      [
+        "Target",
+        "The quantity you want to estimate, here the final fare."
+      ],
+      [
+        "Slope",
+        "How much the estimated amount changes when the input grows by one unit."
+      ],
+      [
+        "Intercept",
+        "The amount the fitted line gives when the input is zero."
+      ],
+      [
+        "Residual",
+        "Actual amount minus predicted amount for one completed case."
+      ],
+      [
+        "Mean absolute error",
+        "The average size of a miss, treating 5 too high and 5 too low alike."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A bakery predicts 10, 20 and 30 trays for three events. The actual counts are 12, 16 and 31.",
+        "action": "Report an average absolute miss of 7 divided by 3 trays, about 2.33 trays.",
+        "reason": "The misses have sizes 2, 4 and 1, so overestimates cannot cancel underestimates.",
+        "check": "Check that adding the three absolute differences gives 7 trays before dividing.",
+        "tradeoff": "This average weights an extra tray and a missing tray equally even if shortages cost more.",
+        "alternative": "Add the signed misses and report only their near-zero average."
+      },
+      {
+        "situation": "A delivery fare line was fitted using trips of 1 through 8 km. A customer asks for a 200 km airport transfer.",
+        "action": "Flag the request for a separate long-distance estimate and collect transfer fares.",
+        "reason": "The short-trip pattern gives no evidence about highway tolls or long-distance tariffs.",
+        "check": "Compare predictions with several actual fares beyond 8 km before widening the supported distance.",
+        "tradeoff": "A fallback slows booking while protecting customers from a misleading price.",
+        "alternative": "Advertise the line's 200 km estimate as just as reliable as a 4 km estimate."
+      },
+      {
+        "situation": "A repair-time model is usually accurate for one bicycle but underestimates jobs for groups of ten.",
+        "action": "Plot actual minus predicted minutes against the number of bicycles and review large jobs separately.",
+        "reason": "Overall averages can hide a consistent shortage of time for group bookings.",
+        "check": "Check whether residuals for groups of ten are repeatedly positive while single-bike residuals center near zero.",
+        "tradeoff": "Large group bookings may be too rare for a separate model until more examples arrive.",
+        "alternative": "Increase every appointment by the same number of minutes without inspecting group size."
+      }
+    ]
+  },
+  "classification": {
+    "title": "Which parcels need a manual check?",
+    "story": "A parcel depot sorts boxes into two named groups, inspect and send on. Its system gives three boxes damage scores of 0.20, 0.62 and 0.91. A person sets the cutoff for asking an inspector to look at a box. Choosing a named group is classification.",
+    "steps": [
+      "Use a cutoff of 0.60 and inspect scores at or above it. The 0.62 and 0.91 boxes go to inspection. The 0.20 box goes straight on.",
+      "Open all three boxes during a small trial. Suppose only the 0.91 box is damaged. The 0.62 box is a false alarm. The damaged box was correctly flagged.",
+      "Raise the cutoff to 0.80 and apply it to the same scores. Only 0.91 is flagged. You saved one inspection in this tiny trial.",
+      "Before choosing the cutoff for the depot, try many more known cases. A damaged box scoring 0.72 would be caught at 0.60 and missed at 0.80."
+    ],
+    "outcome": "Explain how a cutoff changes a decision and what its mistakes cost in the real setting.",
+    "terms": [
+      [
+        "Class",
+        "One of the named outcomes a system can assign."
+      ],
+      [
+        "Score",
+        "A number indicating how strongly the model favors an outcome."
+      ],
+      [
+        "Threshold",
+        "The cutoff for turning a score into a decision."
+      ],
+      [
+        "False positive",
+        "A case flagged for the condition that turns out to be absent."
+      ],
+      [
+        "False negative",
+        "A real case of the condition that was missed."
+      ],
+      [
+        "Confusion matrix",
+        "A table that counts each combination of predicted class and actual class."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A flood alert model scores three streets 0.42, 0.58 and 0.70. Missing a flooded street is serious. Staff propose lowering the alert cutoff from 0.65 to 0.50.",
+        "action": "Trial the lower cutoff and count newly detected floods alongside extra inspections.",
+        "reason": "A 0.58 street is newly flagged, so real floods and false alarms may both increase.",
+        "check": "Replay past storms at both cutoffs and compare missed flooded streets and total callouts.",
+        "tradeoff": "Inspection capacity can make a very low cutoff impractical.",
+        "alternative": "Raise the cutoff to catch more moderate-score flooded streets."
+      },
+      {
+        "situation": "Only 3 of 100 chargers in a test are broken. A system reports every charger as working and claims 97 percent accuracy.",
+        "action": "Count the broken chargers detected out of all three broken chargers.",
+        "reason": "Overall accuracy is dominated by the 97 working chargers.",
+        "check": "The broken-charger detection rate for these predictions is zero out of three.",
+        "tradeoff": "Estimating this rate reliably needs more than three broken examples.",
+        "alternative": "Approve the system solely because 97 of 100 labels match."
+      },
+      {
+        "situation": "A meal service assigns one category per dish, soup, salad or curry. A score of 0.8 appears beside curry.",
+        "action": "Check the system's score definition and compare similarly scored dishes with their verified labels.",
+        "reason": "A ranking score can identify a preferred class without being an accurate 80 percent probability.",
+        "check": "Among many dishes given an estimated curry probability near 0.8, count the fraction actually labeled curry.",
+        "tradeoff": "Enough verified dishes are needed to judge a narrow score range.",
+        "alternative": "Promise that exactly four of every five dishes shown to a customer will be curry."
+      }
+    ]
+  },
+  "train-test": {
+    "title": "Could yesterday’s records predict today’s crowd?",
+    "story": "A pool manager has 30 daily visitor counts and wants to predict day 31 before opening. Grading a rule on the same 30 days used to invent it would tell her little about tomorrow.",
+    "steps": [
+      "Set aside days 25 through 30 before designing the rule. They stand in for the future.",
+      "Use only days 1 through 24 to choose a rule, including any numbers it needs such as typical Monday attendance.",
+      "For each of the final six days, make a guess using only the information available before opening. Compare it with that day’s actual count.",
+      "If these six results guide repeated changes, the six days now help choose the rule. Reserve a later untouched period for the final check."
+    ],
+    "outcome": "Design a fair test that resembles when, where and for whom the prediction will be made.",
+    "terms": [
+      [
+        "Training set",
+        "Examples used to learn a rule and its settings."
+      ],
+      [
+        "Test set",
+        "Examples held back to estimate performance on fresh cases."
+      ],
+      [
+        "Data leakage",
+        "The answer or information from the future slipping into a prediction."
+      ],
+      [
+        "Time split",
+        "Training on earlier dates and checking on later dates."
+      ],
+      [
+        "Generalization",
+        "How well the learned rule works on new cases."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A rail forecast uses July passenger records to predict June after someone shuffles all the dates.",
+        "action": "Train on earlier dates and check on a later block of dates.",
+        "reason": "A forecaster working in June cannot see July’s passenger totals.",
+        "check": "Confirm the latest training day comes before the earliest test day.",
+        "tradeoff": "A short check period may miss a seasonal change, so try several past cutoffs.",
+        "alternative": "Shuffle the dates again until every month appears on both sides."
+      },
+      {
+        "situation": "A shop has five near-identical photos of each bicycle. It needs to recognize damage on a bicycle it has never seen.",
+        "action": "Keep all pictures of one bicycle together when dividing examples.",
+        "reason": "Recognizing the same frame or background can inflate an apparent new-bicycle score.",
+        "check": "List training and test bicycle IDs and confirm the lists have no overlap.",
+        "tradeoff": "There are fewer independent bicycles than photos, which makes uncertainty larger.",
+        "alternative": "Use one picture of each bicycle for testing and its four siblings for training."
+      },
+      {
+        "situation": "An analyst fills unknown floor areas with the average of all 200 homes, then divides them for training and testing.",
+        "action": "Split the homes first, calculate the training average, and reuse that value on held-back homes.",
+        "reason": "Test measurements would otherwise help choose the replacement value.",
+        "check": "Change only a held-back home and confirm the replacement used for training stays fixed.",
+        "tradeoff": "The training average may poorly represent an unfamiliar neighborhood.",
+        "alternative": "Compute a separate replacement average from the test homes whenever predicting them."
+      }
+    ]
+  },
+  "feature-engineering": {
+    "title": "Turn a timetable into a useful clue",
+    "story": "Neha wants to predict how many people are waiting for a bus. At 8:00 the previous bus left at 7:50. At 8:30 it left at 8:28. The gap between departures tells her something two lists of clock times conceal.",
+    "steps": [
+      "Subtract the earlier departure from the present time. The first gap is 10 minutes and the second is 2 minutes. This calculated clue is a feature.",
+      "Record its unit, minutes. People had more time to gather during the 10-minute gap, although other things can also affect the queue.",
+      "Record Saturday and Sunday as day indicators if those days matter. Calling Monday 1 and Tuesday 2 would not make Tuesday twice as busy.",
+      "Build the clues in the same way next week. Use the eventual passenger count only afterwards to check the estimate."
+    ],
+    "outcome": "Turn a raw record into a meaningful clue and check whether it can be calculated on time.",
+    "terms": [
+      [
+        "Feature",
+        "A measurable clue available when making a decision."
+      ],
+      [
+        "Derived feature",
+        "A new clue calculated from existing records."
+      ],
+      [
+        "Encoding",
+        "Representing a category such as route name in a form a model can use."
+      ],
+      [
+        "Scaling",
+        "Changing a measurement’s numerical scale in a consistent way."
+      ],
+      [
+        "Prediction time",
+        "The moment at which every input clue must already be known."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Routes Red, Blue and Green get codes 1, 2 and 3. A distance-based model treats Green as farther from Red than Blue is.",
+        "action": "Use a separate on-or-off marker for each unordered route.",
+        "reason": "The assigned numbers introduce a distance that the route names never described.",
+        "check": "Swap the route names’ alphabetical order and confirm their encoded distances stay equal.",
+        "tradeoff": "Thousands of route names would require many indicators.",
+        "alternative": "Use the alphabet position of each route name as a travel distance."
+      },
+      {
+        "situation": "A grocer predicts tomorrow’s orders using each customer’s total purchases from the entire month.",
+        "action": "Compute the total from receipts recorded strictly before the forecast.",
+        "reason": "Tomorrow’s purchases are part of the outcome the model is supposed to estimate.",
+        "check": "Add a future receipt and confirm an earlier customer feature stays unchanged.",
+        "tradeoff": "New customers may have very short histories.",
+        "alternative": "Rebuild past customer features from the final month-end file."
+      },
+      {
+        "situation": "A house comparison measures floor area in thousands of square feet and bedroom count from 1 to 4. Absolute differences are added together.",
+        "action": "Put both measures on comparable scales using training homes.",
+        "reason": "Large raw floor-area numbers can drown out meaningful room-count differences.",
+        "check": "Compare which neighbors are chosen before and after scaling on homes with known layouts.",
+        "tradeoff": "Equal numerical scales do not prove the two clues deserve equal importance.",
+        "alternative": "Multiply bedroom counts by a different arbitrary factor for each home."
+      }
+    ]
+  },
+  "model-evaluation": {
+    "title": "Did the lost-parcel alarm actually help?",
+    "story": "A warehouse checks ten parcels by hand. Four are genuinely misplaced. The alarm flags five, three of which are genuinely misplaced. The supervisor wants to know both how many checks pay off and how many problems are still missed.",
+    "steps": [
+      "Make four piles. Three parcels were correctly flagged, two flagged in error, one misplaced parcel was missed, and four correctly stayed unflagged. The piles account for all ten.",
+      "Among five flags, three point to real problems. The share of useful flags, called precision, is 3/5 or 60 percent.",
+      "Among four real problems, three were found. The fraction found, called recall, is 3/4 or 75 percent.",
+      "If inspections cost time, the two unnecessary visits matter. If losing a parcel is expensive, the one missed parcel matters. Use the counts to decide which error deserves attention."
+    ],
+    "outcome": "Choose a measurement that reflects the cost of a wrong decision.",
+    "terms": [
+      [
+        "Metric",
+        "A rule for turning several outcomes into a number you can compare."
+      ],
+      [
+        "Precision",
+        "Among all flagged cases, the share that really had the condition."
+      ],
+      [
+        "Recall",
+        "Among all actual cases of the condition, the share that was found."
+      ],
+      [
+        "Evaluation set",
+        "Cases with verified answers reserved for checking a system."
+      ],
+      [
+        "Error analysis",
+        "Looking at specific mistakes to discover patterns a summary number hides."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A battery screen flags 20 batteries. Fifteen truly failed. A technician asks how often a flag warrants investigation.",
+        "action": "Report precision of 15 out of 20, or 75 percent.",
+        "reason": "The question starts with flagged batteries, so every flag belongs in the denominator.",
+        "check": "Count 15 confirmed failures and 5 healthy batteries inside the flagged tray.",
+        "tradeoff": "This number gives no count of defective batteries left outside the tray.",
+        "alternative": "Divide 15 by all batteries shipped and call that precision."
+      },
+      {
+        "situation": "Two delivery formulas have the same average miss, but the second frequently underestimates rural trips by 30 minutes.",
+        "action": "Review rural and urban errors separately and inspect the most delayed trips.",
+        "reason": "Frequent urban trips can dominate the overall average.",
+        "check": "Measure the rural average miss and the share underestimated by more than 20 minutes.",
+        "tradeoff": "A small rural sample can make subgroup estimates unstable.",
+        "alternative": "Choose using only the overall average because the rural delays are infrequent."
+      },
+      {
+        "situation": "A festival doubles evening orders. A developer compares a new forecast on festival day with an old forecast on a normal Tuesday.",
+        "action": "Run both forecasts on the same held-back days.",
+        "reason": "Changing the cases as well as the rule hides what caused the difference.",
+        "check": "Keep both guesses, the actual total and both errors together for each date.",
+        "tradeoff": "A fair replay requires a record of the inputs available at the time.",
+        "alternative": "Choose whichever dates are easiest to score for each version."
+      }
+    ]
+  },
+  "overfitting": {
+    "title": "The tutor who memorized the answer sheet",
+    "story": "A tutor predicts bicycle repair times from ten old jobs. One rule memorizes the exact minutes for each job number. It gives perfect answers for those ten jobs. An eleventh customer arrives with a new job number.",
+    "steps": [
+      "Look up the eleventh number. The list has no match. Knowing an old number gave the rule no way to recognize a similar puncture repair.",
+      "Try a simpler rule such as the usual duration for a puncture or brake repair. It may miss an old job by three minutes and still give a useful estimate for a new customer.",
+      "Check both rules on later jobs kept out of training. A zero old-job error alongside a large later error is a clue that the rule learned accidental details.",
+      "Use separate practice checks to choose the amount of detail. Keep a final untouched group to verify your choice."
+    ],
+    "outcome": "Recognize when a perfect practice score hides a brittle rule.",
+    "terms": [
+      [
+        "Overfitting",
+        "Learning quirks of old cases so well that the rule works poorly on new ones."
+      ],
+      [
+        "Capacity",
+        "How many different patterns a rule is flexible enough to express."
+      ],
+      [
+        "Validation set",
+        "Examples held back while choosing which version of a rule to use."
+      ],
+      [
+        "Generalization gap",
+        "The difference between performance on training cases and fresh ones."
+      ],
+      [
+        "Regularization",
+        "A constraint that discourages overly complicated settings."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A ticket classifier learned that one employee’s email appeared only on urgent tickets last month. That person has changed roles.",
+        "action": "Check a later month and compare results with the employee identifier removed.",
+        "reason": "Staff identity may be a temporary shortcut unrelated to a ticket’s urgency.",
+        "check": "Compare later-month errors for the same employee after the role change.",
+        "tradeoff": "Removing identity could also discard a useful routing pattern, so judge both versions on fresh tickets.",
+        "alternative": "Keep the email clue solely because it raised training accuracy."
+      },
+      {
+        "situation": "A garden forecast has training errors of 5, 2 and 0 after three fitting rounds. Errors on separate check days are 6, 4 and 8.",
+        "action": "Select the second version as a candidate and confirm it on untouched days.",
+        "reason": "Round two has the lowest check error, although round three fits old days best.",
+        "check": "Score the saved second version on a final date range after selection.",
+        "tradeoff": "With few check days the apparent minimum can be noisy.",
+        "alternative": "Choose round three because its training error is zero."
+      },
+      {
+        "situation": "A shop uses one constant price for every item. It makes large errors on both old receipts and fresh receipts.",
+        "action": "Try adding a meaningful product category and compare both errors.",
+        "reason": "Large errors on both sets may mean the rule is too simple to capture genuine differences.",
+        "check": "Check whether including product category reduces both training and validation error.",
+        "tradeoff": "Rare categories may have too few examples for separate estimates.",
+        "alternative": "Simplify the already constant rule just because validation error is high."
+      }
+    ]
+  },
+  "scikit-learn": {
+    "title": "Teach an estimator to price a print job",
+    "story": "A print shop charges 10 rupees for setup plus 2 rupees per page. Old receipts show 5 pages for 20 rupees and 10 pages for 30 rupees. scikit-learn is a Python toolkit that can learn a straight-line rule from records like these.",
+    "steps": [
+      "Supply two rows of input, one for each job, with its page count. Beside those rows supply the known bills, 20 and 30.",
+      "Call fit on a linear-regression estimator. Fit means learning settings. The 10-rupee difference across 5 extra pages gives a rate of 2 per page, with 10 at zero pages.",
+      "Call predict with a new row containing 8 pages. The saved settings give 10 + 2 × 8 = 26 rupees.",
+      "Check that estimate against a fresh receipt. A laminated cover would add a charge that page count alone never described."
+    ],
+    "outcome": "Trace what fit learns, what predict requires and how to keep preparation consistent.",
+    "terms": [
+      [
+        "Estimator",
+        "An object that can learn settings from examples."
+      ],
+      [
+        "fit",
+        "The step that learns settings from input rows and, for this task, known answers."
+      ],
+      [
+        "predict",
+        "The step that applies already learned settings to new input rows."
+      ],
+      [
+        "Transformer",
+        "A step that changes input values into a useful representation."
+      ],
+      [
+        "Pipeline",
+        "A sequence that applies a consistent set of preparation and model steps."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A bicycle delivery model trained on distance then item count. A new request sends item count before distance.",
+        "action": "Validate field names and assemble each row in the training order.",
+        "reason": "A row of two numbers can have the right shape while its positions carry the wrong meanings.",
+        "check": "Send distance 20 and count 2 and verify the assembled row is [20, 2].",
+        "tradeoff": "Supporting a revised input layout requires an explicit mapping or a new version.",
+        "alternative": "Accept any two numbers because the row length is correct."
+      },
+      {
+        "situation": "An analyst learns a scaler from all receipts before dividing them into practice rounds with separate held-back groups.",
+        "action": "Fit a pipeline containing both scaling and prediction separately inside each training round.",
+        "reason": "A scaler learns values such as the mean, which would otherwise include that round’s held-back receipts.",
+        "check": "Change a value only in the held-back group and confirm that round’s fitted training scaler stays unchanged.",
+        "tradeoff": "Refitting preparation in every round takes additional computation.",
+        "alternative": "Reuse one scaler fitted on every receipt so the rounds share identical statistics."
+      },
+      {
+        "situation": "A print order arrives without a final bill. A trainee tries to train the price estimator again before quoting it.",
+        "action": "Apply predict to the 8-page input using the saved estimator.",
+        "reason": "The final bill is the unknown answer and is unnecessary when applying an already learned rule.",
+        "check": "Quote the same job twice and confirm the learned settings do not change.",
+        "tradeoff": "A genuine change in pricing eventually requires updated training examples.",
+        "alternative": "Invent a bill for the new order and use it to refit first."
+      }
+    ]
+  },
+  "model-deployment": {
+    "title": "Put a repair estimate on a booking screen",
+    "story": "A cycle shop has a tested rule that estimates 35 minutes for a brake adjustment. Customers want that number while booking. Deployment means connecting the saved rule to a program that answers new requests.",
+    "steps": [
+      "Agree on the information the form sends. For one brake adjustment, send the repair type and bicycle count in the same form the rule saw during training.",
+      "Load the saved rule and its preparation steps together. Return 35, the unit minutes and a version identifying the rule used.",
+      "Send a known sample booking before opening the service to customers. Check the unit, result and time taken. Also try a missing repair type.",
+      "Later compare stored estimates with actual repair durations. A seriously unreliable update can be replaced by the previously tested version."
+    ],
+    "outcome": "Deliver a model’s result with consistent units and recognize when the service needs attention.",
+    "terms": [
+      [
+        "Inference",
+        "Applying a trained rule to a new case."
+      ],
+      [
+        "Input contract",
+        "An agreement about which fields a caller supplies and what their units mean."
+      ],
+      [
+        "Version",
+        "An identifier for the exact model and preparation used."
+      ],
+      [
+        "Rollback",
+        "Restoring an earlier working version."
+      ],
+      [
+        "Monitoring",
+        "Checking actual behavior after customers begin using the service."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A delivery form sends 5000 metres to a model trained on kilometres. The predicted wait is enormous.",
+        "action": "Specify the input unit and convert 5000 metres to 5 km before inference.",
+        "reason": "The model interprets number size using the units it saw during training.",
+        "check": "Compare the converted request with the model’s 5 km reference case.",
+        "tradeoff": "If some callers already send kilometres, a blanket conversion would shrink valid distances.",
+        "alternative": "Clamp every unusually long predicted wait to ten minutes."
+      },
+      {
+        "situation": "An appointment model is fast on a laptop but some live booking requests now time out.",
+        "action": "Give the new version a small traffic share and measure response times under real load.",
+        "reason": "Competing requests and larger inputs can behave differently from a single local trial.",
+        "check": "Compare timeout rates and slow-response times across both versions on similar traffic.",
+        "tradeoff": "A small rollout may encounter a rare expensive request only after several days.",
+        "alternative": "Replace the old version everywhere after timing one easy booking."
+      },
+      {
+        "situation": "A ticket quotes an 18-minute estimate while today’s service gives 24 for the same job. A model update went out overnight.",
+        "action": "Retain the version and permitted inputs used for the original estimate.",
+        "reason": "Replaying the original rule and preparation distinguishes a version change from an input change.",
+        "check": "Run the saved case through its recorded version and check whether 18 is reproduced.",
+        "tradeoff": "Diagnostic inputs need a retention limit and care with personal details.",
+        "alternative": "Treat today’s result of 24 as proof that the customer misread yesterday’s estimate."
+      }
+    ]
+  },
+  "numpy": {
+    "title": "Make a shopping bill from two shelves",
+    "story": "A shop packs 2 apples, 3 pears and 1 mango. Their unit prices are 10, 20 and 30 rupees, in that order. NumPy is a tool for working on orderly groups of numbers. Here it can do the same multiplication for each item and then add the results.",
+    "steps": [
+      "Write quantities as [2, 3, 1] and prices as [10, 20, 30]. Their matching positions refer to the same fruits. Each group is an array.",
+      "Multiply matching positions. The three line costs are [20, 60, 30]. Adding them gives a bill of 110 rupees.",
+      "If a second basket contains [1, 0, 2], put it on a second row. Two rows and three fruit columns make a shape of (2, 3).",
+      "Apply the same three prices to both baskets. NumPy can reuse the price row across both rows. This is broadcasting. The second bill is 10 + 0 + 60 = 70 rupees."
+    ],
+    "outcome": "Check the shape, ordering and units of measurements before combining them.",
+    "terms": [
+      [
+        "Array",
+        "An ordered group of values that can be processed together."
+      ],
+      [
+        "Shape",
+        "The lengths of the dimensions, such as two baskets by three fruits."
+      ],
+      [
+        "Elementwise multiplication",
+        "Multiplying a value by its partner at the corresponding position."
+      ],
+      [
+        "Broadcasting",
+        "Applying a compatible smaller set of values across a larger arrangement."
+      ],
+      [
+        "Axis",
+        "A direction along which to combine values, such as across fruit columns."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A warehouse has 2 shelves by 3 products and a list of 3 per-product prices. It needs one cost per shelf.",
+        "action": "Multiply quantities by matching product prices, then sum across the three product columns in each row.",
+        "reason": "Each row represents one shelf, so combining that row’s columns produces a shelf total.",
+        "check": "For shelves [2,3,1] and [1,0,2] at prices [10,20,30], verify totals [110,70].",
+        "tradeoff": "If the warehouse requests a total per product, the summing direction changes.",
+        "alternative": "Add down shelves first and report the resulting three product totals as two shelf bills."
+      },
+      {
+        "situation": "A store sorts a three-price list alphabetically by fruit, while the quantity array keeps its original supplier order. Both lists still have length three.",
+        "action": "Align product identifiers before doing position-by-position arithmetic.",
+        "reason": "Equal lengths confirm a shape match while saying nothing about which product each position names.",
+        "check": "Give each fruit a distinct test price and confirm every line amount matches its named fruit.",
+        "tradeoff": "Checking product keys adds preparation before the fast numerical operation.",
+        "alternative": "Trust the multiplication because both arrays have three entries."
+      },
+      {
+        "situation": "A shop stores a two-by-two grid of quantities. Each shelf has its own discount, 10 or 20 percent. A length-two list applies discounts by column.",
+        "action": "Arrange the shelf discounts as a two-row, one-column array before applying them to the grid.",
+        "reason": "Broadcasting aligns trailing dimensions, so a plain length-two list matches the two product columns.",
+        "check": "With all prices 100, verify the discounted rows are [90,90] and [80,80].",
+        "tradeoff": "A per-product discount would belong across the columns instead.",
+        "alternative": "Use the plain list because its length matches the number of shelves."
+      }
+    ]
+  },
+  "pandas": {
+    "title": "Find which vegetable stalls have stock left",
+    "story": "Rani tracks three stalls by name. North has 12 crates, East has 4 and West has 9. pandas is a tool that lets labels such as North travel alongside their values, which helps her compare records even after a list is reordered.",
+    "steps": [
+      "Write North → 12, East → 4, West → 9 as one labeled column. pandas calls this a Series.",
+      "Ask of each stall, is its count below 10? This yes-or-no question produces False, True, True. The three answers form a mask.",
+      "Keep the values whose answers are True. East and West need attention, retaining their counts 4 and 9.",
+      "Suppose an order for East adds 3 crates. Find East by name and update 4 to 7. The same labeled lookup works even if West is listed first tomorrow."
+    ],
+    "outcome": "Use labels and a plain-language question to find records without relying on list order.",
+    "terms": [
+      [
+        "Series",
+        "A column of values that each have a label."
+      ],
+      [
+        "Index",
+        "The labels pandas uses to identify entries."
+      ],
+      [
+        "Boolean mask",
+        "A set of yes-or-no values used to select matching records."
+      ],
+      [
+        "Label alignment",
+        "Matching values by their labels before combining them."
+      ],
+      [
+        "Filter",
+        "Keep only the records satisfying a stated condition."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two stock lists contain the same stalls in opposite order. Rani needs the change per stall.",
+        "action": "Subtract using a shared unique stall label.",
+        "reason": "Matching labels pairs each stall with its own earlier count even when lists are reordered.",
+        "check": "Reverse yesterday’s display order and confirm the per-stall changes stay the same.",
+        "tradeoff": "Spelling variations in stall names can create apparent unmatched entries.",
+        "alternative": "Subtract the first row of one list from the first row of the other."
+      },
+      {
+        "situation": "The rule is to restock stalls with fewer than ten crates. A new stall has exactly ten.",
+        "action": "Use a strictly below-ten condition.",
+        "reason": "Exactly ten meets the minimum, so including equality would send an unnecessary restock request.",
+        "check": "Try counts 9, 10 and 11 and verify only the stall with 9 is selected.",
+        "tradeoff": "If managers redefine the trigger as ten or fewer, the condition must include equality.",
+        "alternative": "Include every stall with a count at or below ten under the current rule."
+      },
+      {
+        "situation": "One stall has no count because its sheet is late. The owner asks for both low stock and missing reports.",
+        "action": "List unknown counts separately, then filter known counts for low stock.",
+        "reason": "A missing observation gives no evidence about how many crates are there.",
+        "check": "Confirm a recorded zero appears under low stock and an unreported stall appears under missing reports.",
+        "tradeoff": "Separate lists require the reader to consider both before ordering.",
+        "alternative": "Replace the unknown count by zero and tell the owner both stalls are empty."
+      }
+    ]
+  },
+  "dataframes": {
+    "title": "Turn three café receipts into a branch report",
+    "story": "A café has three receipts. Lake sold tea for 20 rupees and cake for 40, while Hill sold tea for 30. A DataFrame is a table with named columns, much like a tidy worksheet. Each receipt gets a row so the owner can ask questions by branch or product.",
+    "steps": [
+      "Choose columns branch, item and rupees. Write [Lake, tea, 20], [Lake, cake, 40] and [Hill, tea, 30]. One row now means one sale.",
+      "Read the rupees column to get 20, 40 and 30. Their sum is 90. To find Lake alone, keep the rows where branch equals Lake.",
+      "Split the receipts into piles by branch. Add the rupees within each pile. Lake totals 60 and Hill totals 30. In pandas this is grouping and summing.",
+      "Check that 60 + 30 returns the original 90. This check can catch a receipt lost while making the report."
+    ],
+    "outcome": "Build a table at a clear level of detail and verify totals after a group summary.",
+    "terms": [
+      [
+        "DataFrame",
+        "A labeled table with rows and columns."
+      ],
+      [
+        "Row",
+        "One record at a chosen level of detail, here one sale."
+      ],
+      [
+        "Column",
+        "One named piece of information recorded for each row."
+      ],
+      [
+        "loc",
+        "A pandas selector for rows and columns using labels or conditions."
+      ],
+      [
+        "Group",
+        "Rows that share a chosen field value, such as a branch name."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A retailer wants the money earned by each branch, but receipts from different branches are mixed.",
+        "action": "Group rows by branch and sum the money column within each group.",
+        "reason": "Each receipt contributes once to the total for its own branch.",
+        "check": "Confirm the sum of the branch totals equals the sum of the original receipt amounts.",
+        "tradeoff": "A branch total hides whether earnings came from many small sales or one large one.",
+        "alternative": "Count rows per branch and report those counts as money earned."
+      },
+      {
+        "situation": "An address table has two entries for one customer. Joining it to sales doubles that customer’s 40-rupee order in the report.",
+        "action": "Choose or verify one appropriate address row per order before combining tables.",
+        "reason": "A sale matches every eligible address, so multiple matches repeat its value.",
+        "check": "Compare unique order IDs and total money before and after joining.",
+        "tradeoff": "Some reports really need address history, which requires matching by time as well as customer.",
+        "alternative": "Average the final total with last month’s total to smooth out the increase."
+      },
+      {
+        "situation": "A café report has no rows for Hill on Tuesday. The owner wants zero counted only when Hill actually opened and sold nothing.",
+        "action": "Combine the report with a record of open branches and reporting status.",
+        "reason": "An empty group alone cannot distinguish no sales from a missing file or a closed shop.",
+        "check": "Mark a verified open, fully reported Hill day with no receipts as zero and an unreported one as unknown.",
+        "tradeoff": "Keeping branch-day records requires data beyond individual receipts.",
+        "alternative": "Replace every absent branch row with a confirmed zero."
+      }
+    ]
+  },
+  "data-cleaning": {
+    "title": "Count real orders in a messy register",
+    "story": "A flower shop receives two copies of order A18 for 250 rupees and a separate order A19 for 250. One copy spells the branch as ' Lake ' and the other as 'LAKE'. The owner wants a sales total and wants to retain the original slips if a customer disputes a charge.",
+    "steps": [
+      "Save the original slips. Make a working version in which leading and trailing spaces are removed and branch names use a consistent comparison form.",
+      "Compare order IDs. The two A18 copies describe the same identified sale. A19 is a different sale even though its price is also 250.",
+      "Keep one agreed A18 and one A19. The total is 500 rupees instead of 750. Document the rule used to recognize repeated imports.",
+      "If the A18 copies disagree on price, set them aside for review. Cleaning should make records trustworthy, not invent an answer."
+    ],
+    "outcome": "Repair formatting and repeated records while preserving genuinely separate events.",
+    "terms": [
+      [
+        "Normalization",
+        "Putting equivalent entries into a consistent form for comparison."
+      ],
+      [
+        "Duplicate",
+        "A repeated record of the same event or item."
+      ],
+      [
+        "Unique key",
+        "A field or combination that identifies one intended record."
+      ],
+      [
+        "Validation",
+        "Checking whether a value satisfies a stated rule."
+      ],
+      [
+        "Audit trail",
+        "A record of what was changed and why."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two different customers each buy a 50-rupee rose at noon. Their purchase IDs are F1 and F2.",
+        "action": "Keep both purchases when removing repeated imports.",
+        "reason": "Matching amount and time can describe two real sales, while the distinct IDs identify different purchases.",
+        "check": "Verify a count of two orders and a total of 100 after cleaning.",
+        "tradeoff": "If IDs are occasionally reused, another field or a human check is necessary.",
+        "alternative": "Remove one row just because its time and amount match the other."
+      },
+      {
+        "situation": "A register exports phone extensions '007' and '7'. The office says they reach different desks.",
+        "action": "Keep the extensions as text and preserve the leading zeros.",
+        "reason": "A numeric conversion would erase a distinction the office uses to route calls.",
+        "check": "Check that a lookup for '007' still returns its own desk after import.",
+        "tradeoff": "Quantities intended for arithmetic usually do need numerical conversion.",
+        "alternative": "Convert every numeric-looking entry to an integer."
+      },
+      {
+        "situation": "Order B9 appears twice, once at 150 and once at 180 rupees, with no reliable update time.",
+        "action": "Flag the disagreement and compare both rows with the original receipt.",
+        "reason": "The ID proves they refer to one order but gives no evidence which amount is final.",
+        "check": "Audit the resolved B9 amount against its receipt before publishing the total.",
+        "tradeoff": "Manual review delays the total for disputed orders.",
+        "alternative": "Keep whichever B9 row happened to arrive last."
+      }
+    ]
+  },
+  "missing-values": {
+    "title": "What does a blank rainfall reading mean?",
+    "story": "A school rain gauge records 0 mm on Monday, 6 mm on Tuesday and a blank on Wednesday because the battery ran out. Zero means someone measured a dry day. The blank means nobody knows how wet Wednesday was.",
+    "steps": [
+      "To describe measured days, add 0 and 6, then divide by 2. The average measured rainfall is 3 mm across two observed days. Report that coverage beside the number.",
+      "If you replace Wednesday by zero and divide by 3, the answer becomes 2 mm. This extra precision rests on an assumption the broken gauge never confirmed.",
+      "For a calculation that requires every day, you could temporarily estimate Wednesday using a nearby gauge. Mark the estimate and keep the original blank.",
+      "Ask why the battery failed. If gauges often stop during heavy storms, the measured days may systematically understate rainfall."
+    ],
+    "outcome": "Distinguish unknown from zero and state exactly which observations support an average.",
+    "terms": [
+      [
+        "Missing value",
+        "A place where the value is unknown or unavailable."
+      ],
+      [
+        "Zero",
+        "A known measurement of nothing in the stated units."
+      ],
+      [
+        "Imputation",
+        "Filling a missing entry with an estimate according to a stated rule."
+      ],
+      [
+        "Coverage",
+        "How many expected measurements were actually recorded."
+      ],
+      [
+        "Bias",
+        "A recurring tilt in a result caused by how observations were collected or handled."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A reading of zero means a shop was open and sold nothing. A blank means the daily sheet never arrived.",
+        "action": "Report the missing sheet separately from the zero-sale day.",
+        "reason": "Zero provides information about actual trading, while a missing sheet gives no sale total.",
+        "check": "Verify that average sales per observed day includes the zero but excludes the unknown with its coverage reported.",
+        "tradeoff": "This observed-day average may mislead if busy shops forget to report more often.",
+        "alternative": "Fill every blank with zero before calculating daily sales."
+      },
+      {
+        "situation": "An office thermostat log has a single missing minute between two readings of 22 degrees. An engineer needs a continuous display.",
+        "action": "For the display, estimate the missing point from nearby readings and flag it as estimated.",
+        "reason": "A short gap inside a stable run can support a defensible display estimate.",
+        "check": "Check that the original missing flag survives and that a two-hour outage is handled differently.",
+        "tradeoff": "This interpolation could conceal a sudden real change and may be unsuitable for safety decisions.",
+        "alternative": "Apply the same fill rule to gaps of any length."
+      },
+      {
+        "situation": "Nearly half of a satisfaction survey’s unhappy customers skipped the optional comment field.",
+        "action": "Keep a missing-comment indicator and compare response patterns across satisfaction scores.",
+        "reason": "Dropping rows without comments can change the mix of customers represented.",
+        "check": "Compare the share of low scores before and after excluding missing comments.",
+        "tradeoff": "A missingness indicator reveals a pattern while leaving the actual missing text unknown.",
+        "alternative": "Discard every missing-comment row and assume the remaining stories represent everyone."
+      }
+    ]
+  },
+  "data-transformation": {
+    "title": "Compare two shops that measure milk differently",
+    "story": "One shop lists a milk pack as 500 millilitres for 30 rupees. Another lists 1.5 litres for 75 rupees. More expensive packs can still be better value. A data transformation changes how a value is represented so a useful comparison becomes possible.",
+    "steps": [
+      "Choose litres as the common unit. One litre contains 1000 millilitres, so the first pack holds 0.5 litres. The second already holds 1.5.",
+      "Divide price by litres. The two results are 30 / 0.5 = 60 and 75 / 1.5 = 50 rupees per litre.",
+      "Attach the new unit to the result. The larger pack is cheaper per litre in this comparison, although it costs more at checkout.",
+      "To summarize both packs together, add prices and volumes first. The combined 105 rupees for 2 litres gives 52.5 rupees per litre."
+    ],
+    "outcome": "Build a common measurement and choose the denominator that answers the actual question.",
+    "terms": [
+      [
+        "Mapping",
+        "Converting values according to an explicit correspondence."
+      ],
+      [
+        "Unit conversion",
+        "Expressing the same physical amount in another unit."
+      ],
+      [
+        "Derived column",
+        "A value calculated from other columns in each row."
+      ],
+      [
+        "Aggregation",
+        "Combining several records into a summary."
+      ],
+      [
+        "Weighted average",
+        "An average where observations contribute according to a quantity such as their volume."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two deliveries cover 2 km in 10 minutes and 8 km in 20 minutes. A dispatcher wants the combined speed.",
+        "action": "Add distances and times first, giving 10 km in 30 minutes or 20 km/h.",
+        "reason": "The two trips lasted different amounts of time, so their speeds carry different weights.",
+        "check": "Verify that travelling at 20 km/h for half an hour covers the total 10 km.",
+        "tradeoff": "An average intended to give every trip equal influence would answer a different question.",
+        "alternative": "Average 12 and 24 km/h equally and call 18 km/h the combined journey speed."
+      },
+      {
+        "situation": "A shop labels card payments as CARD, C and card. The finance team documents all three as one category. A new code V appears.",
+        "action": "Map the three documented codes to card and flag V for review.",
+        "reason": "A known mapping supports a merge, while the unfamiliar code has no verified meaning.",
+        "check": "Check that all three known codes count together and V appears on the unmatched-code list.",
+        "tradeoff": "Mapping rules need updating when a provider introduces a new code.",
+        "alternative": "Treat every unrecognized payment code as card."
+      },
+      {
+        "situation": "A sale report shows one sample box with price 0 and volume 0. Its price-per-litre calculation fails.",
+        "action": "Mark that row’s unit price as undefined and keep it out of numerical unit-price comparisons.",
+        "reason": "Dividing by zero volume does not produce a meaningful price per litre.",
+        "check": "Check that normal packs retain their prices per litre and the zero-volume row has a clear status.",
+        "tradeoff": "A free pack with positive volume legitimately has a zero unit price.",
+        "alternative": "Replace every zero volume with one litre to keep the calculation running."
+      }
+    ]
+  },
+  "data-visualization": {
+    "title": "Show when the bus stop is busiest",
+    "story": "Mina counted 8 waiting passengers at 8:00, 20 at 8:15 and 11 at 8:30. She needs to show the rush to a person arranging buses. A chart puts measurements in positions that our eyes can compare quickly.",
+    "steps": [
+      "Place the three times in order from left to right. Choose a vertical scale measuring people and mark the counts 8, 20 and 11 at their matching times.",
+      "A reader can now see that the highest measured crowd was 20 at 8:15. A line between observations suggests a trend, but nobody counted the passengers between those times.",
+      "If the question changes to which of three named stops had most people at 8:15, use separate bars for the three stops. The names have no natural time order.",
+      "Label the unit, time and collection period. Someone checking tomorrow’s timetable can tell what the chart actually covers."
+    ],
+    "outcome": "Choose a chart whose marks match the reader’s question and explain its limits.",
+    "terms": [
+      [
+        "Axis",
+        "A marked direction along which values are positioned."
+      ],
+      [
+        "Scale",
+        "The rule connecting a number to a position or length on a chart."
+      ],
+      [
+        "Time series",
+        "Measurements recorded at successive times."
+      ],
+      [
+        "Bar chart",
+        "A comparison in which each bar’s length represents a quantity."
+      ],
+      [
+        "Aggregation",
+        "Combining several measurements before showing them."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A school compares 49 and 50 library visits using bars that begin at 48. One bar looks twice as long.",
+        "action": "Start quantity bars at zero or use a clearly labeled dot comparison.",
+        "reason": "People interpret bar length as magnitude, so a cropped baseline exaggerates the difference.",
+        "check": "Check that bars for 49 and 50 visits appear nearly equal in length when zero is shown.",
+        "tradeoff": "A dot plot can show small differences more clearly when a zoomed scale is justified.",
+        "alternative": "Remove the axis numbers to make the graphic less cluttered."
+      },
+      {
+        "situation": "A weather sensor sends hourly readings until noon and then stops until 6 p.m. A line joins noon directly to 6 p.m.",
+        "action": "Break the line over the known outage and mark the missing interval.",
+        "reason": "A continuous segment implies observations or an assumption about the hours with no readings.",
+        "check": "Check that readers can identify the unmeasured period without consulting raw logs.",
+        "tradeoff": "A labeled interpolation may be useful for a model but should remain distinct from measured data.",
+        "alternative": "Fill every missing hour with noon’s value and draw a smooth solid line."
+      },
+      {
+        "situation": "One branch records 8 complaints among 100 orders and a bigger branch records 15 among 1000. The owner asks where a customer more often complains.",
+        "action": "Compare complaints per order, 8 percent versus 1.5 percent, and show both order counts.",
+        "reason": "Raw complaint totals confound branch volume with complaint frequency.",
+        "check": "Reconstruct each displayed rate from its complaint count and denominator.",
+        "tradeoff": "If staffing a complaint desk, the absolute workload of 15 can matter more.",
+        "alternative": "Use the longer bar for 15 complaints as proof the bigger branch has a higher complaint rate."
+      }
+    ]
+  },
+  "statistics": {
+    "title": "What is a typical queue time?",
+    "story": "Five customers wait 2, 3, 4, 5 and 26 minutes at a counter. One queue stalled during a printer failure. A manager wants one number for an ordinary visit and another signal that unusually long waits occur.",
+    "steps": [
+      "Add the waits to get 40 minutes. Divide by five customers to get a mean of 8 minutes. That figure would give the right total if everyone waited equally.",
+      "Read the ordered list from both ends. Its middle value, the median, is 4 minutes. Two customers waited less and two more.",
+      "Subtract the shortest wait from the longest. The range is 24 minutes. A single average hides this spread.",
+      "Tell the manager both the 4-minute middle wait and the 26-minute longest observed wait. With only five customers, collect more observations before making a promise about every visit."
+    ],
+    "outcome": "Choose a summary appropriate to the decision and explain what five observations cannot establish.",
+    "terms": [
+      [
+        "Mean",
+        "The sum divided by the number of observations."
+      ],
+      [
+        "Median",
+        "The middle value after ordering observations, or the mean of the two middle values for an even count."
+      ],
+      [
+        "Range",
+        "Largest observed value minus smallest."
+      ],
+      [
+        "Outlier",
+        "An observation unusually far from most others."
+      ],
+      [
+        "Sample",
+        "The observations actually collected from the wider group of interest."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Four people waited 1, 3, 6 and 30 minutes. The owner wants the median of their recorded waits.",
+        "action": "Average the two center values, 3 and 6, to get 4.5 minutes.",
+        "reason": "With an even count there are two equally central positions in the sorted list.",
+        "check": "Verify that two observations lie below 4.5 and two above it.",
+        "tradeoff": "Median conceals how long the most delayed person waited.",
+        "alternative": "Select 6 simply because it appears just after halfway."
+      },
+      {
+        "situation": "A small class has 2 pupils averaging 90 marks and a large class has 8 averaging 60. The school asks for the average per pupil.",
+        "action": "Combine the implied marks, 180 + 480, and divide by ten pupils to get 66.",
+        "reason": "Each pupil deserves one vote, so the larger class contributes more marks.",
+        "check": "Check that multiplying the reported school mean by ten recovers the total 660 marks.",
+        "tradeoff": "If the question gives each class equal weight, 75 answers that separate question.",
+        "alternative": "Average the two class means equally to report the score of the average pupil."
+      },
+      {
+        "situation": "A survey only asks customers visiting a gym at 6 a.m. It concludes that all members prefer morning classes.",
+        "action": "Sample members across different visiting times and include members who rarely attend.",
+        "reason": "The collection time favors people already willing to visit early.",
+        "check": "Compare morning-class preference in morning, evening and infrequent-visitor groups.",
+        "tradeoff": "Broader sampling takes longer and people who never respond can still be underrepresented.",
+        "alternative": "Ask more people at 6 a.m. and assume the larger sample removes the timing bias."
+      }
+    ]
+  },
+  "http-rest": {
+    "title": "Ask the library whether book 42 is available",
+    "story": "A reader taps a book in a library app. Her phone sends a message asking about book 42 and the library computer sends back a message describing it. HTTP is the shared set of rules for that exchange. A REST-style design gives things such as books and loans addresses and uses standard actions on them.",
+    "steps": [
+      "The phone sends GET to /books/42. The address names a book and GET asks to read its information. Opening the page should leave the book on its shelf.",
+      "If book 42 exists, the library replies with status 200 and details such as title and availability. A status is a short number describing how the request turned out.",
+      "Borrowing is a separate action. The app can send POST to /loans with book 42 and the reader’s identity. After recording a loan, the service can return 201 and the new loan’s address.",
+      "If there is no book 99, reading /books/99 can return 404. The app can explain that the book was not found and let the reader search again."
+    ],
+    "outcome": "Read a network exchange as a request about a named item and a response with a clear outcome.",
+    "terms": [
+      [
+        "Client",
+        "The program asking for something, here the phone app."
+      ],
+      [
+        "Server",
+        "The program receiving a request and sending a reply."
+      ],
+      [
+        "Resource",
+        "An identifiable thing such as a book or a loan."
+      ],
+      [
+        "Method",
+        "The action word in the request, such as GET or POST."
+      ],
+      [
+        "Status code",
+        "A number summarizing the result, such as 200 for a successful read."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A ticket site reserves a seat when a visitor merely opens a GET link. A preview tool opens that link too.",
+        "action": "Move reservation into an explicit state-changing request such as POST.",
+        "reason": "Browsers and preview tools may read links automatically, so a read should be safe to repeat without booking.",
+        "check": "Fetch the public seat page twice and verify that no reservation is created.",
+        "tradeoff": "A separate booking action requires the client to send an additional request.",
+        "alternative": "Keep booking on GET and hide the link text from the user."
+      },
+      {
+        "situation": "A customer retries creating a paid order after the first reply is lost. The same order appears twice.",
+        "action": "Attach a unique operation key and reuse the recorded result for the same legitimate retry.",
+        "reason": "A timeout leaves the client uncertain whether the first creation already succeeded.",
+        "check": "Submit the same request twice with one key and verify only one order is stored.",
+        "tradeoff": "The server must store keys and define how long retries remain recognizable.",
+        "alternative": "Assume a lost reply means the original order never existed."
+      },
+      {
+        "situation": "A library successfully creates loan 17 and can immediately serve it at /loans/17. The client needs to discover that address.",
+        "action": "Return a creation status and provide the address of the newly created loan.",
+        "reason": "The reply can connect a successful creation to the resource the client can read next.",
+        "check": "Follow the returned address and verify the response describes loan 17.",
+        "tradeoff": "Work accepted for later processing may need a pending result instead of claiming creation is complete.",
+        "alternative": "Return a generic failure and ask the client to search every loan to see what happened."
+      }
+    ]
+  },
+  "fastapi": {
+    "title": "Give a mobile app a locker lookup",
+    "story": "A station has lockers numbered 1 through 20. A phone app wants to ask the station’s computer whether locker 7 is free. FastAPI is a Python toolkit that connects an incoming web address and action to a function, which is a named piece of work.",
+    "steps": [
+      "Define a read action at /lockers/{number}. The braces mark a spot to be filled by the caller. The address /lockers/7 supplies the text 7.",
+      "Declare that number should be a whole number. FastAPI can convert valid text such as 7 and report a validation error for text such as blue before the locker lookup runs.",
+      "Inside the function, look up 7 in the actual locker record. Return its number and status. Checking that a number is well formed and checking that a locker exists answer different questions.",
+      "Read the generated description of the operation to see its address, action and expected input. Try 7, blue and 99 to exercise three different paths."
+    ],
+    "outcome": "Follow one request from its address through input checks to a real lookup and response.",
+    "terms": [
+      [
+        "Route",
+        "A rule connecting a web action and address to code."
+      ],
+      [
+        "Path parameter",
+        "A value taken from a variable part of an address."
+      ],
+      [
+        "Type hint",
+        "A declaration of the kind of value a piece of code expects."
+      ],
+      [
+        "Handler",
+        "The function called when a request matches the route."
+      ],
+      [
+        "OpenAPI",
+        "A machine-readable description of the operations and data a web service offers."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A service defines /members/{name} before /members/me. A request for the signed-in member lands in the lookup for someone named me.",
+        "action": "Place the fixed /members/me route before the general name route.",
+        "reason": "The first matching path can capture the word me as a variable.",
+        "check": "Request /members/me and /members/amina and confirm they reach their respective handlers.",
+        "tradeoff": "If me must be a valid member name, the addresses need clearer separation.",
+        "alternative": "Rename the Python function while leaving the conflicting order and paths unchanged."
+      },
+      {
+        "situation": "A caller sends /lockers/blue to a FastAPI path whose number parameter is declared int. No custom error handling is installed.",
+        "action": "Expect an input-validation response before consulting the locker database.",
+        "reason": "The word blue cannot be converted to the declared whole-number type.",
+        "check": "Instrument a test lookup and verify it is never called for blue, while locker 7 reaches it.",
+        "tradeoff": "A valid number such as 99 still requires a separate existence check.",
+        "alternative": "Turn input conversion off and search the locker database for the word blue."
+      },
+      {
+        "situation": "A mobile team reads the generated request description and assumes every documented integer locker number exists.",
+        "action": "Document and implement the missing-locker outcome as well as the input type.",
+        "reason": "A description of an integer field constrains the format but cannot inventory the station’s lockers.",
+        "check": "Request an absent, well-formed locker number and check the documented missing result.",
+        "tradeoff": "If lockers are added later, hardcoding the current largest number could reject a real new locker.",
+        "alternative": "Treat any input that passes integer parsing as proof of a real locker."
+      }
+    ]
+  },
+  "pydantic": {
+    "title": "Check a lunch order before the kitchen sees it",
+    "story": "A school accepts an order naming a meal and a portion count. The kitchen can prepare between 1 and 8 portions per order. Pydantic lets the programmer describe the shape of a record once, then check incoming records against that description.",
+    "steps": [
+      "Describe two fields, meal as text and portions as a whole number from 1 to 8. This description is a model, a pattern for one valid order.",
+      "The record with meal rice and portions 3 fits the pattern. The checked object now provides a named portions value for the kitchen.",
+      "The record with portions 0 fails the minimum rule. Send back the field and reason so the parent can correct the form before any food is prepared.",
+      "Decide whether text such as '3' is acceptable. Normal validation can convert some inputs. Strict validation for a whole-number field can require an actual whole number in the submitted data."
+    ],
+    "outcome": "Distinguish a value’s shape from a real-world rule and give the caller a correctable error.",
+    "terms": [
+      [
+        "Field",
+        "A named part of a record, such as portions."
+      ],
+      [
+        "Model",
+        "A description of the fields and rules for a kind of record."
+      ],
+      [
+        "Constraint",
+        "A condition, such as a number being at least one."
+      ],
+      [
+        "Coercion",
+        "Converting an incoming value into an allowed type."
+      ],
+      [
+        "Strict validation",
+        "A policy that restricts automatic conversions."
+      ],
+      [
+        "model_dump()",
+        "A method that turns a checked model into a dictionary of fields."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A machine-to-machine ticket form must send a numeric quantity. One integration sends the text '2' and nobody notices the broken contract.",
+        "action": "Use strict integer validation for that field and document the expected input.",
+        "reason": "Automatic conversion can accept a text value the contract explicitly forbids.",
+        "check": "Submit numeric 2, text '2' and fractional 2.5 and verify only the intended type passes.",
+        "tradeoff": "A browser form that naturally sends text may need a documented conversion before this boundary.",
+        "alternative": "Convert every incoming quantity to text before validating it."
+      },
+      {
+        "situation": "A dispatch request contains start 14:00 and end 13:30. Both fields are valid times individually.",
+        "action": "Validate that the end follows the start after parsing both fields.",
+        "reason": "Two individually valid times can describe an impossible interval under this booking rule.",
+        "check": "Test an end before, equal to and after the start using the service’s stated time convention.",
+        "tradeoff": "An overnight shift needs dates and a different interpretation of crossing midnight.",
+        "alternative": "Rely on a separate time-format check for each field."
+      },
+      {
+        "situation": "A profile form includes display_name and an unexpected administrator flag. The contract permits only display_name.",
+        "action": "Reject unexpected fields and copy only allowed values into the update.",
+        "reason": "Validating the known name alone cannot justify applying a newly supplied privileged field.",
+        "check": "Send administrator=true alongside a valid name and verify no privileges change.",
+        "tradeoff": "Rejecting unknown fields makes some future client changes require a coordinated update.",
+        "alternative": "Save every submitted key after confirming display_name has a valid type."
+      }
+    ]
+  },
+  "json": {
+    "title": "Send a grocery order between a phone and a shop",
+    "story": "A phone wants to send a shopping order to software built by another team. Both teams agree to use JSON, a written format with shared rules for objects, lists, text, numbers and a few other values. The order has an ID with leading zeros and two items.",
+    "steps": [
+      "Represent the order as {\"id\":\"007\",\"items\":[\"tea\",\"rice\"],\"paid\":false}. Names in double quotes identify the fields. The items list preserves both items in order.",
+      "Keep \"007\" as text because the leading zeros identify the order. The value false is a yes-or-no value describing payment, while the text \"false\" would be a word.",
+      "Send the written JSON. The receiver parses it, which means reading the characters according to JSON’s rules and rebuilding usable fields and values.",
+      "Check expected fields after parsing. A document can be perfectly valid JSON and still omit the items your shop needs."
+    ],
+    "outcome": "Read a real order, explain its value types, and separate a broken message from a broken order.",
+    "terms": [
+      [
+        "Object",
+        "A collection of named fields enclosed in curly braces."
+      ],
+      [
+        "Array",
+        "An ordered list of values enclosed in square brackets."
+      ],
+      [
+        "String",
+        "A text value enclosed in double quotes."
+      ],
+      [
+        "Boolean",
+        "A true or false value."
+      ],
+      [
+        "Serialization",
+        "Writing in-memory values into a transferable representation."
+      ],
+      [
+        "Parsing",
+        "Reading a representation back into usable values."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A warehouse receives order code '0012' and another code '12'. Both identify different orders.",
+        "action": "Keep the codes as JSON strings throughout the exchange.",
+        "reason": "Turning both into numbers erases the leading zeros and merges their identities.",
+        "check": "Send both codes through a save-and-read round trip and confirm they remain distinct.",
+        "tradeoff": "Amounts used for arithmetic can follow a different numerical contract.",
+        "alternative": "Convert the IDs to integers to save two characters per message."
+      },
+      {
+        "situation": "A booking form sends paid as the string \"false\". The service expects a JSON true-or-false value.",
+        "action": "Validate the field type and request the Boolean literal false.",
+        "reason": "Text containing five letters and a Boolean false are different values even though people read the same word.",
+        "check": "Test false, true and \"false\" and verify the two Booleans follow the stated contract.",
+        "tradeoff": "Supporting older clients may need a deliberately limited and documented conversion.",
+        "alternative": "Treat any nonempty text in paid as a confirmed payment."
+      },
+      {
+        "situation": "An order with two items arrives with a trailing comma in its JSON array. Another message parses but lacks items entirely.",
+        "action": "Report malformed JSON separately from missing required order fields.",
+        "reason": "The first message fails the writing rules, while the second has a valid representation with the wrong contents.",
+        "check": "Test each input and check that one error points to parsing and the other names the missing field.",
+        "tradeoff": "A user-facing interface can simplify the wording while preserving these distinct causes internally.",
+        "alternative": "Mark both orders as empty and continue with fulfillment."
+      }
+    ]
+  },
+  "requests-responses": {
+    "title": "Tell a florist which bouquet to prepare",
+    "story": "A customer picks a small bouquet and asks for two at the shop’s order address. The app sends one request and waits for one reply. The two messages carry different information, and each has a place for describing the message and a place for its contents.",
+    "steps": [
+      "Address the request to the orders service, use POST to ask for creation, and write the requested size and quantity in the body, the contents of the message.",
+      "Attach a header named Content-Type to say that the body uses JSON, a common written format for named values. This tells the florist’s service how to read the contents.",
+      "The florist checks the order and saves it under F82. Its response contains a status indicating creation and a body giving F82 and the accepted quantity 2.",
+      "The app displays the saved order ID only after reading the reply. If communication breaks before the reply arrives, ask what happened to that order before assuming success or failure."
+    ],
+    "outcome": "Locate an order’s inputs, its format, its saved identity and its outcome in the correct parts of a message.",
+    "terms": [
+      [
+        "Request",
+        "A message sent to ask a service to read or change something."
+      ],
+      [
+        "Response",
+        "The reply describing what happened."
+      ],
+      [
+        "Header",
+        "A named piece of information about a message, such as its content format."
+      ],
+      [
+        "Body",
+        "The contents being sent, such as order details."
+      ],
+      [
+        "Content-Type",
+        "A header telling the receiver how this message’s body is represented."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A client labels a file of comma-separated rows as JSON and the florist cannot read it.",
+        "action": "Send a body matching the advertised format, or use a supported content type for the actual file.",
+        "reason": "A content label does not transform bytes into another format.",
+        "check": "Try one correctly labeled JSON order and one deliberately mislabeled file and inspect the two outcomes.",
+        "tradeoff": "Supporting more formats increases the number of parsing paths to maintain.",
+        "alternative": "Keep the file unchanged and add more JSON headers."
+      },
+      {
+        "situation": "A phone receives a 400 response whose body names an invalid delivery date. It displays an order confirmation anyway.",
+        "action": "Check the response status, then use the error details to show the correction needed.",
+        "reason": "Receiving a reply proves the exchange completed, while its status tells whether the order was accepted.",
+        "check": "Submit an invalid date and confirm no confirmation number or success screen appears.",
+        "tradeoff": "Responses with no body require a fallback message based on the status.",
+        "alternative": "Treat every received response as a successful order."
+      },
+      {
+        "situation": "A delete request succeeds with status 204 and an empty response body. The client reports a JSON parsing error.",
+        "action": "Recognize the no-content response and skip parsing a body.",
+        "reason": "A successful operation can legitimately have no representation to decode.",
+        "check": "Check that an empty 204 displays completion while a 200 JSON response still parses its fields.",
+        "tradeoff": "If the client needs updated values, the service must supply a representation or offer a separate read.",
+        "alternative": "Ask the client to parse an empty string as a JSON object."
+      }
+    ]
+  },
+  "routing": {
+    "title": "Find one train or search all trains?",
+    "story": "A commuter app reads /trains/27 to show one named train. It reads /trains?city=Pune to find several trains for a city. Routing is how the server chooses the piece of code responsible for each address and action.",
+    "steps": [
+      "Split /trains/27 into its fixed part trains and its variable part 27. A rule for /trains/{number} captures 27 and sends it to the train-detail function.",
+      "In /trains?city=Pune the question mark starts optional search information. The address still asks about the train collection, and city narrows the results.",
+      "A route can also depend on the action. Reading /trains/27 and updating /trains/27 may have different handlers even though the address is identical.",
+      "List fixed paths such as /trains/today separately from the general pattern. In a first-match router, a general rule placed first can swallow the word today as a train number."
+    ],
+    "outcome": "Choose clear addresses for item lookups and searches, and trace which rule a request will match.",
+    "terms": [
+      [
+        "Path",
+        "The address portion identifying a resource or route."
+      ],
+      [
+        "Path parameter",
+        "A variable segment identifying one item, such as 27."
+      ],
+      [
+        "Query parameter",
+        "A named option after the question mark, such as city=Pune."
+      ],
+      [
+        "Route order",
+        "The order in which a router considers matching rules."
+      ],
+      [
+        "Handler",
+        "The piece of code that handles a matching request."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A timetable service reads /trains/today as a request for a train numbered today. It checks routes from top to bottom.",
+        "action": "Place the literal today route before the general train-number route or give it a separate unambiguous address.",
+        "reason": "The general path pattern can match ordinary words before a later special route is reached.",
+        "check": "Call /trains/today and /trains/27 and verify both return their intended types of information.",
+        "tradeoff": "If today can also be a legitimate item identifier, order alone leaves an ambiguous address.",
+        "alternative": "Change the display title of the today page and leave both route rules untouched."
+      },
+      {
+        "situation": "A customer wants to sort a train search by departure time and filter it by city without identifying a specific train.",
+        "action": "Put city and sorting choices in documented query parameters on the collection route.",
+        "reason": "The options change the selection or ordering rather than identifying one fixed train.",
+        "check": "Removing the options should still reach the train collection, with documented defaults.",
+        "tradeoff": "Very complex search criteria may need a separate search operation with a structured body.",
+        "alternative": "Assign a new permanent train number for every possible combination of search options."
+      },
+      {
+        "situation": "A client attempts DELETE on a read-only train-detail route. GET on the same address works.",
+        "action": "Treat an unsupported action separately from a missing train address.",
+        "reason": "The resource path is recognized while this operation is disallowed on it.",
+        "check": "Verify that GET succeeds and the unsupported method receives the service’s method-not-allowed response.",
+        "tradeoff": "A service may deliberately conceal certain resource details from unauthorized callers.",
+        "alternative": "Delete the train because the address matched a valid item."
+      }
+    ]
+  },
+  "authentication": {
+    "title": "Who may open locker 12?",
+    "story": "Priya signs into a parcel-locker app and sees her parcel in locker 12. Arun also has a valid account but owns a parcel in locker 18. Checking a person’s identity and checking their permission are two separate jobs.",
+    "steps": [
+      "First verify Priya’s sign-in evidence, such as a valid session issued after login. This establishes who is asking and is called authentication.",
+      "Look up who owns the parcel in locker 12 and what action is requested. Compare that record with Priya’s verified identity before allowing release. That permission check is authorization.",
+      "Try the same release as Arun. His sign-in can succeed while the release fails because locker 12 belongs to Priya.",
+      "Repeat the permission check on the server for every protected action. Hiding a button in Arun’s app cannot stop him sending the address manually."
+    ],
+    "outcome": "Trace identity, requested action and resource ownership before granting access.",
+    "terms": [
+      [
+        "Authentication",
+        "Verifying who a caller is."
+      ],
+      [
+        "Authorization",
+        "Deciding whether that caller may perform this particular action."
+      ],
+      [
+        "Session",
+        "A way to associate later requests with an earlier successful login."
+      ],
+      [
+        "Ownership",
+        "The relationship linking a protected item to the account allowed to use it."
+      ],
+      [
+        "Role",
+        "A named set of permissions, such as clerk or supervisor."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A signed-in reader changes /loans/41 to /loans/42 and sees a stranger’s borrowing history.",
+        "action": "Check the requested loan’s owner against the verified user before returning it.",
+        "reason": "A valid login identifies the reader but gives no permission to inspect every loan ID.",
+        "check": "Sign in as the owner of loan 41 and verify loan 42’s private details are inaccessible.",
+        "tradeoff": "Shared family accounts require an explicit sharing rule beyond strict owner equality.",
+        "alternative": "Make loan IDs longer while letting any signed-in reader open them."
+      },
+      {
+        "situation": "A customer adds a role field equal to supervisor in the body of a refund request.",
+        "action": "Look up refund permission from trusted server-side records or verified authorization claims.",
+        "reason": "The requester controls body text and cannot grant themselves privileges.",
+        "check": "Send the same refund as a normal account with and without the fake role and verify both are denied.",
+        "tradeoff": "Reading current permissions costs a lookup but reflects revocations more promptly.",
+        "alternative": "Trust the submitted role because the customer used the official-looking field name."
+      },
+      {
+        "situation": "A shared tablet remains signed in after its user ends a shift. Another person can still release parcels.",
+        "action": "Expire or invalidate the session when the shift ends and require fresh sign-in for later use.",
+        "reason": "A reusable session can continue identifying the previous person after physical control changes.",
+        "check": "After logout, retry the old session credential and confirm the release is refused.",
+        "tradeoff": "Shorter sessions reduce exposure while asking staff to sign in more often.",
+        "alternative": "Only clear the user’s displayed name while keeping the old session usable."
+      }
+    ]
+  },
+  "database-integration": {
+    "title": "Record one seat booking exactly once",
+    "story": "A bus has one seat left. The booking service must reduce availability from 1 to 0 and issue ticket B7 to Leela. A database stores records after the app closes. The two changes must agree even if the program stops halfway through.",
+    "steps": [
+      "Open a unit of database work for this booking. Read or conditionally update the seat count using a rule that can only reserve when a seat remains.",
+      "Within the same transaction, record the ticket and the successful seat reservation. A transaction groups changes into one all-or-nothing decision.",
+      "Commit once both changes succeed. If creating the ticket fails, roll back the reservation so the available count returns to its earlier value.",
+      "Treat names such as Leela as data supplied separately from the database command. Close or release the connection after the request so the next booking can use it."
+    ],
+    "outcome": "Design a booking whose seat record and ticket agree after success, failure or simultaneous requests.",
+    "terms": [
+      [
+        "Database",
+        "A system for storing and retrieving records reliably."
+      ],
+      [
+        "Session",
+        "A unit through which the application works with database records."
+      ],
+      [
+        "Transaction",
+        "A group of changes that succeed or fail together."
+      ],
+      [
+        "Commit",
+        "Make a transaction’s changes permanent."
+      ],
+      [
+        "Rollback",
+        "Cancel a transaction’s unfinished changes."
+      ],
+      [
+        "Bound parameter",
+        "A value supplied separately from the command that uses it."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The last seat is available when two phones request it at the same moment. Both read 1 before either has written.",
+        "action": "Reserve using an atomic condition or database lock that lets only one request claim the seat.",
+        "reason": "A separate read followed by an unchecked write allows both callers to rely on the same old count.",
+        "check": "Run two simultaneous bookings for one remaining seat and verify there is exactly one confirmed ticket.",
+        "tradeoff": "Stronger coordination can increase waiting time on a popular route.",
+        "alternative": "Rely on disabling the booking button in each phone’s own screen."
+      },
+      {
+        "situation": "A customer named O’Reilly breaks a booking search assembled by inserting the name directly into a query string.",
+        "action": "Bind the name as a query value rather than assembling command text from it.",
+        "reason": "Binding keeps the customer’s punctuation inside a value and out of the command structure.",
+        "check": "Look up a name with an apostrophe and check that only the matching customer is returned.",
+        "tradeoff": "Choosing a dynamic column name requires a separate allowlist rather than ordinary value binding.",
+        "alternative": "Strip apostrophes out of all customer names before saving them."
+      },
+      {
+        "situation": "A ticket insertion fails after availability was reduced, and the bus now shows one fewer available seat with no ticket.",
+        "action": "Place both the reduction and ticket insertion inside one transaction.",
+        "reason": "A failed second write can then cancel the earlier write instead of leaving contradictory records.",
+        "check": "Cause a controlled ticket-insert failure and check that the availability count is unchanged.",
+        "tradeoff": "External work such as sending an email is outside a simple database rollback and needs separate handling.",
+        "alternative": "Commit the seat reduction first and assume ticket insertion always succeeds."
+      }
+    ]
+  },
+  "validation": {
+    "title": "Catch impossible cinema bookings at the door",
+    "story": "A cinema lets one customer buy 1 through 6 tickets. The app receives a request for 3 tickets to a 7:00 show. Validation means checking supplied information against the rules before using it.",
+    "steps": [
+      "Check its shape. Ticket count must be a whole number, so the word many cannot enter the seat calculation.",
+      "Check its allowed range. Three is between 1 and 6. Zero is a number but the cinema does not sell a zero-ticket booking.",
+      "Check related facts. All selected seat numbers must belong to that show and the number of selected seats must equal the ticket count.",
+      "Only then try to reserve seats that are still available. A valid request can become impossible if someone else reached the seat first."
+    ],
+    "outcome": "Translate a real booking rule into checks a customer can understand and correct.",
+    "terms": [
+      [
+        "Type check",
+        "Checking the kind of value, such as a whole number."
+      ],
+      [
+        "Range check",
+        "Checking permitted minimum and maximum values."
+      ],
+      [
+        "Cross-field rule",
+        "A condition that depends on more than one supplied value."
+      ],
+      [
+        "Boundary case",
+        "An input right at or just beyond a limit."
+      ],
+      [
+        "Validation error",
+        "Information describing which rule an input failed."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A form limits orders to 6 tickets, but someone sends 60 directly to the server.",
+        "action": "Enforce the upper bound at the server before reserving seats.",
+        "reason": "An on-screen restriction can be bypassed by a different client.",
+        "check": "Send counts 6 and 7 directly and verify only 6 is accepted.",
+        "tradeoff": "The client-side check still helps users notice mistakes early.",
+        "alternative": "Trust the request because the official form contains a maximum field."
+      },
+      {
+        "situation": "A request asks for three tickets but lists A1, A1 and A2. The list has three entries.",
+        "action": "Check that the selected seats are distinct as well as matching the ticket count.",
+        "reason": "Repeating A1 cannot provide two physical seats.",
+        "check": "Use A1, A2, A3 as a valid comparison and verify duplicates fail before payment.",
+        "tradeoff": "Open-admission events with no assigned seats require a different rule.",
+        "alternative": "Approve the order after comparing only the list length with three."
+      },
+      {
+        "situation": "A train form accepts departure 23:50 and arrival 00:20 the following day. A time-only check rejects it.",
+        "action": "Compare full dates and times under an explicit time-zone convention.",
+        "reason": "The arrival belongs to the next day and is thirty minutes later despite its smaller clock reading.",
+        "check": "Check same-day reversed times, a valid overnight journey and a journey crossing time zones.",
+        "tradeoff": "Collecting dates and zones adds fields but removes an otherwise unavoidable ambiguity.",
+        "alternative": "Reject every arrival clock time lower than the departure clock time."
+      }
+    ]
+  },
+  "exception-handling": {
+    "title": "Explain why a parcel lookup failed",
+    "story": "Ravi enters parcel P19 and the tracker cannot show its status. The number may be unknown, the input may be malformed, or the storage service may be down. Handling exceptions means responding to these different interruptions deliberately.",
+    "steps": [
+      "If P19 is well formed and a successful search finds no parcel, return the service’s missing-parcel result. The user can recheck the number.",
+      "If the storage service times out, say tracking is temporarily unavailable. A failed search is not evidence that the parcel is missing.",
+      "Record internal details for staff under a reference such as R4. Show the customer a safe message with that reference rather than passwords or internal file paths.",
+      "If the request was changing a parcel record, undo unfinished database changes before returning the error."
+    ],
+    "outcome": "Tell a caller what happened and preserve enough evidence to investigate it.",
+    "terms": [
+      [
+        "Exception",
+        "A signal that ordinary execution could not continue as expected."
+      ],
+      [
+        "Handler",
+        "Code that decides how to respond to a particular failure."
+      ],
+      [
+        "Timeout",
+        "Giving up on a reply after a set waiting time."
+      ],
+      [
+        "Status code",
+        "A short number describing the outcome of a web request."
+      ],
+      [
+        "Diagnostic detail",
+        "Information staff can use to investigate a failure."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A parcel search catches a database timeout and tells the customer P19 does not exist.",
+        "action": "Return a temporary-service failure and keep the timeout cause for staff.",
+        "reason": "The search never completed, so the service has no evidence that P19 is absent.",
+        "check": "Simulate an unavailable database and verify the reply differs from a confirmed missing parcel.",
+        "tradeoff": "Automatic retry may help reads, but retrying a change can repeat it without safeguards.",
+        "alternative": "Treat every lookup exception as a missing record."
+      },
+      {
+        "situation": "A broken handler sends a customer a full stack trace containing internal folders and a connection string.",
+        "action": "Return a short public message with a reference ID and restrict detailed diagnostics to protected logs.",
+        "reason": "The customer needs a useful next step while staff need technical details that may reveal secrets.",
+        "check": "Trigger a controlled failure and check the user reply omits private values and the reference locates the staff event.",
+        "tradeoff": "Protected logs also require redaction, access limits and retention rules.",
+        "alternative": "Return the full traceback to make support calls shorter."
+      },
+      {
+        "situation": "Two callers try to claim parcel P19. One succeeds and the other encounters a known already-claimed condition.",
+        "action": "Map the expected conflict to a clear conflict response and leave ownership unchanged.",
+        "reason": "A competing claim is a recognized business outcome with a different remedy from a server crash.",
+        "check": "Repeat the claim under a second account and verify exactly one owner and an understandable conflict message.",
+        "tradeoff": "Access policies may limit how much ownership information the reply can reveal.",
+        "alternative": "Catch the conflict as an unknown crash and retry the claim until it succeeds."
+      }
+    ]
+  },
+  "logging": {
+    "title": "Trace one missing meal order through a busy kitchen",
+    "story": "A service handles meal orders 41 and 42 at the same second. Order 42 never reaches the kitchen. A log is a chronological record of events kept for investigation. Times alone cannot separate simultaneous orders.",
+    "steps": [
+      "Give the request for order 42 a reference such as K9. Write an event when the request arrives, another when the order is stored and another when the kitchen receives it. Carry K9 along.",
+      "Write named fields for the event, reference and result. This lets someone search for K9 without trying to guess which sentence was used.",
+      "Suppose K9 has order_saved followed by kitchen_timeout. A member of staff can now investigate the kitchen connection rather than asking the customer to re-enter payment.",
+      "Keep account secrets and personal details out of diagnostic fields. A reference that points to a protected record is often enough."
+    ],
+    "outcome": "Reconstruct one request among many without logging everything the customer sent.",
+    "terms": [
+      [
+        "Log event",
+        "One recorded occurrence, such as an order being saved."
+      ],
+      [
+        "Structured log",
+        "An event written with named fields that can be searched."
+      ],
+      [
+        "Correlation ID",
+        "A reference shared by events belonging to one request or operation."
+      ],
+      [
+        "Severity",
+        "An indication of how much attention an event needs."
+      ],
+      [
+        "Redaction",
+        "Removing or hiding sensitive details in a record."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Events for two orders share the same timestamp. Staff cannot tell which kitchen timeout belongs to order 42.",
+        "action": "Propagate one correlation reference through all stages of each individual order.",
+        "reason": "Concurrent events can share times, while the reference ties related work together.",
+        "check": "Filter records for K9 and confirm only events from the intended request chain appear.",
+        "tradeoff": "A reference omitted by a downstream system breaks the chain.",
+        "alternative": "Add more timestamp digits and assume they identify related events."
+      },
+      {
+        "situation": "A login failure logs the full submitted password to help the team reproduce the problem.",
+        "action": "Record the failure category and a safe account reference while omitting the password.",
+        "reason": "Anyone able to read the logs could otherwise recover the customer’s credential.",
+        "check": "Make a test attempt with a distinctive dummy password and confirm it never appears in logs.",
+        "tradeoff": "Redacted logs can require a more carefully controlled reproduction for complex failures.",
+        "alternative": "Keep the password because failed login attempts can never contain a real password."
+      },
+      {
+        "situation": "A food shop pages its overnight team for every successful order as well as actual delivery failures.",
+        "action": "Assign routine events an informational level and alert on meaningful failure patterns.",
+        "reason": "If everything wakes the team, staff may miss a genuine incident among ordinary activity.",
+        "check": "Replay successful orders and a sustained failure and verify only the intended condition triggers a page.",
+        "tradeoff": "An extremely strict alert can delay detection of an important isolated failure.",
+        "alternative": "Turn all logging off to stop the overnight pages."
+      }
+    ]
+  },
+  "api-testing": {
+    "title": "Check a reservation without selling a real ticket",
+    "story": "A museum charges 50 rupees for a standard ticket and accepts up to four tickets per request. A developer wants to change the booking service and know quickly if an ordinary family visit still works. A test supplies a known situation and checks an observable result.",
+    "steps": [
+      "First check the price calculation by itself. With a price of 50 and quantity 3, the result should be 150. A small check of one piece of logic is a unit test.",
+      "Next send a test booking through the same web address and field names the app uses. Verify the success status, quantity 3, total 150 and one saved booking. This checks more than the calculation.",
+      "Start each test with known museum seats in a test database. This prepared starting data is called a fixture. Avoid touching real bookings.",
+      "Try a quantity of five. The expected result is a clear rejection and zero bookings saved. Checking what stayed unchanged is part of testing a failure."
+    ],
+    "outcome": "Choose a small test for arithmetic and a service-level test for the actual customer workflow.",
+    "terms": [
+      [
+        "Assertion",
+        "A check that the observed result matches an expectation."
+      ],
+      [
+        "Fixture",
+        "Known data or resources set up for a test."
+      ],
+      [
+        "Unit test",
+        "A focused check of one small piece of behavior."
+      ],
+      [
+        "API test",
+        "A check that calls the service through its public request and response interface."
+      ],
+      [
+        "Contract",
+        "The agreed inputs, outputs and outcomes callers rely on."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A test checks only that the booking endpoint returns 200. A bug returns a successful-looking message with total 15 instead of 150.",
+        "action": "Assert the expected quantity, total and stored booking as well as the agreed success status.",
+        "reason": "A status alone does not verify the content or side effects the client needs.",
+        "check": "Introduce a deliberately wrong total in a disposable run and confirm the test fails.",
+        "tradeoff": "Checking every unimportant display field can make tests fragile during harmless changes.",
+        "alternative": "Add more repetitions of the status-only assertion."
+      },
+      {
+        "situation": "A rejection test passes alone but fails after a previous test fills the museum’s last seat.",
+        "action": "Give each test isolated seat data and clean up changes deterministically.",
+        "reason": "The starting seat count otherwise depends on which test ran first.",
+        "check": "Run the tests in both orders and independently and compare the outcomes.",
+        "tradeoff": "Creating fresh data costs setup time for large test suites.",
+        "alternative": "Require everyone to run the tests in one permanent order."
+      },
+      {
+        "situation": "A payment service is slow and charges real cards. A test needs to verify what the museum does after a declined payment.",
+        "action": "Supply a controlled test payment provider that reports a decline and inspect the booking state.",
+        "reason": "A predictable decline exercises the museum’s failure handling without creating real charges.",
+        "check": "Verify the failure response and that no ticket was confirmed for the declined payment.",
+        "tradeoff": "A test substitute does not verify the real provider’s exact protocol, which needs a separate integration check.",
+        "alternative": "Use a real customer’s card and hope this payment is declined."
+      }
+    ]
+  },
+  "backend-security": {
+    "title": "Protect the school’s report download",
+    "story": "A school lets each family download its own report. The screen asks for a report ID, such as R12. The server must decide which file that signed-in family can receive and what information belongs in the reply. A curious person can alter anything their browser sends.",
+    "steps": [
+      "Treat the supplied R12 as a request, not proof of permission. Look up the report and verify the signed-in family is allowed to receive it.",
+      "Choose the stored file using the school’s own mapping. A caller-supplied path such as ../private should never be used to wander outside the permitted directory.",
+      "Run the download service with access only to the reports it needs. If something fails, narrower permissions limit the damage.",
+      "Return only the fields intended for parents. Check the actual response for staff notes even if the screen does not display them."
+    ],
+    "outcome": "Identify the caller-controlled pieces of a request and enforce independent checks at the service.",
+    "terms": [
+      [
+        "Trust boundary",
+        "A point where information arrives from someone or something with different permissions."
+      ],
+      [
+        "Least privilege",
+        "Giving a program only the access it needs for its job."
+      ],
+      [
+        "Allowlist",
+        "An explicit set of permitted values or actions."
+      ],
+      [
+        "Data minimization",
+        "Sending or keeping only the information needed for the task."
+      ],
+      [
+        "Authorization",
+        "Checking whether a caller may act on a particular protected item."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A school report endpoint accepts a filename. Someone submits a path that goes up one directory and points to a private staff file.",
+        "action": "Look up an approved report ID, and enforce containment inside the allowed report directory before opening a file.",
+        "reason": "File path syntax can navigate outside the intended folder even when the request came through a normal web form.",
+        "check": "Test an allowed report plus an attempted parent-directory path and verify no outside file contents are returned.",
+        "tradeoff": "If uploads may contain symbolic links, containment must account for where they resolve.",
+        "alternative": "Check only that the text ends with .pdf before opening the requested path."
+      },
+      {
+        "situation": "A report page hides teachers’ private notes, but the network reply still contains those notes in an unused field.",
+        "action": "Construct the server response from an explicit set of fields intended for the family.",
+        "reason": "A caller can read the raw reply regardless of what the page chooses to draw.",
+        "check": "Inspect the response body as a parent and verify private notes are absent.",
+        "tradeoff": "A staff workflow needing the notes requires a separate authorized response.",
+        "alternative": "Hide the note more thoroughly with page styling."
+      },
+      {
+        "situation": "A read-only timetable service can edit all student grades with its database credentials.",
+        "action": "Give its database account read access only to the schedule data it needs.",
+        "reason": "A compromised timetable service can cause only changes allowed by its underlying permissions.",
+        "check": "Using the service account, confirm permitted schedule reads succeed and grade updates are rejected.",
+        "tradeoff": "New legitimate capabilities may require carefully reviewed permission changes.",
+        "alternative": "Keep broad permissions and rely on a rule telling future developers not to edit grades."
+      }
+    ]
+  }
+}

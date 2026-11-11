@@ -1,0 +1,68 @@
+{
+  "predicates": {
+    "Intermediate": [
+      [
+        "A lift accepts luggage weighing at most 20 kg. Write the comparison for a bag weighing w kg, and say whether 20 kg passes.",
+        "Use w <= 20. Exactly 20 kg passes because the limit includes equality.",
+        "<=/less than or equal/at most",
+        "passes/qualifies/accepted/true/includes equality"
+      ],
+      [
+        "A club admits a guest if they hold a valid ticket OR appear on the guest list. Lina is on the list with no ticket. What result should the predicate return, and why?",
+        "Return True. With or, either qualifying fact is sufficient, and Lina is on the guest list.",
+        "true/yes/admit",
+        "either/guest list/on the list"
+      ],
+      [
+        "A warehouse clerk sees weights [2, 5, 8]. A filter keeps a weight only if it is greater than 2 and less than 8. Which weights survive? Explain the endpoints.",
+        "Only 5 survives. Both strict comparisons exclude their endpoints, 2 and 8.",
+        "5",
+        "strict/exclude/not included/greater than"
+      ],
+      [
+        "The value 'False' arrived as form text. Why does if value still enter the yes branch, and what should the form parser do?",
+        "It is a nonempty string, so Python treats it as true. Parse the accepted text values explicitly into Boolean values before applying the predicate.",
+        "nonempty/non-empty/non empty",
+        "parse/convert/map/explicit"
+      ],
+      [
+        "A library page lists available titles. Why should the predicate used to filter that list avoid subtracting a copy?",
+        "Filtering may call the predicate for every title or call it repeatedly. Keep the count unchanged while checking and deduct a copy only when a reservation succeeds.",
+        "repeated/every title/filter",
+        "unchanged/reservation/no side effect/no change"
+      ]
+    ],
+    "Advanced": [
+      [
+        "Two visitors each evaluate copies > 0 while the last copy is still available. Both see True. Why can two reservations succeed, and how would you prevent this?",
+        "They read the same old count before either write completes. Check and decrement in one atomic conditional update or transaction, and confirm exactly one row changed.",
+        "same/old count/concurrent/race",
+        "atomic/transaction/lock"
+      ],
+      [
+        "A locker records weight as missing. A colleague defines too_heavy as weight > 5 and proposes accepting every parcel for which too_heavy is false. What decision is missing?",
+        "An unknown weight requires measurement or explicit rejection before comparison. A failed or unknown measurement does not establish that the parcel is within the limit.",
+        "unknown/missing",
+        "measure/reject/explicit"
+      ],
+      [
+        "An engineer translates an in-stock rule into SQL WHERE quantity > 0. Why is a row with NULL quantity omitted? How would you produce a separate list of missing counts?",
+        "The comparison yields unknown for NULL, and WHERE retains only true rows. Use IS NULL to list missing quantities.",
+        "unknown/true",
+        "is null"
+      ],
+      [
+        "A staff discount requires (member OR employee) AND purchase >= 100. A rewrite says member OR (employee AND purchase >= 100). Give a customer who exposes the error and the intended result.",
+        "A member who spends below 100 provides a counterexample. The intended rule rejects that purchase, while the rewrite accepts it based on membership alone.",
+        "member",
+        "below/under/less than/50/99"
+      ],
+      [
+        "A data analyst uses a yes/no predicate to label training examples for a fraud model. The rule marks every payment above £100 as fraud. Why can a model score well on these labels and still miss real fraud?",
+        "The labels express the amount threshold, so reproducing it scores well. Evaluate against independently verified fraud outcomes, including smaller fraudulent payments.",
+        "threshold/amount/rule/labels",
+        "verified/independent/actual/confirmed"
+      ]
+    ]
+  }
+}

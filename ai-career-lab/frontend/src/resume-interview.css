@@ -1,0 +1,28 @@
+.resume-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(225px, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+.resume-panel { min-width: 0; margin-bottom: 18px; }
+.resume-form { display: grid; gap: 12px; }
+.resume-form > label { font-weight: 600; }
+.resume-form > :is(input, textarea) { width: 100%; }
+.resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.resume-file { position: relative; overflow: hidden; cursor: pointer; }
+.resume-file input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+.resume-file:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.resume-voice-option { padding: 12px 14px; background: var(--faint); border-radius: 8px; }
+.resume-voice-option label { display: flex; align-items: baseline; gap: 8px; font-weight: 550; }
+.resume-voice-option p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+.resume-form .resume-question { font-size: clamp(18px, 2vw, 24px); line-height: 1.45; font-weight: 550; margin: 0; }
+.resume-panel blockquote { margin: 10px 0 15px; border-left: 3px solid var(--line); padding-left: 12px; line-height: 1.55; }
+.resume-panel :is(blockquote, h2, h3, p) { overflow-wrap: anywhere; }
+.resume-review { border-top: 1px solid var(--border); padding: 16px 0 0; margin-top: 16px; }
+.resume-review h3 { font-size: 15px; margin: 3px 0 8px; }
+.resume-review p { margin: 8px 0; line-height: 1.55; }
+.resume-review small, .resume-actions small { color: var(--muted); }
+.resume-reply { white-space: pre-wrap; }
+@media (max-width: 780px) {
+  .resume-layout { grid-template-columns: 1fr; gap: 0; }
+}

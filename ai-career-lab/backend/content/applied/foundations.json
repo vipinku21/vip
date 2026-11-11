@@ -1,0 +1,2589 @@
+{
+  "joins": {
+    "Beginner": [
+      [
+        "What does a join use to connect two related table rows?",
+        "A matching condition, commonly on keys.",
+        "condition/key"
+      ],
+      [
+        "Which join keeps only row combinations satisfying the match on both sides?",
+        "An inner join.",
+        "inner"
+      ],
+      [
+        "In appointments LEFT JOIN rooms, which table's unmatched rows are retained?",
+        "Appointments.",
+        "appointments"
+      ],
+      [
+        "What value commonly appears in missing right-side fields from an unmatched left join?",
+        "NULL.",
+        "null"
+      ],
+      [
+        "Can one parent row appear more than once after joining to several matching children?",
+        "Yes, once per matching child combination.",
+        "yes/each/once per"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Order 5 has two line items; order 6 has none. How many rows does an inner join of these orders to their lines produce?",
+        "Two rows, both for order 5.",
+        "two/2",
+        "order 5"
+      ],
+      [
+        "A club needs members and the names of their optional mentors, both stored as people. How can an ID refer back to the same table?",
+        "Self-join the people table under member and mentor aliases using the mentor ID.",
+        "self-join/aliases",
+        "mentor id"
+      ],
+      [
+        "A clinic needs unassigned rooms rather than all rooms with optional appointments. What result condition identifies them after a left join from rooms?",
+        "Keep rows whose matching appointment ID is NULL.",
+        "appointment",
+        "null"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A join compares a text employee code '007' to a numeric employee ID 7. Why should the team avoid relying on a database's implicit conversion?",
+        "Conversions may conflate distinct identifiers or differ by engine. Align data types and validate the key mapping.",
+        "identifiers/distinct",
+        "types/mapping"
+      ],
+      [
+        "A sales analyst joins old orders to today's product prices to report historical revenue. The join finds every product, so what can still be wrong?",
+        "Today's price may differ from the amount charged. Use the stored sale price or an effective-dated historical price.",
+        "charged/sale price",
+        "historical/effective-dated"
+      ],
+      [
+        "A relationship joins a pupil to a class roster by year alone. What diagnostic would reveal a many-to-many explosion?",
+        "Compare row counts and inspect the number of matching class rows per pupil before accepting the join.",
+        "row counts",
+        "per pupil/matching"
+      ],
+      [
+        "A left join audit filters 'room name IS NULL' to find missing rooms. Why might it falsely flag a matched room?",
+        "A matched room can itself have a NULL name. Test the nonnullable right-side primary key for absence.",
+        "null name/matched",
+        "primary key/nonnullable"
+      ],
+      [
+        "A system keeps several address versions per customer. How should an order-to-address join avoid attaching every historical address?",
+        "Match the customer and restrict the address version to the period containing the order time.",
+        "customer",
+        "period/order time"
+      ]
+    ]
+  },
+  "subqueries": {
+    "Beginner": [
+      [
+        "What is the smaller query inside another SQL query called?",
+        "A subquery.",
+        "subquery"
+      ],
+      [
+        "What is the query surrounding a subquery called?",
+        "The outer query.",
+        "outer"
+      ],
+      [
+        "If an inner average returns 12, does a duration of 12 pass duration > that average?",
+        "No. The values are equal.",
+        "no/equal"
+      ],
+      [
+        "What does EXISTS ask about the inner result?",
+        "Whether at least one matching row exists.",
+        "one/exists"
+      ],
+      [
+        "Can a correlated subquery refer to a value from the current outer row?",
+        "Yes.",
+        "yes"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A store compares each bottle with the largest bottle on shelf A. What aggregate can the inner query calculate?",
+        "MAX for bottle size, filtered to shelf A.",
+        "max",
+        "shelf"
+      ],
+      [
+        "A shipping clerk wants customers who ordered twice or more. Which smaller grouped result could the outer customer query use?",
+        "Group orders by customer ID and keep groups with count at least two.",
+        "group",
+        "count/two"
+      ],
+      [
+        "A classroom has marks 40, 60 and 80. If a query keeps marks strictly less than the class average, which mark appears?",
+        "The average is 60 and only 40 is below it.",
+        "60",
+        "40"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A NOT EXISTS query should find members without loans, but its inner test omits the link to the current member. What does the query accidentally test?",
+        "It asks whether any loan exists anywhere. Correlate loan.member_id with the current member ID.",
+        "anywhere/any loan",
+        "member id/member_id"
+      ],
+      [
+        "A report needs the latest rate applicable before each booking. A subquery simply chooses the highest numeric rate. What business rule must the query encode?",
+        "Filter rate records by applicable date and order them by effective time before choosing the latest eligible one.",
+        "date/time",
+        "latest/order"
+      ],
+      [
+        "An average subquery runs on a department with no recorded wages and returns NULL. How does a wage > average comparison behave?",
+        "The comparison becomes unknown. Define whether empty departments should be reported separately or receive an explicit fallback.",
+        "unknown",
+        "separately/fallback"
+      ],
+      [
+        "An analyst selects products whose price exceeds the average of all sales lines. Why can popular items distort the intended catalogue-price reference?",
+        "Sales lines weight frequently sold products repeatedly. Compute the reference over distinct intended product records.",
+        "weight/repeated",
+        "product records/distinct"
+      ],
+      [
+        "A scalar subquery calculates the maximum test score and the outer query tests score = that value. Why can two winners be correct and how could one winner be selected?",
+        "Tied rows share the maximum. Define a deterministic tie-breaker if one winner is required.",
+        "tied/share",
+        "tie-breaker/deterministic"
+      ]
+    ]
+  },
+  "aggregation": {
+    "Beginner": [
+      [
+        "What does COUNT(*) count inside the East stall group?",
+        "The rows in that group.",
+        "rows"
+      ],
+      [
+        "Which aggregate adds known amounts?",
+        "SUM.",
+        "sum"
+      ],
+      [
+        "Which aggregate finds the smallest recorded fare?",
+        "MIN.",
+        "min"
+      ],
+      [
+        "Which aggregate gives the arithmetic mean of nonmissing readings?",
+        "AVG.",
+        "avg/average"
+      ],
+      [
+        "Does GROUP BY shop combine sales from different shop keys into the same group?",
+        "No. Different shop keys form different groups.",
+        "no/different groups"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A desk groups three visits by status: paid, paid, unpaid. How many groups and paid rows will it show?",
+        "Two groups, with two paid rows.",
+        "two/2",
+        "paid"
+      ],
+      [
+        "A train controller wants departure stations used by at least three trains. What condition belongs after grouping by departure station?",
+        "HAVING COUNT(*) >= 3 filters station groups by train count.",
+        "having",
+        "count"
+      ],
+      [
+        "A stock report needs the largest item price in each aisle. Which two parts of the query express that task?",
+        "Group by aisle and apply MAX to price.",
+        "group",
+        "max"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A shop's report sums sale values and return values, but both are stored positive. Which fact must revenue aggregation account for?",
+        "Apply the transaction type or sign so returns subtract revenue and validate the net result.",
+        "type/sign",
+        "subtract/net"
+      ],
+      [
+        "A team counts distinct buyers per day and sums those daily counts to estimate unique buyers per month. Who could be counted twice?",
+        "A buyer active on multiple days appears in multiple daily counts. Deduplicate over the full month.",
+        "multiple days",
+        "month"
+      ],
+      [
+        "A teacher takes an average of class attendance percentages for classes of unequal size. When is equal weighting meaningful, and when should pupils be weighted?",
+        "Equal weighting describes a typical class. A pupil-level rate should use total attended pupils divided by total eligible pupils.",
+        "typical class",
+        "total eligible/total attended"
+      ],
+      [
+        "A query groups by city name while recording results across multiple countries. Why could Springfield get an incorrect combined total?",
+        "Identical city names can refer to different places. Group by a stable city ID or country-and-city key.",
+        "names/different places",
+        "city id/country"
+      ],
+      [
+        "An office expects a report showing every department even with zero expenses. Why can GROUP BY department in the expenses table omit a department entirely?",
+        "No expense rows means no group is formed. Start from departments and left join expense totals with an appropriate zero fallback.",
+        "no group/no expense",
+        "left join/fallback"
+      ]
+    ]
+  },
+  "indexes": {
+    "Beginner": [
+      [
+        "Which database object can help locate matching barcode rows faster?",
+        "An index.",
+        "index"
+      ],
+      [
+        "Does creating a normal index automatically delete duplicate product rows?",
+        "No. It adds a lookup structure.",
+        "no/lookup"
+      ],
+      [
+        "Which kind of plan visits table rows broadly to find matches?",
+        "A table scan.",
+        "scan"
+      ],
+      [
+        "What is an index using both city and postal code called?",
+        "A composite index.",
+        "composite"
+      ],
+      [
+        "Does an index consume extra storage?",
+        "Yes.",
+        "yes"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A clinic searches a very large table by exact appointment ID. What candidate indexed field matches that search?",
+        "Appointment ID, after checking whether the key already has a suitable index.",
+        "appointment id",
+        "existing/already"
+      ],
+      [
+        "A discount report asks for prices between 30 and 40. How could an ordered index on price help?",
+        "Locate the lower price boundary and scan the relevant ordered range up to the upper boundary.",
+        "lower/boundary",
+        "range/upper"
+      ],
+      [
+        "A public list has only eight rows. Why should a student measure before adding an extra index?",
+        "A scan is cheap on a tiny table and index maintenance may outweigh the savings.",
+        "tiny/scan",
+        "maintenance"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A barcode index never returns a stale record after an item's code changes. Which two index effects should the database maintain during the update?",
+        "Remove or invalidate the old key entry and create the entry for the new key consistently with the row.",
+        "old",
+        "new"
+      ],
+      [
+        "A team benchmarks the first lookup without an index and the hundredth repeat with one. Which uncontrolled factor could overstate the gain?",
+        "Caching can make repeated reads faster. Compare matched cold or warm workloads across both configurations.",
+        "caching/cache",
+        "cold/warm/matched"
+      ],
+      [
+        "An office filters by status='open' and gets 99% of tickets. Why might indexing that field alone be a weak choice?",
+        "Its low selectivity returns almost every row. Test more selective combined conditions used by real queries.",
+        "low selectivity/almost every",
+        "combined/real queries"
+      ],
+      [
+        "A scheduler sorts by meeting time and then room ID. An index covers only time. What property determines whether output is stable across time ties?",
+        "Specify room ID or another deterministic tie-breaker in the query, and evaluate an index matching the full order if needed.",
+        "tie-breaker/room id",
+        "query/order"
+      ],
+      [
+        "A deletion removes most old records from a table and its plan suddenly performs poorly. What non-schema information may now need refreshing?",
+        "Update or inspect optimizer statistics because the distribution and row count have changed.",
+        "statistics",
+        "distribution/row count"
+      ]
+    ]
+  },
+  "transactions": {
+    "Beginner": [
+      [
+        "What word means accepting a database transaction's changes?",
+        "Commit.",
+        "commit"
+      ],
+      [
+        "What word means discarding uncommitted changes?",
+        "Rollback.",
+        "rollback/roll back"
+      ],
+      [
+        "If a transaction rolls back both halves of a transfer, should its completed debit remain?",
+        "No. Both uncommitted changes are discarded.",
+        "no/discard"
+      ],
+      [
+        "Which property groups a set of changes into an all-or-nothing unit?",
+        "Atomicity.",
+        "atomicity"
+      ],
+      [
+        "A card starts at 10 and spends 2 in a committed transaction. What balance should later ordinary reads see once the commit is visible?",
+        "Eight credits.",
+        "eight/8"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "An order starts with 7 reserved seats. A transaction adds 2 reservations then rolls back. How many seats in that order remain reserved?",
+        "Seven seats remain reserved because the uncommitted addition was discarded.",
+        "seven/7",
+        "rollback/discard"
+      ],
+      [
+        "A shop wants to save an order and its line items together. When should it commit?",
+        "Commit after all the required header and line rows have been saved successfully.",
+        "all",
+        "header/line"
+      ],
+      [
+        "A clerk tries to debit ₹8 from an account with ₹5 under a no-overdraft policy. What check must decide whether the transaction can proceed?",
+        "Ensure sufficient funds before committing; insufficient funds should reject the debit.",
+        "sufficient",
+        "reject"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A bank posts an audit entry saying 'transfer complete' before the transfer transaction commits. How could the audit contradict reality?",
+        "The transaction could roll back after the audit entry. Write the completion evidence atomically with the committed outcome.",
+        "roll back/rollback",
+        "atomically/commit"
+      ],
+      [
+        "A long checkout transaction waits for the customer to read terms while holding a stock lock. Which boundary should be reconsidered?",
+        "Obtain user input before the short critical transaction, then revalidate stock when reserving it.",
+        "input/before",
+        "revalidate/stock"
+      ],
+      [
+        "A retry policy retries only the last SQL statement after a deadlock aborts a whole transaction. Why can that be wrong?",
+        "Earlier transaction work was rolled back too. Retry the complete logical transaction from a consistent starting state.",
+        "earlier/rolled back",
+        "complete/whole"
+      ],
+      [
+        "Two readers see different totals because they start separate transactions moments apart. Does that alone prove corruption? Which evidence would be more diagnostic?",
+        "Different committed snapshots can be valid. Check the invariant within the same consistent snapshot and inspect committed transfer records.",
+        "snapshots",
+        "invariant/records"
+      ],
+      [
+        "A programmer stores a separate 'transfer complete' flag to recover from failures. Which ordering or grouping prevents the flag and balance changes disagreeing?",
+        "Commit the completion flag and the balance changes in the same transaction. Separate commits can record contradictory states.",
+        "same transaction",
+        "separate/contradictory"
+      ]
+    ]
+  },
+  "database-design": {
+    "Beginner": [
+      [
+        "What term describes a kind of thing represented in a database, such as a supplier?",
+        "An entity.",
+        "entity"
+      ],
+      [
+        "Which key identifies one row in its own table?",
+        "A primary key.",
+        "primary"
+      ],
+      [
+        "Which key links an order to a row in the customers table?",
+        "A foreign key.",
+        "foreign"
+      ],
+      [
+        "Can one supplier be linked to several products?",
+        "Yes. That is a one-to-many relationship.",
+        "yes/one-to-many"
+      ],
+      [
+        "What is a link table recording pupil-course pairs commonly called?",
+        "A junction table.",
+        "junction/link"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A course registration must also store the enrolment date. Should that date belong to the pupil, course, or the pupil-course relationship?",
+        "Store it on the registration relationship because it describes that particular enrollment.",
+        "registration/relationship",
+        "particular/enrollment"
+      ],
+      [
+        "A warehouse has three physical copies of one manual. Which identifier should a return desk scan?",
+        "Scan the individual copy ID so the correct physical copy's loan is closed.",
+        "copy id",
+        "physical/loan"
+      ],
+      [
+        "A clinic separates doctors and appointments. Where should the doctor ID for appointment A17 be stored?",
+        "Store the doctor ID as a foreign key on the appointment record if each appointment has one doctor.",
+        "foreign key",
+        "appointment"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A customer can change a delivery address while one parcel is already dispatched. Which data record should the courier follow for that parcel?",
+        "Use the address agreed for that particular shipment, kept as a historical snapshot or version linked to the parcel.",
+        "shipment/parcel",
+        "snapshot/version"
+      ],
+      [
+        "A catalogue stores several phone numbers in phone1, phone2 and phone3 columns, then a fourth is needed. What change would support an arbitrary count and labels such as work or home?",
+        "Use a related phone-number table with one row per number, a contact ID and a type label.",
+        "related/table",
+        "contact id/type"
+      ],
+      [
+        "A shop deletes a product that past sales still reference. What design balances clean current listings with historical receipts?",
+        "Retire the product from active listings and preserve the sale reference or sale-time snapshot needed by historical receipts.",
+        "retire/active",
+        "snapshot/historical"
+      ],
+      [
+        "A team stores the current account balance and transaction ledger independently. Which derived-data risk arises and how should it be controlled?",
+        "The stored balance can drift from ledger totals. Update them atomically or reconcile the derived balance against the ledger.",
+        "drift/inconsistent",
+        "atomically/reconcile"
+      ],
+      [
+        "A team makes one giant table of patient, clinician and visit facts. What question would reveal a functional dependency worth separating?",
+        "Ask which facts depend on clinician ID regardless of the visit, then maintain those clinician facts in their own record.",
+        "clinician id",
+        "own record/separate"
+      ]
+    ]
+  },
+  "database-fundamentals": {
+    "Beginner": [
+      [
+        "A school table has 12 rows, one per pupil. How many pupils do those rows describe?",
+        "Twelve pupils.",
+        "twelve/12"
+      ],
+      [
+        "In a library table, is member_name one column or a whole row?",
+        "One column.",
+        "column"
+      ],
+      [
+        "Which database term describes a single stored appointment entry?",
+        "A record or row.",
+        "record/row"
+      ],
+      [
+        "May two different member rows use the same primary key in one table?",
+        "No. The primary key must be unique.",
+        "no/unique"
+      ],
+      [
+        "What is the purpose of keeping a database after a cash register closes?",
+        "Persistent storage allows later retrieval.",
+        "persistent/retrieval/later"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A club has cards 21 and 22 under one household address. Which search field retrieves one member without retrieving both?",
+        "The unique card number identifies one member.",
+        "card",
+        "unique"
+      ],
+      [
+        "A clinic needs to store a person's year of birth and appointment dates. Why can one person have just one birth year but many appointment rows?",
+        "Birth year is a person fact; each separate appointment is an event linked to that person.",
+        "person",
+        "event/appointment"
+      ],
+      [
+        "A teacher only wants a student's name from a record containing a private phone number. What should the read operation return?",
+        "Return the requested name field and omit the unneeded phone information.",
+        "name",
+        "omit/unneeded"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A plan assumes each table row represents one delivery, yet some rows are delivery attempts for the same parcel. Why does that change reporting?",
+        "Row count measures attempts, while distinct parcel identities measure parcels. Define the reporting unit before counting.",
+        "attempts",
+        "parcel/unit"
+      ],
+      [
+        "A member register is restored from backup while a separate loan register is restored from a different moment. What cross-register problem can follow?",
+        "Loans may refer to missing or outdated member records. Restore a consistent snapshot and verify relationships.",
+        "loans/missing",
+        "consistent/relationships"
+      ],
+      [
+        "A manager interprets NULL membership_end as 'membership never expires'. What policy ambiguity should be resolved?",
+        "Missing could mean an unknown date or an open-ended membership. Model those meanings explicitly when the difference matters.",
+        "unknown",
+        "open-ended/never expires"
+      ],
+      [
+        "A customer record can be edited by frontline staff, but audit history needs its previous address. What does overwriting the current row fail to preserve?",
+        "It loses the earlier address and timing of the change. Store versioned history or an audit event.",
+        "earlier/timing",
+        "audit/version"
+      ],
+      [
+        "An application says one row was written, but the user cannot find it after a crash. Which durable event should support the success message?",
+        "Wait for the required transaction commit or durable acknowledgement and verify recovery behavior under injected failure.",
+        "commit/acknowledgement",
+        "recovery/failure"
+      ]
+    ]
+  },
+  "sql": {
+    "Beginner": [
+      [
+        "Which keyword starts the column list in a typical SQL read query?",
+        "SELECT.",
+        "select"
+      ],
+      [
+        "Which clause names the table to read?",
+        "FROM.",
+        "from"
+      ],
+      [
+        "Which clause contains the test used to filter individual rows?",
+        "WHERE.",
+        "where"
+      ],
+      [
+        "For a condition price < 20, does a price of exactly 20 qualify?",
+        "No. It is equal to the boundary.",
+        "no/false"
+      ],
+      [
+        "Does a plain SELECT normally change the selected parcel weights?",
+        "No. It reads the values.",
+        "no/reads"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A till has ready parcels of weights 2 and 4 kg. Which parcel passes weight BETWEEN 2 AND 3?",
+        "The 2 kg parcel passes because BETWEEN includes its endpoints.",
+        "2",
+        "inclusive/includes"
+      ],
+      [
+        "A stall wants each distinct neighbourhood once even when several orders go there. Which SQL modifier can remove duplicate neighbourhood rows?",
+        "SELECT DISTINCT neighbourhood returns distinct neighbourhood values.",
+        "distinct"
+      ],
+      [
+        "A warehouse wants unshipped parcels from either of two hubs. Where should parentheses go when using OR and AND?",
+        "Group the two hub alternatives, then combine that group with the unshipped condition using AND.",
+        "group/parenthes",
+        "unshipped/and"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A search asks for city <> 'Delhi'. Why can it omit rows whose city is missing, and when should those be included explicitly?",
+        "A NULL comparison yields unknown. Add an IS NULL branch if the business policy includes unknown destinations.",
+        "unknown",
+        "is null"
+      ],
+      [
+        "A price filter says 'from ₹100 up to but below ₹150'. What boundary fixture would reveal the mistake of using inclusive BETWEEN?",
+        "Include ₹100 and ₹150, expecting the lower boundary included and the upper one excluded.",
+        "100/lower",
+        "150/upper"
+      ],
+      [
+        "Two queries return the same fields on today's data. One restricts status = 'ready' and the other only excludes status = 'sent'. Which new fixture can distinguish them?",
+        "Add an intermediate status such as packing. It is unsent but not ready.",
+        "packing/intermediate",
+        "ready/unsent"
+      ],
+      [
+        "An app builds an ORDER BY clause from user-provided field names. Why is binding the field name as a value usually insufficient?",
+        "Column identifiers are SQL structure, so select permitted fields from an allowlist and bind only actual data values.",
+        "identifier/structure",
+        "allowlist/permitted"
+      ],
+      [
+        "A script uses SELECT * and unpacks exactly three result fields. A new table column appears. How can a query contract avoid breaking this reader?",
+        "Select the required columns explicitly in the documented order and test the returned shape.",
+        "explicit",
+        "order/shape"
+      ]
+    ]
+  },
+  "database-engines": {
+    "Beginner": [
+      [
+        "Which engine can store a local application database in a single main database file?",
+        "SQLite.",
+        "sqlite"
+      ],
+      [
+        "Which system commonly runs as a database server accepting application connections?",
+        "PostgreSQL.",
+        "postgresql/postgres"
+      ],
+      [
+        "Does local SQLite need the internet to read an existing local route table?",
+        "No. Local reads work offline.",
+        "no/offline"
+      ],
+      [
+        "What is a database connection used for?",
+        "Sending operations to the database and receiving results.",
+        "operations/results"
+      ],
+      [
+        "What does a concurrent writer do relative to another writer?",
+        "It attempts a write during an overlapping time period.",
+        "overlap/same time"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A travelling surveyor wants to collect notes offline and upload approved records in town. Which part could SQLite serve?",
+        "SQLite can persist local notes for later synchronization.",
+        "local",
+        "synchronization/sync"
+      ],
+      [
+        "An office moves to a shared database server. Which failure can now interrupt clients even when their own computers are healthy?",
+        "A network interruption or server outage can prevent connections.",
+        "network/server",
+        "connection"
+      ],
+      [
+        "A maintenance plan compares migration success using row totals alone. What additional comparison could uncover a lost leading zero?",
+        "Compare representative field values and their types, including text IDs with leading zeroes.",
+        "values/text",
+        "zero/types"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A team claims storing a database file on a shared drive is identical to using a server that mediates transactions. Which responsibility differs?",
+        "A database server coordinates client operations and locking. Shared file access depends on filesystem behavior and supported locking guarantees.",
+        "coordinates/server",
+        "filesystem/locking"
+      ],
+      [
+        "A desktop tool is the only writer but several reports read its live data. Why should engine choice consider duration as well as number of connections?",
+        "Long transactions can affect locking and resource use differently from brief reads. Test realistic overlapping transaction durations.",
+        "long/duration",
+        "locking/overlapping"
+      ],
+      [
+        "A migration script targets 'SQL' generally and uses an engine-specific date expression. What test would establish portability of the date results?",
+        "Run the same date fixtures on both target engines and compare boundary and missing-date outcomes.",
+        "both",
+        "boundary/missing"
+      ],
+      [
+        "A new hosted database promises strong availability but the office has intermittent connectivity. Which user-visible failure is outside the server's uptime figure?",
+        "Clients can lose the network path to a healthy server. Measure end-to-end reachability and define offline behavior.",
+        "network path/connection",
+        "offline/end-to-end"
+      ],
+      [
+        "A small shared installation is being evaluated for a future tenfold increase in writes. Which test is more relevant than one isolated fast insert?",
+        "Run a representative multi-writer workload and measure contention, latency, and failure handling at the expected scale.",
+        "multi-writer/concurrent",
+        "contention/latency"
+      ]
+    ]
+  },
+  "tables": {
+    "Beginner": [
+      [
+        "Which type is usually suitable for the seat count 3?",
+        "An integer.",
+        "integer/int"
+      ],
+      [
+        "What is the purpose of a column's data type?",
+        "It describes the kind of value stored.",
+        "kind/type"
+      ],
+      [
+        "Which constraint forbids a missing value in a required name column?",
+        "NOT NULL.",
+        "not null"
+      ],
+      [
+        "What does a CHECK constraint evaluate on a new row?",
+        "A condition that the row is required to satisfy under the database's rules.",
+        "condition/rule"
+      ],
+      [
+        "Should a teacher store the literal text 'unknown' as a numeric mark?",
+        "No. Use a supported missing-value representation when the mark is unknown.",
+        "no/missing"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A phone extension 0024 has four significant printed digits. What should happen in a text-column round trip?",
+        "It should return exactly 0024 with both leading zeroes preserved.",
+        "0024",
+        "zero/exact"
+      ],
+      [
+        "A theatre table needs one row per seat within each hall, and seat number 1 exists in several halls. Which two fields together can be unique?",
+        "Hall ID and seat number together identify one seat.",
+        "hall",
+        "seat"
+      ],
+      [
+        "A stock table must accept zero stock but reject negative stock. Which comparison belongs in its range check?",
+        "Require quantity >= 0, allowing zero.",
+        ">=/nonnegative/zero or greater"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A customer table allows NULL loyalty numbers but forbids duplicate assigned numbers. Which behavior must be checked on the chosen engine?",
+        "Verify how unique constraints handle multiple NULL values and test duplicate nonmissing loyalty numbers separately.",
+        "null",
+        "duplicate/nonmissing"
+      ],
+      [
+        "A booking code is kept in text, but one importer trims leading spaces that can be significant. Which guarantee must span both schema and ingestion?",
+        "Define the exact canonical code format and test that the importer preserves or rejects significant characters according to it.",
+        "format/canonical",
+        "preserve/reject"
+      ],
+      [
+        "Two columns independently pass their range checks, but reservation_end precedes reservation_start. Which further rule is needed?",
+        "Add a cross-column condition requiring the end to follow or equal the start according to the booking policy.",
+        "end",
+        "start"
+      ],
+      [
+        "A promotions table allows a blank code through NOT NULL. Why does that happen and how would the policy reject whitespace-only codes?",
+        "Empty text is a present value. Add a check on trimmed length or validate a nonblank canonical code.",
+        "empty/present",
+        "trim/nonblank"
+      ],
+      [
+        "During migration a field formerly stored only integers but now needs fractions. What compatibility risk exists for older readers?",
+        "Older readers can truncate or reject fractional values. Coordinate schema and client updates with representative decimal fixtures.",
+        "truncate/reject",
+        "client/fixtures"
+      ]
+    ]
+  },
+  "crud": {
+    "Beginner": [
+      [
+        "Which SQL statement commonly creates a new row?",
+        "INSERT.",
+        "insert"
+      ],
+      [
+        "Which SQL statement reads existing rows?",
+        "SELECT.",
+        "select"
+      ],
+      [
+        "Which SQL statement changes values on existing matching rows?",
+        "UPDATE.",
+        "update"
+      ],
+      [
+        "Which SQL statement removes matching rows?",
+        "DELETE.",
+        "delete"
+      ],
+      [
+        "Does typing DELETE without a WHERE condition typically target one chosen order or all rows of the table?",
+        "All rows can be affected.",
+        "all/every"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A shop charges ₹5 more on just order 22. How can an update change the amount relative to its existing value?",
+        "Set amount = amount + 5 and restrict the update to order ID 22.",
+        "+ 5/add",
+        "22"
+      ],
+      [
+        "A teacher needs a new pupil row only if the registration code has not been used. Which database rule should guard against duplicate inserts?",
+        "Enforce a unique registration code and handle a conflicting insert.",
+        "unique",
+        "conflict/duplicate"
+      ],
+      [
+        "A charity has archived donations and active pledges in different states of one table. How can a volunteer read only active pledges without removing anything?",
+        "SELECT with a status filter for active pledges.",
+        "select",
+        "status/active"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A DELETE succeeds but its caller retries when the response is lost. What should the API decide about reporting a second deletion of an already absent row?",
+        "Define an idempotent deletion outcome while recording whether a row actually existed on the first operation.",
+        "idempotent",
+        "existed/absent"
+      ],
+      [
+        "A bulk edit sets every employee's role from an uploaded file. Which safeguard prevents extra spreadsheet columns from changing fields like payroll access?",
+        "Allowlist the writable columns and validate each employee ID and permitted change before updating.",
+        "allowlist/permitted columns",
+        "validate/id"
+      ],
+      [
+        "An audit must explain who changed an order and what it used to contain. Why is the updated current row insufficient?",
+        "It lacks the earlier values and actor history. Record an audit event with before/after data and actor identity.",
+        "earlier/before",
+        "actor/audit"
+      ],
+      [
+        "A system archives old orders by copying them elsewhere and then deleting them. What failure risk arises if deletion runs despite a partial copy?",
+        "Orders can be lost. Verify durable complete copies or coordinate migration and deletion transactionally.",
+        "lost/loss",
+        "verify/transaction"
+      ],
+      [
+        "A help desk treats 'zero rows updated' as proof the ID never existed. Which extra condition in the update could give the same result for an existing row?",
+        "A version or status predicate may fail for an existing record. Distinguish a stale or ineligible state from an unknown ID when needed.",
+        "version/status",
+        "stale/ineligible"
+      ]
+    ]
+  },
+  "modules": {
+    "Beginner": [
+      [
+        "A shopkeeper writes a reusable fee rule in fees.py. What is fees.py called in Python?",
+        "A module.",
+        "module"
+      ],
+      [
+        "Which keyword makes the standard math module available?",
+        "import.",
+        "import"
+      ],
+      [
+        "With import math, how is the module name connected to sqrt in a call?",
+        "A dot connects the names in math.sqrt.",
+        "dot/math.sqrt"
+      ],
+      [
+        "In import statistics as stats, which short name can the caller use?",
+        "stats.",
+        "stats"
+      ],
+      [
+        "A toolkit folder groups pricing and delivery modules under one common name. What is that grouping called?",
+        "A package.",
+        "package"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A kitchen program imports ceil from math. How can it round 2.2 trays up using that imported name?",
+        "Call ceil(2.2), which returns 3.",
+        "ceil",
+        "3/three"
+      ],
+      [
+        "A script defines a local discount and imports a module that also defines discount. How can it call the module's version explicitly?",
+        "Import the module and qualify the call with the module name, such as fees.discount.",
+        "module",
+        "qualify/dot/fees.discount"
+      ],
+      [
+        "A route checker needs the same postcode validation in a phone app and a batch script. What should each caller provide to the shared module?",
+        "Pass the postcode as input and use the validation result returned by the shared rule.",
+        "postcode",
+        "result/return"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A worker imports a module with a counter, and two users' counts interfere. Which ownership boundary should the code establish?",
+        "Keep per-user counts in user-specific state and make the module's shared state explicit.",
+        "per-user/user-specific",
+        "shared"
+      ],
+      [
+        "A regional helper module now imports a large plotting library even for simple date arithmetic. How can you evaluate a split?",
+        "Measure startup cost for the date-only caller and isolate plotting dependencies behind the feature that uses them.",
+        "startup/measure",
+        "plotting/dependenc"
+      ],
+      [
+        "A railway shares shift rules in a package and updates them without telling clients. How can callers identify the rules behind yesterday's payout?",
+        "Version the shared rules and record the package or rule version with each payout.",
+        "version",
+        "record/payout"
+      ],
+      [
+        "A team wants to test receipt formatting without printing actual paper. How should the boundary between the formatting and printer modules work?",
+        "Have formatting return text, then pass it to a printer interface that tests can replace.",
+        "return text/text",
+        "interface/replace"
+      ],
+      [
+        "An import succeeds on the developer's laptop only because the project root is the current working directory. What repeatable test would catch the dependency?",
+        "Install the package in a clean environment and run its supported entry point from a different directory.",
+        "clean/install",
+        "different directory/entry point"
+      ]
+    ]
+  },
+  "virtual-environments": {
+    "Beginner": [
+      [
+        "What does venv help isolate between two Python projects?",
+        "Installed packages and their versions.",
+        "packages/dependencies"
+      ],
+      [
+        "Does a new virtual environment need its own full operating system?",
+        "No. It shares the host operating system.",
+        "no/shares"
+      ],
+      [
+        "A student runs python -m venv .venv. What is .venv in this instruction?",
+        "The directory for the new environment.",
+        "directory/folder"
+      ],
+      [
+        "Is a package installed in Project A automatically installed in a separate fresh Project B environment?",
+        "No. Install required dependencies in Project B's environment.",
+        "no/separate"
+      ],
+      [
+        "Which tool commonly installs packages into a project's Python environment?",
+        "pip.",
+        "pip"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A laptop already has a global plotting package. A clean project environment cannot import it. How should the developer record the requirement for teammates?",
+        "Add the plotting package to the project's dependencies and install it in the project environment.",
+        "dependencies/requirements",
+        "install"
+      ],
+      [
+        "A script starts successfully through the editor but fails through a scheduled job. Which executable should the job invoke?",
+        "Point the job to the project's environment interpreter using its explicit path.",
+        "interpreter",
+        "path"
+      ],
+      [
+        "A learner has two shells open, activates a project in the first shell, and runs a command in the second. Why might it use another Python?",
+        "Activation changes command lookup in the current shell; select the environment in the second shell as well.",
+        "current shell",
+        "second shell"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A web service records dependencies manually but a transitive helper upgrades unexpectedly. How could builds be made more repeatable?",
+        "Record the resolved dependency graph or lock file and test installation from it in a fresh environment.",
+        "resolved/lock",
+        "fresh/test"
+      ],
+      [
+        "A binary wheel installs on one CPU architecture and fails on another despite identical Python package versions. What else belongs in compatibility checks?",
+        "Check the operating system, CPU architecture and Python ABI before choosing a compatible binary build.",
+        "architecture/cpu",
+        "abi/binary"
+      ],
+      [
+        "A team shares one writable virtual environment among multiple simultaneous builds. What failure can occur during installation and what arrangement avoids it?",
+        "Concurrent installs can leave inconsistent package files. Give each build an isolated environment or immutable prepared image.",
+        "concurrent/inconsistent",
+        "isolated/immutable"
+      ],
+      [
+        "A retired project environment occupies disk space. Which evidence should be retained before recreating it elsewhere?",
+        "Preserve the dependency specification and Python version, then verify a clean rebuild runs the project's tests.",
+        "specification/version",
+        "rebuild/tests"
+      ],
+      [
+        "A local test passes only when a developer has enabled access to system packages in their environment. How can CI expose the hidden dependency?",
+        "Install in an environment without system packages and run imports and tests using only declared dependencies.",
+        "system packages/clean",
+        "declared/tests"
+      ]
+    ]
+  },
+  "git": {
+    "Beginner": [
+      [
+        "What word describes a saved point in a Git project's history?",
+        "A commit.",
+        "commit"
+      ],
+      [
+        "What does Git status help a baker see after editing menu.txt?",
+        "Which files have changed or are staged.",
+        "changed/staged"
+      ],
+      [
+        "Which Git operation downloads objects and updates remote-tracking information without automatically combining it into your current branch?",
+        "Fetch.",
+        "fetch"
+      ],
+      [
+        "Is a Git branch name tied to a line of commits or to a particular computer screen?",
+        "A line of commits.",
+        "commits/history"
+      ],
+      [
+        "What is the purpose of a short commit message?",
+        "Explain the change and its intent.",
+        "explain/change/intent"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A clerk wants to compare unstaged edits to a tracked invoice template with the staged version. Which inspection should be used?",
+        "Use git diff to inspect the working-tree differences before staging.",
+        "git diff",
+        "working/unstaged"
+      ],
+      [
+        "A volunteer is on a feature branch and needs the latest remote changes incorporated. Why distinguish fetch from merge?",
+        "Fetch obtains remote commits, while merge combines the selected history into the active branch.",
+        "obtains/download/fetch",
+        "combines/merge"
+      ],
+      [
+        "A manager wants a clear reference for the exact release used to print festival tickets. Which Git object name could the team add?",
+        "Tag the release commit and record the tag or commit ID on the release.",
+        "tag",
+        "commit"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An automated formatter changed a file after its first version was staged. Which two differences should be inspected before committing?",
+        "Inspect the staged diff for the pending snapshot and the unstaged diff for subsequent working-tree edits.",
+        "staged",
+        "unstaged"
+      ],
+      [
+        "A team sees a merge commit that builds but a seasonal discount disappeared. What should a post-merge check cover beyond textual conflicts?",
+        "Test the intended behavior of both merged features together using a case that activates the seasonal discount.",
+        "behavior",
+        "both/together"
+      ],
+      [
+        "A developer ignores a log pattern after giant logs are already tracked and committed. Why do logs keep appearing in changes?",
+        "Ignore rules normally affect untracked files. Stop tracking the intended logs deliberately while keeping local copies when needed.",
+        "untracked",
+        "tracking/index"
+      ],
+      [
+        "A change works only when a particular untracked configuration file is present. How can a shared project reproduce the setup without committing credentials?",
+        "Track a sanitized configuration example or schema and document how local environment values supply secrets.",
+        "example/schema/sanitized",
+        "environment/secrets"
+      ],
+      [
+        "A teammate rebases an unpublished feature and notices new commit IDs for apparently identical code. What changes a Git commit's identity besides file contents?",
+        "Its parent history and commit metadata contribute to identity, so reapplying the changes can produce new IDs.",
+        "parent",
+        "metadata"
+      ]
+    ]
+  },
+  "dsa": {
+    "Beginner": [
+      [
+        "Which structure serves the oldest waiting person first?",
+        "A queue.",
+        "queue"
+      ],
+      [
+        "Which structure takes the most recently added item first?",
+        "A stack.",
+        "stack"
+      ],
+      [
+        "What does pushing a plate onto a stack do?",
+        "Adds it to the top.",
+        "top/add"
+      ],
+      [
+        "What does dequeuing at a bakery do?",
+        "Removes the front waiting entry.",
+        "front/oldest"
+      ],
+      [
+        "What is an algorithm for counting a tray of vouchers?",
+        "An ordered procedure for obtaining the count.",
+        "ordered/procedure/steps"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A delivery driver needs to visit stops in the input order and keep duplicates when two packages go to one stop. Which basic collection fits?",
+        "Use a list that preserves both order and duplicates.",
+        "list",
+        "duplicates/order"
+      ],
+      [
+        "A student checks parentheses in '(())'. When reading a closing parenthesis, what previously saved item should be removed?",
+        "Pop the latest unmatched opening parenthesis from the stack.",
+        "latest/most recent",
+        "stack/pop"
+      ],
+      [
+        "A help desk wants the value for complaint number 42, without scanning every complaint. Which mapping would support lookup?",
+        "Map complaint ID to its record in a dictionary.",
+        "id",
+        "dictionary/map"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A new waiting-room implementation promises FIFO. Which minimal sequence distinguishes FIFO from a stack without depending on internal code?",
+        "Add two different tickets and remove one. The first ticket must come out before the second.",
+        "two different/two",
+        "first"
+      ],
+      [
+        "A customer search scans a list once a day, while updates happen continuously. Why might maintaining several indexes cost more than it helps?",
+        "Rare searches save little work while every update maintains indexes. Compare actual read frequency and write cost.",
+        "rare/frequency",
+        "update/write"
+      ],
+      [
+        "A file tree has shared subfolders and cycles. Which two facts must a traversal decide to prevent double counting or endless visits?",
+        "Define the unit being counted and remember visited folder identities or active paths according to that definition.",
+        "unit/definition",
+        "visited/paths"
+      ],
+      [
+        "A fixed-size recent-activity display should keep only the latest 20 events and append new ones quickly. What behavior must its collection guarantee when full?",
+        "Append the newest event and evict the oldest when capacity reaches 20, as in a bounded deque.",
+        "newest/append",
+        "oldest/evict"
+      ],
+      [
+        "A shop builds a lookup dictionary mapping product code to the last sale, then a report demands every sale for that product. What information should the mapping retain?",
+        "Map the code to a collection of all matching sale records rather than replacing earlier entries with one record.",
+        "collection/all",
+        "replacing/earlier"
+      ]
+    ]
+  },
+  "complexity": {
+    "Beginner": [
+      [
+        "What does n represent when analyzing a list of receipts?",
+        "The number of receipts or input size.",
+        "number/input size"
+      ],
+      [
+        "If a scan checks all 12 items exactly once, how many item checks occur?",
+        "Twelve checks.",
+        "twelve/12"
+      ],
+      [
+        "Which grows faster for large n, n or n squared?",
+        "n squared.",
+        "squared/quadratic"
+      ],
+      [
+        "A lookup needs the first item only. How many positions does it inspect regardless of list length?",
+        "One position.",
+        "one/1"
+      ],
+      [
+        "What kind of complexity describes extra memory rather than operation count?",
+        "Space complexity.",
+        "space"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A stock checker reads 8 items twice in two separate loops. Is that 16 or 64 visits and why?",
+        "Sixteen visits because two passes add their costs.",
+        "sixteen/16",
+        "add/two passes"
+      ],
+      [
+        "A party organizer checks each of 10 guests against each of 5 tables. How many guest-table comparisons does the nested search perform?",
+        "It performs 50 comparisons by multiplying the two input counts.",
+        "50/fifty",
+        "multiply/product"
+      ],
+      [
+        "A list of 64 candidate rooms can be cut to 32, then 16. Which searching idea does this illustrate and what prerequisite allows it?",
+        "Binary search halves candidates using an ordered search key.",
+        "binary/halves",
+        "ordered/sorted"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A sort takes noticeable time only for some arrival patterns. What workloads should a performance comparison include?",
+        "Include representative, sorted, reversed and adversarial patterns as applicable, measuring the range of costs rather than one lucky case.",
+        "representative",
+        "reversed/adversarial/range"
+      ],
+      [
+        "A set lookup is described as constant time on average. Why should an engineer avoid calling that a guaranteed worst-case bound?",
+        "Hash collisions and implementation behavior can increase work for individual lookups. Distinguish average and worst-case costs.",
+        "collision",
+        "average/worst-case"
+      ],
+      [
+        "A program reads a stream once but stores a copy of every previously read line. Which complexity claims can both be true?",
+        "The scan can take linear time and also use linear extra space.",
+        "linear time",
+        "linear extra space/linear space"
+      ],
+      [
+        "A recursive walk visits every tree node once. Two trees have the same node count but very different heights. Which resource can differ sharply?",
+        "The call-stack space can follow tree height even when total node visits are equal.",
+        "stack",
+        "height/depth"
+      ],
+      [
+        "A new algorithm halves CPU time but doubles network round trips in a remote lookup. Which measurement should decide if users benefit?",
+        "Compare end-to-end latency under a representative network and workload, including round-trip time.",
+        "end-to-end/latency",
+        "network/round-trip"
+      ]
+    ]
+  },
+  "recursion": {
+    "Beginner": [
+      [
+        "What is a base case in a folder-counting rule?",
+        "A case that can be answered without another recursive call.",
+        "without another/stop"
+      ],
+      [
+        "How many files should an empty folder contribute?",
+        "Zero.",
+        "zero/0"
+      ],
+      [
+        "How many files does a single file contribute?",
+        "One.",
+        "one/1"
+      ],
+      [
+        "Can a recursive call return to the same function through another helper function?",
+        "Yes, it calls itself directly or through another function.",
+        "itself/yes"
+      ],
+      [
+        "Which term describes the waiting recursive calls?",
+        "The call stack.",
+        "stack"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A box holds two smaller boxes containing 3 and 4 coins. How should the parent combine the returned child counts?",
+        "Add the child counts to produce 7 coins.",
+        "add/sum",
+        "7/seven"
+      ],
+      [
+        "A lookup walks from a worker to a supervisor. What should end the recursion when the office director is reached?",
+        "A base case recognizing that the director has no further supervisor.",
+        "base case",
+        "no further/no supervisor"
+      ],
+      [
+        "A recipe function counts ingredients inside subrecipes. How could it distinguish a leaf ingredient from a recipe with children?",
+        "Inspect the item's kind or structure before branching to a base count or recursive descent.",
+        "kind/structure",
+        "base/recursive"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A report uses recursion to flatten folders but order matters to users. How can replacing recursion with an explicit stack accidentally reverse siblings?",
+        "A stack pops the last pushed child first. Push children in reverse intended order or explicitly preserve their sequence.",
+        "last/reverse",
+        "order/sequence"
+      ],
+      [
+        "A directory scan visits one file through two links. Which definition decides whether it should count as one or two?",
+        "Decide whether to count unique underlying files or distinct paths, then key visited records accordingly.",
+        "unique/file identity",
+        "paths"
+      ],
+      [
+        "A function computing Fibonacci-like demand forecasts repeats the same subproblem many times. When would memoization be safe?",
+        "Cache repeated input states only when the same state determines the same result, including relevant configuration in the key.",
+        "same result/deterministic",
+        "key/state"
+      ],
+      [
+        "A recursively defined discount rule calls itself with the same amount if the discount is rounded to zero. What progress argument fails?",
+        "The recursive input does not get smaller. Add a stopping condition for a zero change or redefine the reduction.",
+        "smaller/progress",
+        "zero/stopping"
+      ],
+      [
+        "A tree export builds a full string in each child and concatenates through every ancestor. Which hidden cost can grow with depth?",
+        "Repeated copying of accumulated text can dominate traversal. Stream fragments or join collected pieces once.",
+        "copying/repeated",
+        "stream/join"
+      ]
+    ]
+  },
+  "comprehensions": {
+    "Beginner": [
+      [
+        "What does the for part of a list comprehension visit?",
+        "Each input item.",
+        "item/input"
+      ],
+      [
+        "What does the if part decide?",
+        "Whether the item is included.",
+        "include/filter"
+      ],
+      [
+        "For [n+1 for n in [1,2]], what are the two output numbers?",
+        "2 and 3.",
+        "2",
+        "3"
+      ],
+      [
+        "What does [x for x in []] produce?",
+        "An empty list.",
+        "empty"
+      ],
+      [
+        "Which braces enclose a set comprehension?",
+        "Curly braces.",
+        "curly/braces"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A school wants badge numbers above 10 from [8,12,10,14]. What two numbers pass?",
+        "12 and 14 pass.",
+        "12",
+        "14"
+      ],
+      [
+        "A grocer wants prices in paise from [2, 3] rupees. Which transformation should a comprehension apply?",
+        "Multiply each price by 100 to obtain 200 and 300 paise.",
+        "multiply/100",
+        "paise/200"
+      ],
+      [
+        "A shipment contains names 'Tea', '', 'Mint'. What filter should precede uppercasing so the blank label is skipped?",
+        "Keep nonempty names, then apply upper to each retained name.",
+        "nonempty/non-empty",
+        "upper"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A nested comprehension enumerates every product-colour pairing, creating a huge list although only the first valid pair is needed. What execution pattern saves work?",
+        "Generate pairs lazily and stop at the first valid pair instead of constructing every combination.",
+        "lazy/lazily/generator",
+        "first/stop"
+      ],
+      [
+        "A dictionary comprehension calls a changing exchange-rate service separately for every item. Why can one invoice mix rates?",
+        "The rate can change between calls. Capture one applicable rate snapshot and reuse it for the invoice.",
+        "change",
+        "snapshot/reuse"
+      ],
+      [
+        "A child writes [remove(x) for x in basket] for its side effects. Why would a plain loop convey the task more accurately?",
+        "A comprehension builds output values that nobody needs. A loop states the mutation directly and avoids an unused list.",
+        "values/list",
+        "loop/mutation"
+      ],
+      [
+        "A student filters out missing values using if value and accidentally drops valid zeros. What precise predicate should be used when only None means missing?",
+        "Use value is not None so zero remains in the collected results.",
+        "is not none",
+        "zero"
+      ],
+      [
+        "A report combines names and marks using zip in a comprehension. One name disappears when the marks list is short. What contract should be checked?",
+        "Validate equal lengths or pair records by stable IDs, since zip stops at the shorter input.",
+        "length/stable ids",
+        "shorter/zip stops"
+      ]
+    ]
+  },
+  "file-handling": {
+    "Beginner": [
+      [
+        "Which file mode commonly opens a text file for reading?",
+        "r means read.",
+        "r/read"
+      ],
+      [
+        "What does opening an existing file with w do to its earlier contents?",
+        "It truncates the file.",
+        "truncate/erase/clear"
+      ],
+      [
+        "What does a newline separate in an expense diary?",
+        "It separates lines or entries.",
+        "lines/entries"
+      ],
+      [
+        "What is a path to a receipt file?",
+        "Its location and name.",
+        "location/name"
+      ],
+      [
+        "Does reading '35' from a text line immediately produce an integer?",
+        "No; it produces text.",
+        "no/text"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A shop writes three names without newline separators. Why does tomorrow's line reader see one line?",
+        "Nothing marks line boundaries. Write a newline between names.",
+        "boundaries/newline",
+        "between"
+      ],
+      [
+        "An expense file lists 7, a blank line and 5. If blanks mean no entry, what should the total be and what line should be skipped?",
+        "Skip the blank line and add 7 plus 5 for a total of 12.",
+        "blank",
+        "12"
+      ],
+      [
+        "A receipt contains ₹ and Marathi names. Which consistent encoding could writer and reader use?",
+        "Both can use UTF-8 for the stored text.",
+        "utf-8/utf8"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A text parser assumes every entry fits on one line but customer addresses can contain newlines. What record format rule must change?",
+        "Encode or quote fields in a structured format that preserves embedded newlines and clearly marks record boundaries.",
+        "quote/encode/structured",
+        "boundaries/embedded"
+      ],
+      [
+        "A backup copy appears empty even though the program called write just before copying. What should be coordinated before copy or shutdown?",
+        "Flush and close the writer as appropriate, and copy a consistent completed version rather than an in-progress buffer.",
+        "flush/close",
+        "consistent/completed"
+      ],
+      [
+        "An import re-reads a 2 GB file four times to compute four independent totals. Which design could reduce disk work while preserving errors?",
+        "Compute all totals in one streaming pass and record malformed lines with their positions.",
+        "one/streaming",
+        "malformed/positions"
+      ],
+      [
+        "A hotel replaces room files using guest-supplied room names. Why is restricting the extension to .txt insufficient protection?",
+        "Directory traversal can still use a .txt filename. Resolve the path inside an allowed root and restrict identifiers.",
+        "traversal/path",
+        "allowed/root"
+      ],
+      [
+        "A team exports address records with trailing spaces that are significant. Which regression fixture catches destructive cleanup?",
+        "Round-trip a record with meaningful trailing spaces and assert the exact restored value including its length.",
+        "trailing spaces",
+        "exact/length"
+      ]
+    ]
+  },
+  "exceptions": {
+    "Beginner": [
+      [
+        "What happens when int('apple') cannot convert the text?",
+        "It raises a ValueError.",
+        "valueerror"
+      ],
+      [
+        "Which keyword starts a block that may raise an exception?",
+        "try.",
+        "try"
+      ],
+      [
+        "Which keyword introduces the handler for an expected exception?",
+        "except.",
+        "except"
+      ],
+      [
+        "What does raising an exception tell the caller?",
+        "The operation could not finish normally.",
+        "normally/failure/problem"
+      ],
+      [
+        "Which keyword introduces cleanup that should run when leaving the try statement?",
+        "finally.",
+        "finally"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A shop expects input '12.5' but calls int directly on that text. What should a whole-item form tell the user?",
+        "Explain that a whole number is required and ask for a corrected quantity.",
+        "whole/integer",
+        "corrected/ask"
+      ],
+      [
+        "A library tries to read yesterday's report and the file is missing. Is a retry with an unchanged invalid path enough? Why?",
+        "No, correct the path or supply the file; retrying the same absent location cannot repair it.",
+        "no",
+        "path/file"
+      ],
+      [
+        "A scale returns a reading of -2 and conversion succeeds. What separate check can reject it for a nonnegative weight form?",
+        "Validate that the numeric weight is at least zero and report the invalid negative value.",
+        "zero/nonnegative",
+        "negative/invalid"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An app catches KeyboardInterrupt during a batch job and silently starts from the first row again. Why might this be a poor recovery action?",
+        "The user requested cancellation and accepted rows may be duplicated. Stop cleanly and record completed progress.",
+        "cancellation/user",
+        "progress/duplicated"
+      ],
+      [
+        "A parser replaces invalid prices with zero and the revenue total looks plausible. What information would show the error rate and prevent misinterpretation?",
+        "Preserve invalid records or counts and label the revenue as incomplete when any price could not be parsed.",
+        "invalid/count",
+        "incomplete"
+      ],
+      [
+        "A database cleanup exception masks the original payment failure in logs. Which two pieces of evidence should a diagnostic record retain?",
+        "Preserve the original payment error and the separate cleanup error with their causal order.",
+        "original/payment",
+        "cleanup"
+      ],
+      [
+        "A bulk mail job catches an address-format error per recipient and a server outage per batch. Why should these failures trigger different actions?",
+        "An invalid address requires correction for that recipient; a server outage affects many entries and can warrant pausing the batch.",
+        "correction/recipient",
+        "outage/pause"
+      ],
+      [
+        "A public booking endpoint returns a full traceback when a lookup fails. What should the user see and what should staff retain?",
+        "Give the user a safe actionable message and keep detailed diagnostics with a correlation identifier in protected logs.",
+        "safe/message",
+        "log/identifier"
+      ]
+    ]
+  },
+  "oop": {
+    "Beginner": [
+      [
+        "What is a particular copy B17 created from a Book class called?",
+        "An object or instance.",
+        "object/instance"
+      ],
+      [
+        "Where could a book object store its title?",
+        "In an attribute.",
+        "attribute"
+      ],
+      [
+        "What is an action called when defined on an object?",
+        "A method.",
+        "method"
+      ],
+      [
+        "Does changing one copy's own due date normally change another copy's own due date?",
+        "No, instance attributes belong to each copy.",
+        "no/instance"
+      ],
+      [
+        "What kind of fact does borrowed=True describe?",
+        "It describes the book's current state.",
+        "state"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A library creates two Member objects with balances 5 and 8. Which object should a payment of 5 alter?",
+        "Change the paying member's instance; leave the other member's balance at 8.",
+        "paying/instance",
+        "8"
+      ],
+      [
+        "A parking meter object has start and finish actions. What fact must finish remember from start to calculate duration?",
+        "Store the start time on that parking session and compare it with the end time.",
+        "start time",
+        "end time"
+      ],
+      [
+        "A classroom desk can be reserved only while available. What should its reserve method verify before recording the pupil?",
+        "Check the desk state is available and change it to reserved for that pupil.",
+        "available",
+        "reserved"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A school compares two pupil objects using only their display names and merges two children named Jo. What equality definition fits persistent identities?",
+        "Compare stable pupil IDs and let names remain editable display attributes.",
+        "id/ids/identit",
+        "display/name"
+      ],
+      [
+        "A desk app sets account.balance directly in several screens. How might a withdrawal method enforce a stronger invariant?",
+        "Put the funds check and balance update together in one validated operation preventing unauthorized negative balances.",
+        "funds/check",
+        "update/negative"
+      ],
+      [
+        "A return action can receive an already returned book from a repeated scanner event. How should the state transition handle repetition?",
+        "Define an idempotent return or explicit already-returned result and avoid generating a second credit or loan event.",
+        "already/idempotent",
+        "second/duplicate"
+      ],
+      [
+        "A book object's string representation includes borrowers' phone numbers and is automatically logged on failure. Which design would avoid accidental disclosure?",
+        "Make the default representation minimal and redact private fields from diagnostics.",
+        "minimal/redact",
+        "private/diagnostic"
+      ],
+      [
+        "A test needs a predictable checkout time, but the method reads the wall clock internally. How could object design make the test repeatable?",
+        "Supply a clock dependency or explicit timestamp and test with a fixed time.",
+        "clock/timestamp",
+        "fixed"
+      ]
+    ]
+  },
+  "loops": {
+    "Beginner": [
+      [
+        "A loop visits the names Ira, Jo and Ravi once. How many iterations take place?",
+        "Three iterations.",
+        "three/3"
+      ],
+      [
+        "What initial total makes sense before adding the day's sales?",
+        "Zero.",
+        "zero/0"
+      ],
+      [
+        "In for name in queue, what does name represent during one pass?",
+        "The current queue entry.",
+        "current/entry"
+      ],
+      [
+        "If a shop loops over an empty list of orders, how often does the loop body run?",
+        "Zero times.",
+        "zero/0"
+      ],
+      [
+        "Which keyword exits the nearest running loop?",
+        "break exits it.",
+        "break"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A water tank starts at 12 and loses 4 on each pass. Which values remain after each withdrawal?",
+        "The remaining amounts are 8, 4 and 0 in that order.",
+        "8",
+        "0"
+      ],
+      [
+        "A teacher needs both the number and name for each pupil on a register. Which Python helper supplies both during iteration?",
+        "Use enumerate to obtain a position and the current name together.",
+        "enumerate",
+        "position/index"
+      ],
+      [
+        "A cashier totals only positive tips from [2, -1, 0, 5]. Which entries contribute and what is the sum?",
+        "Only 2 and 5 contribute, producing 7.",
+        "2",
+        "7"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A timetable loop opens a new connection for each of 10,000 trips. The arithmetic is fast but runtime is poor. What might be moved outside the loop?",
+        "Reuse a managed connection where the protocol allows it and measure the avoided setup cost.",
+        "connection",
+        "setup/measure"
+      ],
+      [
+        "A warehouse needs the largest reading from possibly all-negative temperatures. Why is starting the maximum at zero unsafe?",
+        "Zero may exceed every actual reading. Initialize from the first real reading and handle empty input explicitly.",
+        "first real/first reading",
+        "empty"
+      ],
+      [
+        "A conveyor's for loop calls break inside an inner scan of labels. Why does the outer conveyor keep running?",
+        "Break exits only the nearest loop. Propagate the stop condition to the outer control flow.",
+        "nearest/inner",
+        "outer"
+      ],
+      [
+        "A ticket allocator increments its issued counter before trying a printer. A printer failure creates a gap. How should the loop distinguish attempts from completed tickets?",
+        "Keep separate attempt and success counts and increment success after confirmed issue.",
+        "separate/attempt",
+        "confirmed/success"
+      ],
+      [
+        "A stream of sensor samples may never end. Why can a request for its final average block forever, and how should reports be bounded?",
+        "An unbounded stream has no final item. Define a time window or sample count for each average.",
+        "unbounded/no final",
+        "window/sample count"
+      ]
+    ]
+  },
+  "lists": {
+    "Beginner": [
+      [
+        "Can a list hold the same passenger name twice?",
+        "Yes, duplicate entries are allowed.",
+        "yes/duplicate"
+      ],
+      [
+        "How many entries are in ['milk', 'rice', 'tea']?",
+        "Three entries.",
+        "three/3"
+      ],
+      [
+        "What does [].append('tea') do to the list it acts on?",
+        "It adds tea at the end.",
+        "end/add"
+      ],
+      [
+        "For seats=['A','B','C'], what is seats[0]?",
+        "A.",
+        "a"
+      ],
+      [
+        "What does len([]) give for an empty waitlist?",
+        "Zero.",
+        "zero/0"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A queue begins [7,8,9]. What does removing position 1 leave?",
+        "It removes 8, leaving 7 and 9.",
+        "8",
+        "7 and 9/7, 9"
+      ],
+      [
+        "A roster of four names needs its last two entries. Which slice selects them even if another pupil joins tomorrow?",
+        "Use roster[-2:] to select the final two positions.",
+        "-2/final two"
+      ],
+      [
+        "A shop appends 'pen' to its list, then assigns the result of append back to the list name. What value does that name now hold?",
+        "It holds None because append changes the list in place.",
+        "none",
+        "in place"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A teacher sorts a marks list without sorting the parallel names list. What relationship is broken and what representation would protect it?",
+        "Name-mark pairs lose alignment. Store a record or pair per pupil and sort those records together.",
+        "alignment/pair",
+        "record/together"
+      ],
+      [
+        "A clinic's waiting list needs urgent inserts at a specified position. Under what workload could list insertion become costly?",
+        "Frequent middle or front insertions in large lists shift many later elements. Measure the typical position and queue size.",
+        "shift",
+        "position/size"
+      ],
+      [
+        "A delivery app uses list.index for every parcel number. With many repeated lookups and stable IDs, which extra structure would help and what must remain synchronized?",
+        "Add a dictionary indexed by parcel ID and update it together with the ordered collection.",
+        "dictionary/index",
+        "update/synchron"
+      ],
+      [
+        "A coordinator repeats a row of empty lists using multiplication, then editing one booking row affects all rows. How should the rows be created?",
+        "Multiplication repeated references to one inner list. Create a fresh independent inner list for each row.",
+        "references/shared",
+        "fresh/independent"
+      ],
+      [
+        "A passenger API promises the original waiting order but returns its own internal mutable list directly. How could callers break the promise?",
+        "A caller can reorder or remove entries through the shared object. Return a copy or read-only view.",
+        "reorder/remove",
+        "copy/read-only"
+      ]
+    ]
+  },
+  "tuples": {
+    "Beginner": [
+      [
+        "How many items are in ticket=('D', 20)?",
+        "Two items.",
+        "two/2"
+      ],
+      [
+        "For ('D', 20), what value is at position 0?",
+        "D.",
+        "d"
+      ],
+      [
+        "What character separates items in ('D', 20)?",
+        "A comma.",
+        "comma"
+      ],
+      [
+        "Can a tuple's first slot be reassigned directly after creation?",
+        "No; tuple slots are immutable.",
+        "no/immutable"
+      ],
+      [
+        "What does a, b = (4, 9) assign to b?",
+        "It assigns 9.",
+        "9/nine"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A weather reading contains (22, 'C'). How can a receipt unpack and display it clearly?",
+        "Assign temperature and unit in order, then display 22 C.",
+        "order/unpack",
+        "22"
+      ],
+      [
+        "A seating map stores keys (row, number). Would ('B', 3) equal (3, 'B')? Explain.",
+        "No. Position and value order are different.",
+        "no",
+        "order/position"
+      ],
+      [
+        "A route pair has two stops. What does appending a third stop require if the original pair must stay unchanged?",
+        "Construct a new tuple containing the first two values and the third stop.",
+        "new tuple",
+        "third"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A vendor uses a coordinate tuple with floating-point measurements as an exact matching key. Why might two readings of one location miss each other?",
+        "Tiny measurement or rounding differences change exact equality. Define the intended tolerance or quantized location key.",
+        "rounding/measurement",
+        "tolerance/quantized"
+      ],
+      [
+        "A timetable uses (station, time) as a key for service calls. Two trains can visit together. Which identity assumption fails and what should distinguish them?",
+        "Station and time do not uniquely identify a train call; include a train or service ID.",
+        "unique",
+        "service id/train"
+      ],
+      [
+        "A sensor library returns a four-item tuple where callers need only first and last values. How could a named record improve forward compatibility?",
+        "Callers can access named fields without relying on fixed intermediate positions or unpacking arity.",
+        "named",
+        "positions/arity"
+      ],
+      [
+        "A map cache uses (latitude, longitude) in one service and (longitude, latitude) in another. How would you detect a silent swap near the equator?",
+        "Test asymmetric coordinates against a known location and document a single coordinate order.",
+        "asymmetric/known location",
+        "order/document"
+      ],
+      [
+        "A clerk suggests converting a changing inventory list to a tuple before every lookup. Why might this be an inefficient use of immutability?",
+        "Rebuilding a full tuple costs time proportional to the inventory size. Choose a persistent key or lookup index matched to the operation.",
+        "rebuilding/proportional",
+        "index/key"
+      ]
+    ]
+  },
+  "sets": {
+    "Beginner": [
+      [
+        "What is the size of the set built from A, A, B?",
+        "Two distinct members.",
+        "two/2"
+      ],
+      [
+        "Can an empty attendance set contain badge 12?",
+        "No.",
+        "no/false"
+      ],
+      [
+        "What operation asks whether a visitor badge belongs to a set?",
+        "Membership testing.",
+        "membership"
+      ],
+      [
+        "If A is already present and is added again, how many A members exist?",
+        "One.",
+        "one/1"
+      ],
+      [
+        "What does intersection keep from two guest groups?",
+        "Members appearing in both groups.",
+        "both/shared"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "Cafe A stocks tea and milk; Cafe B stocks tea and juice. Which item appears only at Cafe B?",
+        "Juice, from B minus A.",
+        "juice",
+        "minus/difference"
+      ],
+      [
+        "Two lists contain departments that invited or admitted a guest. How would you detect whether every admitted department had invited the guest?",
+        "Check whether the admitted set is a subset of the invited set.",
+        "subset",
+        "invited"
+      ],
+      [
+        "A clerk needs to remove a possibly absent badge without treating absence as an error. Which set operation suits this?",
+        "Use discard; an absent member leaves the set unchanged.",
+        "discard",
+        "unchanged/absent"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A fair sells two different tickets to the same person and must count tickets as well as distinct people. Which membership keys belong to the two measures?",
+        "Count ticket IDs for tickets and person IDs for unique people.",
+        "ticket id",
+        "person id"
+      ],
+      [
+        "A system takes the symmetric difference of invitation batches but the organizer expected anyone invited at least once. Why are shared guests absent?",
+        "Symmetric difference excludes members in both sets. Use union to include all invited guests.",
+        "both/shared",
+        "union"
+      ],
+      [
+        "A restaurant stores dish ingredients in a set and later tries to reconstruct its recipe. Which two classes of information are missing?",
+        "A set omits order and duplicate quantities, so it cannot reconstruct preparation sequence or amounts.",
+        "order/sequence",
+        "quantity/quantities/duplicate"
+      ],
+      [
+        "A software release compares permission sets before and after a change. Which two differences identify grants and revocations separately?",
+        "New minus old gives grants; old minus new gives revocations.",
+        "new minus old",
+        "old minus new"
+      ],
+      [
+        "A sponsor hashes customer inputs into a tiny set of fingerprint values and treats equal fingerprints as equal customers. Why can the shortcut miscount?",
+        "Distinct customers can have hash collisions. Verify the full stable identity when exact equality matters.",
+        "collision",
+        "identity/equality"
+      ]
+    ]
+  },
+  "dictionaries": {
+    "Beginner": [
+      [
+        "In {'C2': 30}, which part is the key?",
+        "C2.",
+        "c2"
+      ],
+      [
+        "In {'C2': 30}, what does looking up C2 return?",
+        "30.",
+        "30/thirty"
+      ],
+      [
+        "What does len({}) report for an empty price list?",
+        "Zero entries.",
+        "zero/0"
+      ],
+      [
+        "Can one dictionary hold two separate values simultaneously under the same identical key?",
+        "No; assigning again replaces the value at that key.",
+        "no/replace"
+      ],
+      [
+        "Which dictionary method allows an explicit fallback on a missing key?",
+        "get accepts the fallback value.",
+        "get"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A menu stores {'tea': 8}. How would you set coffee to 12 while keeping the tea entry?",
+        "Assign 12 under the distinct key 'coffee'; the tea key stays unchanged.",
+        "coffee",
+        "unchanged/distinct"
+      ],
+      [
+        "A glossary maps English words to Tamil translations. If the task is to look up Tamil words, what direction should a new index map?",
+        "Map Tamil words to their English meanings, allowing multiple English values when required.",
+        "tamil",
+        "english"
+      ],
+      [
+        "A team's ranking points map contains three players. To compute total points, should the app sum keys or values? Explain.",
+        "Sum the numeric values because the keys identify players.",
+        "values",
+        "players/keys"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A cookie-order map uses plain product names, then renames Chocolate to Cocoa. How can old purchases retain their identity across the rename?",
+        "Use stable product IDs in order records and update the mutable display name separately.",
+        "stable/id",
+        "display/separately"
+      ],
+      [
+        "A spellchecker uses a dictionary to count letters but resets count to one whenever it sees a letter. Which input exposes the bug most clearly?",
+        "Use a repeated letter such as 'aa'; expect a count of two instead of one.",
+        "repeated/aa",
+        "two/2"
+      ],
+      [
+        "A call centre deletes customers from a dictionary while iterating its live keys. How can it avoid invalidating the iteration?",
+        "Collect keys to remove first, then delete in a separate pass or iterate a snapshot.",
+        "collect/snapshot",
+        "separate/pass"
+      ],
+      [
+        "A language app maps each translation to an English word by reversing an English-to-translation dictionary. Why might the reversed map be incomplete?",
+        "Several English words can share one translation, causing overwrites. Store all corresponding words under each reverse key.",
+        "share/overwrite",
+        "all/collection"
+      ],
+      [
+        "A help desk caches 'missing' for a customer ID. Later the customer registers and is still shown as absent. What cache rule addresses this?",
+        "Invalidate the cached miss when the record is created or expire negative lookups after a defined interval.",
+        "invalidate/expire",
+        "created/interval"
+      ]
+    ]
+  },
+  "functions": {
+    "Beginner": [
+      [
+        "What is the name of the function in def total(amount):?",
+        "total.",
+        "total"
+      ],
+      [
+        "What is the parameter in def total(amount):?",
+        "amount.",
+        "amount"
+      ],
+      [
+        "In total(12), what is the argument?",
+        "12.",
+        "12/twelve"
+      ],
+      [
+        "Does defining a function always run its body immediately?",
+        "No. Its body normally runs when it is called.",
+        "no/called"
+      ],
+      [
+        "What does return do to the current function call?",
+        "It finishes the call and hands a result back to the caller.",
+        "finishes/hands/returns"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A tailor calls double(7) where the function returns value * 2. What result can the caller store?",
+        "It can store 14.",
+        "14/fourteen"
+      ],
+      [
+        "A school function returns early when a student's ID is missing. Will the later attendance update in that call execute? Explain.",
+        "No. Return exits the call before the later update.",
+        "no",
+        "exits/before"
+      ],
+      [
+        "A bakery calculates a 10% deposit on an order of ₹700. How would two calls test the calculation without using the till display?",
+        "Call the function with 700 expecting 70, then use a different input with its own expected returned value.",
+        "70",
+        "returned/expected"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A library fee function catches every error and returns 0. Why might a caller incorrectly waive money and which contract would help?",
+        "Zero can mean a genuine free loan or a failure. Use a distinct error outcome for calculation failures.",
+        "zero/free",
+        "distinct/error"
+      ],
+      [
+        "A recursive helper calls itself for each guest group and stores its total in a module variable. Why might two separate group calls interfere?",
+        "Shared mutable state persists between calls. Return local subtotals and combine them in the caller.",
+        "shared/persist",
+        "local/return"
+      ],
+      [
+        "A café exposes tip(total, rate) and a client passes a percentage as 10 while the function expects 0.10. What belongs in its contract and test?",
+        "Specify the rate scale and test a known example such as a 10 percent tip on 100 returning 10.",
+        "scale",
+        "known/example/returning 10"
+      ],
+      [
+        "A function accepts an employee record and mutates it while returning a formatted name. Why can this surprise a payroll caller?",
+        "Formatting appears read-only but the hidden mutation changes shared data. Separate formatting from updates or document the side effect.",
+        "mutation/shared",
+        "separate/document"
+      ],
+      [
+        "A price function rounds each item before returning it to an invoice-sum function. Why does moving rounding change the responsibility of both functions?",
+        "Item rounding and invoice rounding yield different totals. Assign rounding ownership to one agreed layer and test the combined result.",
+        "different/layer",
+        "test/combined"
+      ]
+    ]
+  },
+  "python-fundamentals": {
+    "Beginner": [
+      [
+        "A baker types print(9). What appears on the screen?",
+        "9 appears.",
+        "9/nine"
+      ],
+      [
+        "What does the star mean in a till's calculation 4 * 7?",
+        "It means multiplication.",
+        "multiplication/multiply"
+      ],
+      [
+        "What surrounds the text in print('Open')?",
+        "Quotation marks surround Open.",
+        "quotation/quotes"
+      ],
+      [
+        "A shop saves two instructions in a .py file. What runs those Python instructions?",
+        "A Python interpreter runs them.",
+        "interpreter"
+      ],
+      [
+        "Which character begins a comment explaining a receipt calculation?",
+        "The hash character # begins the comment.",
+        "hash/#"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A parent pays for two ₹18 tickets and one ₹9 ticket. What single calculation gives the total?",
+        "Multiply 2 by 18 and add 9 to obtain 45.",
+        "45/forty-five",
+        "add/+/plus"
+      ],
+      [
+        "A sign should print Closed today on one line. Why does print(Closed today) fail and what must change?",
+        "The words need quotes to form one string literal.",
+        "quotes/quotation",
+        "string/literal"
+      ],
+      [
+        "A recipe file uses print('6 * 7') but should calculate the ingredient total. What needs to change inside the parentheses?",
+        "Remove the quotes so multiplication evaluates to 42.",
+        "quotes",
+        "42"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A counting demonstration pastes the console prompt >>> into a .py file and gets a syntax error. Which part should the learner preserve?",
+        "Keep the Python instruction and remove the console prompt, which belongs to the interface.",
+        "instruction/code",
+        "prompt/>>>"
+      ],
+      [
+        "A receipt prints the correct amount twice. How would you tell whether one script ran twice or it printed twice during one run?",
+        "Label each launch with a run ID and trace the print sites within each run.",
+        "run id/launch",
+        "print sites/trace"
+      ],
+      [
+        "An instructor shows a screenshot of the correct output but not the input used. Why is that weak evidence and what should a reproducible example include?",
+        "Several inputs can produce the same output. Record the exact program and input so the result can be reproduced.",
+        "input",
+        "program/reproduce"
+      ],
+      [
+        "A calculator has one line that says print(1/0) before a later line displaying Done. Which observation distinguishes a runtime failure from successful completion?",
+        "Division by zero raises an exception before Done. Inspect the error and confirm that the later line was never reached.",
+        "exception/division by zero",
+        "later line/done"
+      ],
+      [
+        "A kiosk prints the label 'total' instead of the value of its variable total. How would you demonstrate the distinction with one small controlled change?",
+        "Compare print('total') with print(total) after assigning 27. The quoted version shows characters and the unquoted name produces 27.",
+        "quoted/characters",
+        "27"
+      ]
+    ]
+  },
+  "variables": {
+    "Beginner": [
+      [
+        "A taxi writes passengers = 3. What is the variable name?",
+        "passengers is the name.",
+        "passengers"
+      ],
+      [
+        "In badge = '005', what kind of value is '005'?",
+        "It is a string.",
+        "string/text"
+      ],
+      [
+        "In active = False, what kind of value is False?",
+        "It is a Boolean.",
+        "boolean/bool"
+      ],
+      [
+        "A store runs cost = 6 followed by cost = 8. What value does cost now reference?",
+        "It refers to 8.",
+        "8/eight"
+      ],
+      [
+        "What does the single equals sign do in seats = 12?",
+        "It assigns 12 to the name seats.",
+        "assign"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A field contains the text '25'. What conversion is needed before subtracting 5, and what result follows?",
+        "Convert it with int or another numeric conversion; the result is 20.",
+        "int/convert",
+        "20"
+      ],
+      [
+        "A clinic receives temperature 37.5 and patient number '031'. Which should support fractional arithmetic?",
+        "Temperature needs fractional arithmetic; the patient number should remain text.",
+        "temperature",
+        "text/string"
+      ],
+      [
+        "A kiosk stores paid = False and replaces it with paid = 'False'. Which value will a simple if paid test treat as true?",
+        "The nonempty string 'False' is treated as true.",
+        "nonempty/string"
+      ]
+    ],
+    "Advanced": [
+      [
+        "An import maps true, 'true', 1 and '1' to one field. Which agreement should precede automatic conversion?",
+        "Define accepted representations and reject or separately report ambiguous values outside that contract.",
+        "accepted/representation",
+        "reject/ambiguous"
+      ],
+      [
+        "A booking program uses total for both the number of seats and total money. How can a later arithmetic bug escape type checks, and what improves the model?",
+        "Both values can be integers. Use names or distinct representations carrying seat count and money units.",
+        "integers/numeric",
+        "unit/distinct/names"
+      ],
+      [
+        "A survey's spreadsheet converts a long account number into scientific notation and rounds digits. Can converting the imported number back to text recover it?",
+        "Lost digits cannot be reconstructed reliably. Reimport from an original text source that preserves the exact identifier.",
+        "lost/rounded",
+        "original/reimport"
+      ],
+      [
+        "A developer records temperature in a variable named temp, then reuses temp as the latest filename. Which small test would reveal the problem?",
+        "Check its expected type and numeric value immediately before the temperature calculation after a file operation.",
+        "type",
+        "numeric/temperature calculation"
+      ],
+      [
+        "A report computes closing balance from an opening balance variable, then needs both values on the receipt. Which assignment plan avoids destroying the evidence?",
+        "Keep the opening value and assign the calculated closing amount to a separate name.",
+        "opening",
+        "separate/closing"
+      ]
+    ]
+  },
+  "strings": {
+    "Beginner": [
+      [
+        "A clinic label stores 'CAT'. What is the character at index 1?",
+        "A is at index 1.",
+        "a"
+      ],
+      [
+        "How many characters does the label 'A B' contain, counting the space?",
+        "Three characters.",
+        "three/3"
+      ],
+      [
+        "What does 'bus'.upper() produce for a route sign?",
+        "BUS.",
+        "bus"
+      ],
+      [
+        "For label='Gate', what does label[-1] select?",
+        "It selects the final e.",
+        "e/final"
+      ],
+      [
+        "A counter wants a blank message string. How many characters does '' contain?",
+        "Zero characters.",
+        "zero/0"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A kiosk receives 'Bus-12-East'. How would you extract the number between the two hyphens?",
+        "Split on the hyphen and take the middle field, which contains 12.",
+        "split",
+        "middle/12"
+      ],
+      [
+        "A newsletter combines the names Mira and Dev with ' & ' between them. Which operation inserts exactly one separator?",
+        "Join the two names using ' & ' as the separator.",
+        "join",
+        "separator"
+      ],
+      [
+        "A customer label is exactly 'REF-Ab12'. How can you remove the known prefix without modifying later matching letters?",
+        "Use removeprefix with 'REF-' or slice after verifying that exact prefix.",
+        "removeprefix/prefix",
+        "exact/verify"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A restaurant menu truncates all labels to 12 code points. A font still displays some labels beyond the available space. What different measurement should layout use?",
+        "Measure rendered width in the selected font because code points do not have equal visual widths.",
+        "rendered width/font",
+        "code points/visual"
+      ],
+      [
+        "An import uses strip('kg') on both ends of a label intending to remove one trailing unit. Why can it remove too much, and what is a safer operation?",
+        "strip treats its argument as a set of removable characters. Validate the suffix and use removesuffix('kg').",
+        "set/characters",
+        "removesuffix/suffix"
+      ],
+      [
+        "A support tool masks an account by calling replace('1234','****') anywhere in a message. Why might this damage unrelated fields?",
+        "Replacement affects every matching occurrence. Identify the account field and mask only the intended positions.",
+        "every/occurrence",
+        "field/positions"
+      ],
+      [
+        "A travel search may treat accented city names as equivalent while booking confirmation must display the selected city's official name. Which two records should the search result connect?",
+        "Use a comparison key for retrieval and connect each match to a stable city ID and its official display name.",
+        "key",
+        "city id/official"
+      ],
+      [
+        "A form compares strings using alphabetical order to prioritize queue tickets '9', '10' and '11'. Why does '10' appear before '9', and how could ordering be fixed?",
+        "Text compares characters from the left. Parse the numeric portion for ordering while retaining the original labels.",
+        "characters/text",
+        "numeric/parse"
+      ]
+    ]
+  },
+  "numbers": {
+    "Beginner": [
+      [
+        "Which operator in Python gives the remainder after dividing 14 apples into bags of 4?",
+        "The percent operator % gives the remainder.",
+        "percent/%"
+      ],
+      [
+        "What does 10 // 4 give for the number of full four-seat tables?",
+        "It gives 2 full tables.",
+        "2/two"
+      ],
+      [
+        "How many loose eggs remain after packing 18 into boxes of 6?",
+        "None remain; the remainder is zero.",
+        "zero/0/none"
+      ],
+      [
+        "Is the result of Python's 8 / 2 written as 4 or 4.0 when printed?",
+        "It prints as 4.0.",
+        "4.0"
+      ],
+      [
+        "What is evaluated first in a fare expression (3 + 2) * 10?",
+        "The addition inside the parentheses is evaluated first.",
+        "addition/parenthes"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A recipe uses three quarters of a litre per batch. How much liquid is needed for four batches?",
+        "Multiply 0.75 by 4 to get 3 litres.",
+        "multiply/0.75",
+        "3 litres/three litres"
+      ],
+      [
+        "A library has a ₹90 budget after a ₹10 fee. How many ₹12 notebooks fit and what cash remains?",
+        "Seven notebooks cost 84, leaving 6 rupees.",
+        "seven/7",
+        "6/six"
+      ],
+      [
+        "A delivery lasts 3700 seconds. What whole hours and remaining seconds should a simple report show?",
+        "One hour and 100 seconds remain after subtracting 3600.",
+        "one hour/1 hour",
+        "100"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A meal voucher may be spent only in increments of ₹5. What mathematical test checks an offered whole-rupee amount and what separate input rule is needed?",
+        "Check that the remainder modulo 5 is zero and require a positive allowed amount.",
+        "remainder/modulo",
+        "positive"
+      ],
+      [
+        "A desk plans a route with distances in metres and a speed quoted in kilometres per hour. Why can dividing the raw numbers give a misleading duration?",
+        "Distance and speed use different units. Convert them to consistent units before calculating travel time.",
+        "different units/unit",
+        "convert/consistent"
+      ],
+      [
+        "A grant of 100 paise must be split equally among three children without losing money. How should the leftover be handled?",
+        "Allocate 33 paise each, then distribute the remaining one paise by a documented tie rule.",
+        "33",
+        "remaining/tie"
+      ],
+      [
+        "A price tool applies a discount and a fixed fee. When would swapping those two operations change the bill?",
+        "A percentage discount changes a fee if the fee is included in the discount base. Define and test the intended order.",
+        "base/percentage",
+        "order/test"
+      ],
+      [
+        "A supplier replaces quantities with whole-number division midway through an average. How can truncating an intermediate result introduce bias?",
+        "Fractions lost before later calculations cannot be recovered. Retain precision until the specified final rounding step.",
+        "fractions/precision",
+        "final/rounding"
+      ]
+    ]
+  },
+  "conditions": {
+    "Beginner": [
+      [
+        "A cloakroom accepts tickets under 100. Is ticket 100 < 100 True or False?",
+        "False.",
+        "false"
+      ],
+      [
+        "A playground sign says 'height at least 120 cm'. Which comparison includes exactly 120?",
+        "Use >=, meaning greater than or equal to.",
+        ">=/equal"
+      ],
+      [
+        "A gate asks if colour == 'green'. What does == test?",
+        "It tests equality of the two values.",
+        "equal"
+      ],
+      [
+        "Which branch runs when if paid is False and an else branch follows?",
+        "The else branch runs.",
+        "else"
+      ],
+      [
+        "A discount needs both student status and a pass. How many of the two facts must be true for and to pass?",
+        "Both facts must be true.",
+        "both/two/2"
+      ]
+    ],
+    "Intermediate": [
+      [
+        "A bakery sells a tray only if pieces >= 6 and fresh is True. What happens for six stale pieces?",
+        "The quantity passes but freshness fails, so the combined rule is False.",
+        "freshness/stale",
+        "false"
+      ],
+      [
+        "A bus pass works on Saturday or Sunday. Would a Saturday pass satisfy the condition when the day is not Sunday? Explain.",
+        "Yes; or requires only one matching day and Saturday matches.",
+        "yes/true",
+        "or/one"
+      ],
+      [
+        "A theatre waives a charge for age 65 or above. Which adjacent ages best check the transition?",
+        "Ages 64 and 65 lie immediately on opposite sides of the threshold.",
+        "64",
+        "65"
+      ]
+    ],
+    "Advanced": [
+      [
+        "A shop needs 'no coupon and no membership' for its regular-price branch. Why does 'not coupon or not member' wrongly charge some members?",
+        "That expression passes if either benefit is absent. Require both absences with and, or negate the entire eligibility expression.",
+        "either",
+        "both/negate"
+      ],
+      [
+        "A library check first tests a card and then calls a limited paid service for eligibility. Why might the order of an and condition matter in Python?",
+        "Python short-circuits after a false first operand, avoiding the paid lookup for an invalid card.",
+        "short-circuit/false first",
+        "lookup/paid"
+      ],
+      [
+        "A train fare rule has an if adult branch followed by a separate if senior branch with an else. A passenger gets two messages. What should the branching structure communicate?",
+        "Make the categories mutually exclusive with one if/elif/else chain or explicitly control which messages can combine.",
+        "mutually exclusive/one",
+        "elif/chain"
+      ],
+      [
+        "A bridge shuts for wind above 60 km/h. The sensor alternates 59.9 and 60.1, repeatedly toggling the gate. How can the policy avoid noisy switches?",
+        "Define separate close and reopen thresholds or require a sustained interval and test the safety response under fluctuations.",
+        "thresholds/sustained",
+        "safety/fluctuation"
+      ],
+      [
+        "A rebate applies to accumulated monthly spending, but the code tests only the latest purchase. How would you isolate the logical error with a counterexample?",
+        "Use two small purchases whose combined total crosses the threshold while each purchase stays below it.",
+        "combined/total",
+        "below/each"
+      ]
+    ]
+  }
+}

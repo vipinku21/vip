@@ -1,0 +1,827 @@
+{
+  "python-fundamentals": [
+    {
+      "q": "Which Python function displays an order number on screen?",
+      "answers": [
+        "print",
+        "print()"
+      ],
+      "why": "A call to print sends a readable representation to the output."
+    },
+    {
+      "q": "What is printed by print(2 + 3)?",
+      "answers": [
+        "5"
+      ],
+      "why": "Python evaluates the addition before displaying the result."
+    },
+    {
+      "q": "What does the # symbol begin outside a quoted string?",
+      "answers": [
+        "comment",
+        "a comment"
+      ],
+      "why": "Python skips the rest of that line when executing the program."
+    }
+  ],
+  "variables": [
+    {
+      "q": "Which is text in Python, \"007\" or 7?",
+      "answers": [
+        "\"007\"",
+        "'007'",
+        "007"
+      ],
+      "why": "Quotes preserve the three typed characters, including the leading zeros."
+    },
+    {
+      "q": "After count = 3 and count = count + 1, what value does count hold?",
+      "answers": [
+        "4"
+      ],
+      "why": "The right-hand side uses the previous value before the new assignment."
+    },
+    {
+      "q": "What built-in function reports the type of a stored value?",
+      "answers": [
+        "type",
+        "type()"
+      ],
+      "why": "type(value) tells you whether the current value is an integer, string or another kind of object."
+    }
+  ],
+  "strings": [
+    {
+      "q": "What index identifies the first letter of a Python string?",
+      "answers": [
+        "0",
+        "zero"
+      ],
+      "why": "The first position is offset zero from the beginning."
+    },
+    {
+      "q": "What is the length of the string \"A B\", including its space?",
+      "answers": [
+        "3",
+        "three"
+      ],
+      "why": "A space is a character, just as A and B are."
+    },
+    {
+      "q": "What prints from print(\"bread\"[1:4])?",
+      "answers": [
+        "rea"
+      ],
+      "why": "The slice keeps positions 1, 2 and 3 and stops before 4."
+    }
+  ],
+  "numbers": [
+    {
+      "q": "How many full boxes of six can be filled with 17 eggs?",
+      "answers": [
+        "2",
+        "two"
+      ],
+      "why": "Two boxes hold 12 eggs and the remaining five cannot fill another box."
+    },
+    {
+      "q": "Which Python operator finds the remainder after division?",
+      "answers": [
+        "%",
+        "modulo",
+        "modulus"
+      ],
+      "why": "For 17 eggs and boxes of six, 17 % 6 equals 5."
+    },
+    {
+      "q": "What does 3 ** 2 evaluate to?",
+      "answers": [
+        "9",
+        "nine"
+      ],
+      "why": "Two asterisks denote exponentiation, so 3 is multiplied by itself."
+    }
+  ],
+  "conditions": [
+    {
+      "q": "Which keyword introduces the first test in a Python decision?",
+      "answers": [
+        "if"
+      ],
+      "why": "The block under if runs when its test succeeds."
+    },
+    {
+      "q": "What comparison symbol includes equality in “at least 12”?",
+      "answers": [
+        ">=",
+        "greater than or equal"
+      ],
+      "why": "A 12-year-old satisfies age >= 12."
+    },
+    {
+      "q": "In one if/elif/else chain, how many branches can run at most?",
+      "answers": [
+        "1",
+        "one"
+      ],
+      "why": "Python stops at the first matching branch."
+    }
+  ],
+  "predicates": [
+    {
+      "q": "In plain English, what two answers can a predicate give?",
+      "answers": [
+        "yes or no",
+        "yes/no",
+        "true or false",
+        "true/false",
+        "yes and no"
+      ],
+      "why": "A predicate decides whether one item has the property being tested."
+    },
+    {
+      "q": "Does 5 < 5 evaluate to True or False?",
+      "answers": [
+        "False"
+      ],
+      "why": "Strictly less than excludes equality."
+    },
+    {
+      "q": "A request meets one of two requirements. Which word joins them if either one is sufficient?",
+      "answers": [
+        "or"
+      ],
+      "why": "The combined predicate succeeds when at least one requirement succeeds."
+    }
+  ],
+  "loops": [
+    {
+      "q": "How many times does a loop visit the items in [4, 4, 0]?",
+      "answers": [
+        "3",
+        "three"
+      ],
+      "why": "A loop visits each position, including repeated or zero values."
+    },
+    {
+      "q": "Which statement skips the rest of the current iteration?",
+      "answers": [
+        "continue"
+      ],
+      "why": "continue moves to the next item without ending the loop."
+    },
+    {
+      "q": "Which statement leaves the nearest loop immediately?",
+      "answers": [
+        "break"
+      ],
+      "why": "No later items in that loop are visited."
+    }
+  ],
+  "lists": [
+    {
+      "q": "What is the index of the second shopping-list item?",
+      "answers": [
+        "1",
+        "one"
+      ],
+      "why": "Python list indexing starts at zero."
+    },
+    {
+      "q": "Which list method adds one item at the end?",
+      "answers": [
+        "append",
+        "append()"
+      ],
+      "why": "append keeps the existing order and places the new item after the last one."
+    },
+    {
+      "q": "What does len([]) return?",
+      "answers": [
+        "0",
+        "zero"
+      ],
+      "why": "An empty list has no positions to count."
+    }
+  ],
+  "tuples": [
+    {
+      "q": "How many values does the coordinate (2, 7) contain?",
+      "answers": [
+        "2",
+        "two"
+      ],
+      "why": "The comma separates aisle and shelf into two positions."
+    },
+    {
+      "q": "Which punctuation mark makes (5,) a one-item tuple?",
+      "answers": [
+        "comma",
+        ","
+      ],
+      "why": "Parentheses alone can simply group an expression."
+    },
+    {
+      "q": "Can a tuple's first slot be reassigned after creation? Answer yes or no.",
+      "answers": [
+        "no"
+      ],
+      "why": "A tuple fixes the sequence of object references it contains."
+    }
+  ],
+  "sets": [
+    {
+      "q": "How many distinct names are in the set made from Jo, Jo and Mo?",
+      "answers": [
+        "2",
+        "two"
+      ],
+      "why": "Repeated equal entries occupy one membership position."
+    },
+    {
+      "q": "Which set operation keeps names appearing in both groups?",
+      "answers": [
+        "intersection",
+        "intersect"
+      ],
+      "why": "A name must belong to both sets to appear in their intersection."
+    },
+    {
+      "q": "Which Python call creates an empty set?",
+      "answers": [
+        "set()",
+        "set"
+      ],
+      "why": "Empty braces create a dictionary. Calling set with no items creates a set."
+    }
+  ],
+  "dictionaries": [
+    {
+      "q": "In {\"Jo\": \"204\"}, which text is the key?",
+      "answers": [
+        "Jo",
+        "\"Jo\"",
+        "'Jo'"
+      ],
+      "why": "A key is the identifier used to look up the associated value."
+    },
+    {
+      "q": "If the same key is assigned a new value, how many entries for that key remain?",
+      "answers": [
+        "1",
+        "one"
+      ],
+      "why": "A dictionary maps a key to one current value."
+    },
+    {
+      "q": "Which dictionary method accepts a fallback for an absent key?",
+      "answers": [
+        "get",
+        "get()"
+      ],
+      "why": "contacts.get(name, fallback) returns the fallback when the key is absent."
+    }
+  ],
+  "functions": [
+    {
+      "q": "Which keyword sends a result back to a function's caller?",
+      "answers": [
+        "return"
+      ],
+      "why": "Returning a value makes it available for the next calculation."
+    },
+    {
+      "q": "What value comes back when a Python function ends without a return value?",
+      "answers": [
+        "None"
+      ],
+      "why": "Displaying a total with print alone leaves the caller with None."
+    },
+    {
+      "q": "What is the name for an input variable listed in a function definition?",
+      "answers": [
+        "parameter"
+      ],
+      "why": "An argument supplies a value to that parameter when the function is called."
+    }
+  ],
+  "recursion": [
+    {
+      "q": "What is the usual name for a case that finishes without another recursive call?",
+      "answers": [
+        "base case",
+        "stopping case"
+      ],
+      "why": "A base case lets the chain of calls unwind."
+    },
+    {
+      "q": "How many files should a recursive count return for an empty folder?",
+      "answers": [
+        "0",
+        "zero"
+      ],
+      "why": "There are no file contributions to add."
+    },
+    {
+      "q": "In count([a, [b, c]]), how many files does the inner folder contribute?",
+      "answers": [
+        "2",
+        "two"
+      ],
+      "why": "The nested call counts b and c before handing that total to its parent."
+    }
+  ],
+  "comprehensions": [
+    {
+      "q": "What kind of collection does [x for x in items] produce?",
+      "answers": [
+        "list",
+        "a list"
+      ],
+      "why": "Square brackets collect the results into a new list."
+    },
+    {
+      "q": "In [x * 2 for x in [2, 3]], what is the second output value?",
+      "answers": [
+        "6",
+        "six"
+      ],
+      "why": "The mapping expression doubles the second input, 3."
+    },
+    {
+      "q": "Does the if clause in a list comprehension filter or sort the input?",
+      "answers": [
+        "filter",
+        "filters"
+      ],
+      "why": "The condition determines whether each input contributes an output."
+    }
+  ],
+  "file-handling": [
+    {
+      "q": "Which file mode adds entries at the end without truncating a log?",
+      "answers": [
+        "a",
+        "append"
+      ],
+      "why": "Append mode preserves earlier entries and places writes at the end."
+    },
+    {
+      "q": "Which Python keyword opens a context that closes a file when the block exits?",
+      "answers": [
+        "with"
+      ],
+      "why": "The context manager closes the file even if the block raises an error."
+    },
+    {
+      "q": "What character sequence represents a line break in a Python string literal?",
+      "answers": [
+        "\\n",
+        "newline escape"
+      ],
+      "why": "The newline separates one text line from the next."
+    }
+  ],
+  "exceptions": [
+    {
+      "q": "Which exception does int(\"milk\") normally raise?",
+      "answers": [
+        "ValueError"
+      ],
+      "why": "The value is text but its contents cannot be parsed as an integer."
+    },
+    {
+      "q": "Which keyword introduces the handler for a matching Python exception?",
+      "answers": [
+        "except"
+      ],
+      "why": "Python transfers control to a matching except block."
+    },
+    {
+      "q": "Which clause runs as a try statement finishes, including during an exception?",
+      "answers": [
+        "finally"
+      ],
+      "why": "Cleanup such as releasing a resource belongs in a finally block."
+    }
+  ],
+  "oop": [
+    {
+      "q": "What do we call one particular book created from a Book class?",
+      "answers": [
+        "instance",
+        "object"
+      ],
+      "why": "The class describes shared structure. An instance has its own identity and state."
+    },
+    {
+      "q": "Which conventional parameter names the current Python instance in an instance method?",
+      "answers": [
+        "self"
+      ],
+      "why": "self lets a method read or update this particular book."
+    },
+    {
+      "q": "Two books each track their own borrowed flag. Is that instance state or class state?",
+      "answers": [
+        "instance state",
+        "instance"
+      ],
+      "why": "Changing one copy's status should leave the other copy's flag alone."
+    }
+  ],
+  "modules": [
+    {
+      "q": "Which keyword makes a Python module available by name in a program?",
+      "answers": [
+        "import"
+      ],
+      "why": "After import math, the name math refers to the loaded module."
+    },
+    {
+      "q": "After import math, what expression calls the integer square-root function on 9?",
+      "answers": [
+        "math.isqrt(9)"
+      ],
+      "why": "The dot selects the function from the module's namespace."
+    },
+    {
+      "q": "What file extension does an ordinary Python source module use?",
+      "answers": [
+        ".py",
+        "py"
+      ],
+      "why": "A file such as fees.py can contain related functions and constants."
+    }
+  ],
+  "virtual-environments": [
+    {
+      "q": "What is the standard-library module used by python -m venv?",
+      "answers": [
+        "venv"
+      ],
+      "why": "It creates a project directory containing a separate interpreter environment."
+    },
+    {
+      "q": "Which command suffix identifies pip for the Python interpreter you explicitly invoked: -m pip or -m git?",
+      "answers": [
+        "-m pip",
+        "pip"
+      ],
+      "why": "Running python -m pip installs through the selected interpreter."
+    },
+    {
+      "q": "Does activating an environment automatically install a project's missing libraries? Answer yes or no.",
+      "answers": [
+        "no"
+      ],
+      "why": "Activation changes command lookup. Installing packages is a separate operation."
+    }
+  ],
+  "git": [
+    {
+      "q": "Which Git command stages a changed file for the next commit?",
+      "answers": [
+        "git add",
+        "add"
+      ],
+      "why": "Staging selects the content that the next normal commit records."
+    },
+    {
+      "q": "Which Git command shows staged, modified and untracked files?",
+      "answers": [
+        "git status",
+        "status"
+      ],
+      "why": "Status summarizes the working tree and staging area."
+    },
+    {
+      "q": "Does a local commit automatically upload itself to a remote repository? Answer yes or no.",
+      "answers": [
+        "no"
+      ],
+      "why": "A push is a separate operation that transfers commits."
+    }
+  ],
+  "dsa": [
+    {
+      "q": "Which structure serves the most recently added item first?",
+      "answers": [
+        "stack",
+        "a stack"
+      ],
+      "why": "Last in, first out matches the way an inner opening bracket must close first."
+    },
+    {
+      "q": "Which structure normally serves the earliest waiting customer first?",
+      "answers": [
+        "queue",
+        "a queue"
+      ],
+      "why": "First in, first out preserves arrival order."
+    },
+    {
+      "q": "How many unmatched openings remain after reading the text \"(()\"?",
+      "answers": [
+        "1",
+        "one"
+      ],
+      "why": "Two brackets open and the final bracket closes the most recent one."
+    }
+  ],
+  "complexity": [
+    {
+      "q": "Scanning 8 items once needs how many item visits?",
+      "answers": [
+        "8",
+        "eight"
+      ],
+      "why": "The visit count grows in direct proportion to the input length."
+    },
+    {
+      "q": "What is the usual Big-O label for a fixed number of operations independent of n?",
+      "answers": [
+        "O(1)",
+        "constant",
+        "constant time"
+      ],
+      "why": "The operation count stays bounded as the input grows."
+    },
+    {
+      "q": "If an algorithm stores a second copy of n items, what is the extra-space order?",
+      "answers": [
+        "O(n)",
+        "linear"
+      ],
+      "why": "The number of additional stored items grows with n."
+    }
+  ],
+  "database-fundamentals": [
+    {
+      "q": "In a registration table, what normally represents one registration: a row or a column?",
+      "answers": [
+        "row",
+        "a row"
+      ],
+      "why": "Columns describe fields. A row groups field values for one record."
+    },
+    {
+      "q": "What name is given to the identifier that uniquely identifies a row?",
+      "answers": [
+        "primary key"
+      ],
+      "why": "A stable primary key lets other records refer to a specific row."
+    },
+    {
+      "q": "What does SQL use to represent a missing value?",
+      "answers": [
+        "NULL"
+      ],
+      "why": "NULL indicates the field has no known value."
+    }
+  ],
+  "sql": [
+    {
+      "q": "Which clause chooses the columns to return?",
+      "answers": [
+        "SELECT"
+      ],
+      "why": "The list following SELECT defines the output columns or expressions."
+    },
+    {
+      "q": "Which clause filters individual rows before they enter the result?",
+      "answers": [
+        "WHERE"
+      ],
+      "why": "Rows enter the result only when their filter condition is true."
+    },
+    {
+      "q": "Which clause specifies the order of the returned rows?",
+      "answers": [
+        "ORDER BY"
+      ],
+      "why": "A query needs an explicit ordering when a predictable sequence matters."
+    }
+  ],
+  "database-engines": [
+    {
+      "q": "Which engine commonly stores an entire local database in a single main file: SQLite or PostgreSQL?",
+      "answers": [
+        "SQLite"
+      ],
+      "why": "SQLite runs in the application process and reads its database file."
+    },
+    {
+      "q": "Which term describes SQL work saved successfully at the end of a transaction?",
+      "answers": [
+        "commit",
+        "committed"
+      ],
+      "why": "A commit makes the transaction's results part of the database."
+    },
+    {
+      "q": "What database name does Python's sqlite3 use for a connection-local in-memory database?",
+      "answers": [
+        ":memory:"
+      ],
+      "why": "That database normally disappears when the connection closes."
+    }
+  ],
+  "tables": [
+    {
+      "q": "Which constraint requires a nonmissing value?",
+      "answers": [
+        "NOT NULL"
+      ],
+      "why": "The database rejects writes that omit the required value."
+    },
+    {
+      "q": "Which constraint can enforce balance >= 0?",
+      "answers": [
+        "CHECK",
+        "check constraint"
+      ],
+      "why": "A check expression can rule out a negative balance."
+    },
+    {
+      "q": "What SQL statement defines a new table?",
+      "answers": [
+        "CREATE TABLE"
+      ],
+      "why": "The statement declares column names, types and constraints."
+    }
+  ],
+  "crud": [
+    {
+      "q": "Which SQL command adds a new employee row?",
+      "answers": [
+        "INSERT",
+        "INSERT INTO"
+      ],
+      "why": "Inserting creates a record."
+    },
+    {
+      "q": "Which command changes fields on existing rows?",
+      "answers": [
+        "UPDATE"
+      ],
+      "why": "UPDATE modifies the rows selected by its condition."
+    },
+    {
+      "q": "Which command removes matching rows while keeping the table definition?",
+      "answers": [
+        "DELETE",
+        "DELETE FROM"
+      ],
+      "why": "DELETE removes data rows from the table."
+    }
+  ],
+  "joins": [
+    {
+      "q": "Which join retains every left-hand row even without a matching right-hand row?",
+      "answers": [
+        "LEFT JOIN",
+        "LEFT OUTER JOIN"
+      ],
+      "why": "Right-side fields become NULL where no match exists."
+    },
+    {
+      "q": "A cross join combines 2 employees with 3 departments. How many pairs result?",
+      "answers": [
+        "6",
+        "six"
+      ],
+      "why": "Every employee pairs with every department."
+    },
+    {
+      "q": "When an employee has two matching rows on the other side of an inner join, how many result rows does that employee contribute?",
+      "answers": [
+        "2",
+        "two"
+      ],
+      "why": "A join emits a row for each matching pair."
+    }
+  ],
+  "subqueries": [
+    {
+      "q": "What is the term for a query nested inside another query?",
+      "answers": [
+        "subquery",
+        "sub-query"
+      ],
+      "why": "The outer query can use the inner rows or value."
+    },
+    {
+      "q": "What is AVG of the nonmissing salaries 10, 20 and 30?",
+      "answers": [
+        "20",
+        "twenty"
+      ],
+      "why": "Their total is 60 and there are three salaries."
+    },
+    {
+      "q": "Which SQL keyword tests whether a subquery returns at least one row?",
+      "answers": [
+        "EXISTS"
+      ],
+      "why": "The test cares about the presence of a row."
+    }
+  ],
+  "aggregation": [
+    {
+      "q": "Which aggregate counts all rows, even those with missing fields?",
+      "answers": [
+        "COUNT(*)"
+      ],
+      "why": "The star counts rows independently of any one field."
+    },
+    {
+      "q": "Which clause forms one group per team?",
+      "answers": [
+        "GROUP BY"
+      ],
+      "why": "Rows sharing the grouping key are summarized together."
+    },
+    {
+      "q": "Which clause filters completed groups after aggregation?",
+      "answers": [
+        "HAVING"
+      ],
+      "why": "HAVING can test a group total such as SUM(amount)."
+    }
+  ],
+  "indexes": [
+    {
+      "q": "A database index can speed up lookups but takes extra disk space. Does it also need maintenance during writes? Answer yes or no.",
+      "answers": [
+        "yes"
+      ],
+      "why": "Inserted, deleted or changed indexed entries have to be reflected in the index."
+    },
+    {
+      "q": "In an index on (team, date), what is the leftmost key?",
+      "answers": [
+        "team"
+      ],
+      "why": "The leading component determines the initial grouping of entries."
+    },
+    {
+      "q": "What SQLite command prefix shows how a query will be executed?",
+      "answers": [
+        "EXPLAIN QUERY PLAN"
+      ],
+      "why": "The plan can show whether a scan or an index lookup is chosen."
+    }
+  ],
+  "transactions": [
+    {
+      "q": "Which command makes all successful work in a SQL transaction permanent?",
+      "answers": [
+        "COMMIT"
+      ],
+      "why": "A commit ends the transaction with its changes saved."
+    },
+    {
+      "q": "Which command cancels uncommitted work?",
+      "answers": [
+        "ROLLBACK"
+      ],
+      "why": "Rolling back restores the state from before the transaction."
+    },
+    {
+      "q": "Which property means both account updates happen together or neither takes effect?",
+      "answers": [
+        "atomicity",
+        "atomic"
+      ],
+      "why": "Atomicity treats multiple changes as a single unit."
+    }
+  ],
+  "database-design": [
+    {
+      "q": "Which key points from an employee record to its department record?",
+      "answers": [
+        "foreign key",
+        "department foreign key"
+      ],
+      "why": "The reference expresses a relationship between two tables."
+    },
+    {
+      "q": "If three employees share one department row, how many copies of the department phone should be stored in that design?",
+      "answers": [
+        "1",
+        "one"
+      ],
+      "why": "The phone belongs to the department and can be looked up through the shared reference."
+    },
+    {
+      "q": "What is the relationship called when one department has many employees?",
+      "answers": [
+        "one to many",
+        "one-to-many",
+        "1:n"
+      ],
+      "why": "Several rows on the employee side can refer to one department."
+    }
+  ]
+}

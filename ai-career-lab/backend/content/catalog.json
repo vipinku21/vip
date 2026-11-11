@@ -1,0 +1,1618 @@
+[
+  {
+    "id": "programming-fundamentals",
+    "title": "Programming Fundamentals",
+    "description": "Learn to give Python precise instructions. Build from a single line of code to programs that store, transform and validate information.",
+    "hours": 11.9,
+    "project": "Personal learning toolkit",
+    "prerequisites": [],
+    "modules": [
+      {
+        "title": "Python",
+        "topics": [
+          {
+            "id": "python-fundamentals",
+            "title": "Python Fundamentals",
+            "minutes": 25,
+            "concepts": [
+              "Expressions",
+              "print()",
+              "Comments"
+            ],
+            "project": "Learning journal",
+            "prerequisites": []
+          },
+          {
+            "id": "variables",
+            "title": "Variables and Data Types",
+            "minutes": 30,
+            "concepts": [
+              "Assignment",
+              "type()",
+              "Conversion"
+            ],
+            "project": "Employee profile",
+            "prerequisites": [
+              "python-fundamentals"
+            ]
+          },
+          {
+            "id": "strings",
+            "title": "Python Strings",
+            "minutes": 65,
+            "concepts": [
+              "String literals",
+              "Indexing",
+              "Slicing",
+              "Immutability",
+              "Formatting",
+              "String methods",
+              "Unicode"
+            ],
+            "project": "Text formatter",
+            "prerequisites": [
+              "variables"
+            ]
+          },
+          {
+            "id": "numbers",
+            "title": "Numbers and Operators",
+            "minutes": 40,
+            "concepts": [
+              "Integer arithmetic",
+              "Division",
+              "Remainder"
+            ],
+            "project": "Study time calculator",
+            "prerequisites": [
+              "strings"
+            ]
+          },
+          {
+            "id": "predicates",
+            "title": "Predicates",
+            "minutes": 30,
+            "concepts": [
+              "Yes-or-no rules",
+              "Boolean values",
+              "Boundary checks",
+              "Filtering",
+              "AND and OR"
+            ],
+            "project": "Library hold checker",
+            "prerequisites": []
+          },
+          {
+            "id": "conditions",
+            "title": "Conditions",
+            "minutes": 25,
+            "concepts": [
+              "Booleans",
+              "Comparison",
+              "Branch order"
+            ],
+            "project": "Study session planner",
+            "prerequisites": [
+              "numbers"
+            ]
+          },
+          {
+            "id": "loops",
+            "title": "Loops",
+            "minutes": 30,
+            "concepts": [
+              "Iteration",
+              "range()",
+              "Accumulators"
+            ],
+            "project": "Session summary",
+            "prerequisites": [
+              "conditions"
+            ]
+          },
+          {
+            "id": "lists",
+            "title": "Lists",
+            "minutes": 35,
+            "concepts": [
+              "Indexing",
+              "append()",
+              "Mutability"
+            ],
+            "project": "Shopping list",
+            "prerequisites": [
+              "loops"
+            ]
+          },
+          {
+            "id": "tuples",
+            "title": "Tuples",
+            "minutes": 40,
+            "concepts": [
+              "Packing",
+              "Unpacking",
+              "Immutability"
+            ],
+            "project": "Coordinate card",
+            "prerequisites": [
+              "lists"
+            ]
+          },
+          {
+            "id": "sets",
+            "title": "Sets",
+            "minutes": 25,
+            "concepts": [
+              "Membership",
+              "Union",
+              "Intersection"
+            ],
+            "project": "Skill overlap checker",
+            "prerequisites": [
+              "tuples"
+            ]
+          },
+          {
+            "id": "dictionaries",
+            "title": "Dictionaries",
+            "minutes": 30,
+            "concepts": [
+              "Keys and values",
+              "get()",
+              "items()"
+            ],
+            "project": "Contact manager",
+            "prerequisites": [
+              "sets"
+            ]
+          },
+          {
+            "id": "functions",
+            "title": "Functions",
+            "minutes": 35,
+            "concepts": [
+              "Parameters",
+              "Return values",
+              "Scope"
+            ],
+            "project": "Calculator",
+            "prerequisites": [
+              "dictionaries"
+            ]
+          },
+          {
+            "id": "recursion",
+            "title": "Recursion",
+            "minutes": 40,
+            "concepts": [
+              "Base case",
+              "Recursive step",
+              "Call stack"
+            ],
+            "project": "Nested folder counter",
+            "prerequisites": [
+              "functions"
+            ]
+          },
+          {
+            "id": "comprehensions",
+            "title": "Comprehensions",
+            "minutes": 25,
+            "concepts": [
+              "Mapping",
+              "Filtering",
+              "Comprehension order"
+            ],
+            "project": "Activity filter",
+            "prerequisites": [
+              "recursion"
+            ]
+          },
+          {
+            "id": "file-handling",
+            "title": "File Handling",
+            "minutes": 30,
+            "concepts": [
+              "Context managers",
+              "Text streams",
+              "Encoding"
+            ],
+            "project": "Expense tracker",
+            "prerequisites": [
+              "comprehensions"
+            ]
+          },
+          {
+            "id": "exceptions",
+            "title": "Exceptions",
+            "minutes": 35,
+            "concepts": [
+              "try/except",
+              "ValueError",
+              "finally"
+            ],
+            "project": "Safe expense importer",
+            "prerequisites": [
+              "file-handling"
+            ]
+          },
+          {
+            "id": "oop",
+            "title": "Object-Oriented Programming",
+            "minutes": 40,
+            "concepts": [
+              "Classes",
+              "Instance attributes",
+              "Methods"
+            ],
+            "project": "Library management system",
+            "prerequisites": [
+              "exceptions"
+            ]
+          },
+          {
+            "id": "modules",
+            "title": "Modules and Packages",
+            "minutes": 25,
+            "concepts": [
+              "Imports",
+              "Namespaces",
+              "Standard library"
+            ],
+            "project": "Reusable utility collection",
+            "prerequisites": [
+              "oop"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Developer tools",
+        "topics": [
+          {
+            "id": "virtual-environments",
+            "title": "Virtual Environments",
+            "minutes": 25,
+            "concepts": [
+              "Interpreter isolation",
+              "Dependency pins",
+              "sys.prefix"
+            ],
+            "project": "Project environment card",
+            "prerequisites": [
+              "modules"
+            ]
+          },
+          {
+            "id": "git",
+            "title": "Git and GitHub",
+            "minutes": 30,
+            "concepts": [
+              "Staging",
+              "Commits",
+              "Remotes"
+            ],
+            "project": "Versioned learning journal",
+            "prerequisites": [
+              "virtual-environments"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Algorithms",
+        "topics": [
+          {
+            "id": "dsa",
+            "title": "Basic Data Structures and Algorithms",
+            "minutes": 25,
+            "concepts": [
+              "Stacks",
+              "Queues",
+              "Search"
+            ],
+            "project": "Task queue",
+            "prerequisites": [
+              "git"
+            ]
+          },
+          {
+            "id": "complexity",
+            "title": "Time and Space Complexity",
+            "minutes": 30,
+            "concepts": [
+              "Growth rate",
+              "Big O",
+              "Auxiliary space"
+            ],
+            "project": "Duplicate detector benchmark",
+            "prerequisites": [
+              "dsa"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "databases",
+    "title": "Databases",
+    "description": "Organize persistent records, answer questions with SQL and protect changes made to related tables.",
+    "hours": 5.8,
+    "project": "Employee database",
+    "prerequisites": [
+      "programming-fundamentals"
+    ],
+    "modules": [
+      {
+        "title": "Relational foundations",
+        "topics": [
+          {
+            "id": "database-fundamentals",
+            "title": "Database Fundamentals",
+            "minutes": 25,
+            "concepts": [
+              "Rows",
+              "Columns",
+              "Keys"
+            ],
+            "project": "Employee directory",
+            "prerequisites": [
+              "complexity"
+            ]
+          },
+          {
+            "id": "sql",
+            "title": "SQL",
+            "minutes": 30,
+            "concepts": [
+              "SELECT",
+              "WHERE",
+              "ORDER BY"
+            ],
+            "project": "Employee search",
+            "prerequisites": [
+              "database-fundamentals"
+            ]
+          },
+          {
+            "id": "database-engines",
+            "title": "SQLite and PostgreSQL",
+            "minutes": 35,
+            "concepts": [
+              "Embedded storage",
+              "Client/server",
+              "SQL dialects"
+            ],
+            "project": "Database selection note",
+            "prerequisites": [
+              "sql"
+            ]
+          },
+          {
+            "id": "tables",
+            "title": "Tables and Data Types",
+            "minutes": 40,
+            "concepts": [
+              "CREATE TABLE",
+              "PRIMARY KEY",
+              "CHECK"
+            ],
+            "project": "Employee schema",
+            "prerequisites": [
+              "database-engines"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Querying data",
+        "topics": [
+          {
+            "id": "crud",
+            "title": "CRUD Queries",
+            "minutes": 25,
+            "concepts": [
+              "INSERT",
+              "UPDATE",
+              "DELETE"
+            ],
+            "project": "Employee record editor",
+            "prerequisites": [
+              "tables"
+            ]
+          },
+          {
+            "id": "joins",
+            "title": "Joins",
+            "minutes": 30,
+            "concepts": [
+              "INNER JOIN",
+              "LEFT JOIN",
+              "Join keys"
+            ],
+            "project": "Department report",
+            "prerequisites": [
+              "crud"
+            ]
+          },
+          {
+            "id": "subqueries",
+            "title": "Subqueries",
+            "minutes": 35,
+            "concepts": [
+              "EXISTS",
+              "Scalar subqueries",
+              "Correlation"
+            ],
+            "project": "Above-average sessions",
+            "prerequisites": [
+              "joins"
+            ]
+          },
+          {
+            "id": "aggregation",
+            "title": "Aggregation",
+            "minutes": 40,
+            "concepts": [
+              "GROUP BY",
+              "COUNT",
+              "HAVING"
+            ],
+            "project": "Team activity totals",
+            "prerequisites": [
+              "subqueries"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Reliable storage",
+        "topics": [
+          {
+            "id": "indexes",
+            "title": "Indexes",
+            "minutes": 25,
+            "concepts": [
+              "Search keys",
+              "Query plans",
+              "Write overhead"
+            ],
+            "project": "Directory lookup index",
+            "prerequisites": [
+              "aggregation"
+            ]
+          },
+          {
+            "id": "transactions",
+            "title": "Transactions",
+            "minutes": 30,
+            "concepts": [
+              "BEGIN",
+              "COMMIT",
+              "ROLLBACK"
+            ],
+            "project": "Atomic credit transfer",
+            "prerequisites": [
+              "indexes"
+            ]
+          },
+          {
+            "id": "database-design",
+            "title": "Database Design",
+            "minutes": 35,
+            "concepts": [
+              "Normalization",
+              "Foreign keys",
+              "Cardinality"
+            ],
+            "project": "Normalized employee database",
+            "prerequisites": [
+              "transactions"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data-processing",
+    "title": "Data Processing",
+    "description": "Turn inconsistent observations into a reproducible dataset and explain the patterns you find.",
+    "hours": 5.9,
+    "project": "Learning activity report",
+    "prerequisites": [
+      "databases"
+    ],
+    "modules": [
+      {
+        "title": "Arrays and tables",
+        "topics": [
+          {
+            "id": "numpy",
+            "title": "NumPy",
+            "minutes": 40,
+            "concepts": [
+              "Arrays",
+              "Shapes",
+              "Broadcasting"
+            ],
+            "project": "Session matrix",
+            "prerequisites": [
+              "database-design"
+            ]
+          },
+          {
+            "id": "pandas",
+            "title": "Pandas",
+            "minutes": 45,
+            "concepts": [
+              "Series",
+              "Labels",
+              "Boolean masks"
+            ],
+            "project": "Session record explorer",
+            "prerequisites": [
+              "numpy"
+            ]
+          },
+          {
+            "id": "dataframes",
+            "title": "DataFrames",
+            "minutes": 50,
+            "concepts": [
+              "Columns",
+              "loc",
+              "Grouping"
+            ],
+            "project": "Learner activity table",
+            "prerequisites": [
+              "pandas"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Preparing data",
+        "topics": [
+          {
+            "id": "data-cleaning",
+            "title": "Data Cleaning",
+            "minutes": 40,
+            "concepts": [
+              "Normalization",
+              "Deduplication",
+              "Validation"
+            ],
+            "project": "Clean contact dataset",
+            "prerequisites": [
+              "dataframes"
+            ]
+          },
+          {
+            "id": "missing-values",
+            "title": "Missing Values",
+            "minutes": 45,
+            "concepts": [
+              "Null indicators",
+              "Imputation",
+              "Missingness bias"
+            ],
+            "project": "Attendance quality report",
+            "prerequisites": [
+              "data-cleaning"
+            ]
+          },
+          {
+            "id": "data-transformation",
+            "title": "Data Transformation",
+            "minutes": 50,
+            "concepts": [
+              "Mapping",
+              "Scaling",
+              "Aggregation"
+            ],
+            "project": "Feature preparation notebook",
+            "prerequisites": [
+              "missing-values"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Exploring results",
+        "topics": [
+          {
+            "id": "data-visualization",
+            "title": "Data Visualization",
+            "minutes": 40,
+            "concepts": [
+              "Chart selection",
+              "Axes",
+              "Aggregation"
+            ],
+            "project": "Study activity chart",
+            "prerequisites": [
+              "data-transformation"
+            ]
+          },
+          {
+            "id": "statistics",
+            "title": "Basic Statistics",
+            "minutes": 45,
+            "concepts": [
+              "Mean",
+              "Median",
+              "Spread"
+            ],
+            "project": "Session distribution report",
+            "prerequisites": [
+              "data-visualization"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "backend-development",
+    "title": "Backend Development",
+    "description": "Give other programs a reliable way to request data, perform actions and recover from errors.",
+    "hours": 10.3,
+    "project": "Employee management REST API",
+    "prerequisites": [
+      "data-processing"
+    ],
+    "modules": [
+      {
+        "title": "Web foundations",
+        "topics": [
+          {
+            "id": "http-rest",
+            "title": "HTTP and REST",
+            "minutes": 40,
+            "concepts": [
+              "Methods",
+              "Resources",
+              "Status codes"
+            ],
+            "project": "Employee resource contract",
+            "prerequisites": [
+              "statistics"
+            ]
+          },
+          {
+            "id": "fastapi",
+            "title": "FastAPI",
+            "minutes": 45,
+            "concepts": [
+              "Path operations",
+              "Type hints",
+              "OpenAPI"
+            ],
+            "project": "Employee API endpoint",
+            "prerequisites": [
+              "http-rest"
+            ]
+          },
+          {
+            "id": "pydantic",
+            "title": "Pydantic",
+            "minutes": 50,
+            "concepts": [
+              "BaseModel",
+              "Constraints",
+              "model_dump()"
+            ],
+            "project": "Employee request model",
+            "prerequisites": [
+              "fastapi"
+            ]
+          },
+          {
+            "id": "json",
+            "title": "JSON",
+            "minutes": 55,
+            "concepts": [
+              "Serialization",
+              "Parsing",
+              "JSON types"
+            ],
+            "project": "Settings interchange",
+            "prerequisites": [
+              "pydantic"
+            ]
+          },
+          {
+            "id": "requests-responses",
+            "title": "Requests and Responses",
+            "minutes": 60,
+            "concepts": [
+              "Headers",
+              "Bodies",
+              "Content types"
+            ],
+            "project": "Request inspector",
+            "prerequisites": [
+              "json"
+            ]
+          },
+          {
+            "id": "routing",
+            "title": "Routing",
+            "minutes": 40,
+            "concepts": [
+              "Path parameters",
+              "Query parameters",
+              "Route order"
+            ],
+            "project": "Employee route map",
+            "prerequisites": [
+              "requests-responses"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application services",
+        "topics": [
+          {
+            "id": "authentication",
+            "title": "Authentication and Authorization",
+            "minutes": 40,
+            "concepts": [
+              "Identity",
+              "Permissions",
+              "Ownership"
+            ],
+            "project": "Employee access policy",
+            "prerequisites": [
+              "routing"
+            ]
+          },
+          {
+            "id": "database-integration",
+            "title": "Database Integration",
+            "minutes": 45,
+            "concepts": [
+              "Sessions",
+              "Parameter binding",
+              "Transaction boundaries"
+            ],
+            "project": "Persistent employee repository",
+            "prerequisites": [
+              "authentication"
+            ]
+          },
+          {
+            "id": "validation",
+            "title": "Input Validation",
+            "minutes": 50,
+            "concepts": [
+              "Type checks",
+              "Range checks",
+              "Cross-field rules"
+            ],
+            "project": "Shift validator",
+            "prerequisites": [
+              "database-integration"
+            ]
+          },
+          {
+            "id": "exception-handling",
+            "title": "API Exception Handling",
+            "minutes": 55,
+            "concepts": [
+              "Error mapping",
+              "Status codes",
+              "Safe messages"
+            ],
+            "project": "API error translator",
+            "prerequisites": [
+              "validation"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Service quality",
+        "topics": [
+          {
+            "id": "logging",
+            "title": "Application Logging",
+            "minutes": 40,
+            "concepts": [
+              "Log levels",
+              "Structured events",
+              "Correlation IDs"
+            ],
+            "project": "Request activity log",
+            "prerequisites": [
+              "exception-handling"
+            ]
+          },
+          {
+            "id": "api-testing",
+            "title": "Unit and API Testing",
+            "minutes": 45,
+            "concepts": [
+              "Assertions",
+              "Fixtures",
+              "HTTP contracts"
+            ],
+            "project": "Employee API test suite",
+            "prerequisites": [
+              "logging"
+            ]
+          },
+          {
+            "id": "backend-security",
+            "title": "Backend Security",
+            "minutes": 50,
+            "concepts": [
+              "Trust boundaries",
+              "Least privilege",
+              "Data minimization"
+            ],
+            "project": "Service boundary review",
+            "prerequisites": [
+              "api-testing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "machine-learning",
+    "title": "Machine Learning",
+    "description": "Learn from examples, compare predictions against evidence and ship a model with a clear input contract.",
+    "hours": 7.8,
+    "project": "Study-time prediction service",
+    "prerequisites": [
+      "backend-development"
+    ],
+    "modules": [
+      {
+        "title": "Prediction fundamentals",
+        "topics": [
+          {
+            "id": "ml-concepts",
+            "title": "Machine Learning Concepts",
+            "minutes": 40,
+            "concepts": [
+              "Features",
+              "Labels",
+              "Baselines"
+            ],
+            "project": "Prediction baseline",
+            "prerequisites": [
+              "backend-security"
+            ]
+          },
+          {
+            "id": "learning-types",
+            "title": "Supervised and Unsupervised Learning",
+            "minutes": 45,
+            "concepts": [
+              "Labels",
+              "Clustering",
+              "Similarity"
+            ],
+            "project": "Session pattern explorer",
+            "prerequisites": [
+              "ml-concepts"
+            ]
+          },
+          {
+            "id": "regression",
+            "title": "Regression",
+            "minutes": 50,
+            "concepts": [
+              "Continuous targets",
+              "Residuals",
+              "Mean absolute error"
+            ],
+            "project": "Study duration predictor",
+            "prerequisites": [
+              "learning-types"
+            ]
+          },
+          {
+            "id": "classification",
+            "title": "Classification",
+            "minutes": 55,
+            "concepts": [
+              "Classes",
+              "Thresholds",
+              "Confusion matrix"
+            ],
+            "project": "Revision need classifier",
+            "prerequisites": [
+              "regression"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Training and evaluation",
+        "topics": [
+          {
+            "id": "train-test",
+            "title": "Train/Test Splitting",
+            "minutes": 40,
+            "concepts": [
+              "Generalization",
+              "Leakage",
+              "Temporal splits"
+            ],
+            "project": "Evaluation split planner",
+            "prerequisites": [
+              "classification"
+            ]
+          },
+          {
+            "id": "feature-engineering",
+            "title": "Feature Engineering",
+            "minutes": 45,
+            "concepts": [
+              "Encoding",
+              "Scaling",
+              "Prediction-time availability"
+            ],
+            "project": "Session feature builder",
+            "prerequisites": [
+              "train-test"
+            ]
+          },
+          {
+            "id": "model-evaluation",
+            "title": "Model Evaluation",
+            "minutes": 50,
+            "concepts": [
+              "Metrics",
+              "Baselines",
+              "Error analysis"
+            ],
+            "project": "Prediction scorecard",
+            "prerequisites": [
+              "feature-engineering"
+            ]
+          },
+          {
+            "id": "overfitting",
+            "title": "Overfitting",
+            "minutes": 55,
+            "concepts": [
+              "Generalization gap",
+              "Regularization",
+              "Model capacity"
+            ],
+            "project": "Learning curve review",
+            "prerequisites": [
+              "model-evaluation"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Model delivery",
+        "topics": [
+          {
+            "id": "scikit-learn",
+            "title": "scikit-learn",
+            "minutes": 40,
+            "concepts": [
+              "Estimators",
+              "Pipelines",
+              "fit/predict"
+            ],
+            "project": "Reusable training pipeline",
+            "prerequisites": [
+              "overfitting"
+            ]
+          },
+          {
+            "id": "model-deployment",
+            "title": "Model Deployment",
+            "minutes": 45,
+            "concepts": [
+              "Inference contracts",
+              "Versioning",
+              "Rollback"
+            ],
+            "project": "Versioned prediction endpoint",
+            "prerequisites": [
+              "scikit-learn"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "generative-ai",
+    "title": "Generative AI",
+    "description": "Connect language models to trusted information, evaluate their answers and protect the information they use.",
+    "hours": 10.4,
+    "project": "Document question-answering assistant",
+    "prerequisites": [
+      "machine-learning"
+    ],
+    "modules": [
+      {
+        "title": "Language model APIs",
+        "topics": [
+          {
+            "id": "llms",
+            "title": "LLM Fundamentals",
+            "minutes": 40,
+            "concepts": [
+              "Next-token prediction",
+              "Sampling",
+              "Context"
+            ],
+            "project": "Language model behavior notebook",
+            "prerequisites": [
+              "model-deployment"
+            ]
+          },
+          {
+            "id": "tokens",
+            "title": "Tokens and Context Windows",
+            "minutes": 45,
+            "concepts": [
+              "Tokenization",
+              "Input budget",
+              "Output reserve"
+            ],
+            "project": "Context budget calculator",
+            "prerequisites": [
+              "llms"
+            ]
+          },
+          {
+            "id": "prompt-engineering",
+            "title": "Prompt Engineering",
+            "minutes": 50,
+            "concepts": [
+              "Task instructions",
+              "Examples",
+              "Output constraints"
+            ],
+            "project": "Document answer prompt",
+            "prerequisites": [
+              "tokens"
+            ]
+          },
+          {
+            "id": "model-apis",
+            "title": "Model APIs",
+            "minutes": 55,
+            "concepts": [
+              "Request payloads",
+              "Timeouts",
+              "Retries"
+            ],
+            "project": "Provider request adapter",
+            "prerequisites": [
+              "prompt-engineering"
+            ]
+          },
+          {
+            "id": "structured-outputs",
+            "title": "Structured Outputs",
+            "minutes": 60,
+            "concepts": [
+              "JSON schemas",
+              "Validation",
+              "Semantic checks"
+            ],
+            "project": "Feedback schema validator",
+            "prerequisites": [
+              "model-apis"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Retrieval and grounding",
+        "topics": [
+          {
+            "id": "embeddings",
+            "title": "Embeddings",
+            "minutes": 40,
+            "concepts": [
+              "Vector representation",
+              "Cosine similarity",
+              "Model compatibility"
+            ],
+            "project": "Similarity calculator",
+            "prerequisites": [
+              "structured-outputs"
+            ]
+          },
+          {
+            "id": "vector-databases",
+            "title": "Vector Databases",
+            "minutes": 45,
+            "concepts": [
+              "Nearest neighbors",
+              "Metadata filters",
+              "Index updates"
+            ],
+            "project": "Passage index",
+            "prerequisites": [
+              "embeddings"
+            ]
+          },
+          {
+            "id": "semantic-search",
+            "title": "Semantic Search",
+            "minutes": 50,
+            "concepts": [
+              "Query embeddings",
+              "Ranking",
+              "Recall@k"
+            ],
+            "project": "Passage search",
+            "prerequisites": [
+              "vector-databases"
+            ]
+          },
+          {
+            "id": "rag",
+            "title": "Retrieval-Augmented Generation",
+            "minutes": 55,
+            "concepts": [
+              "Retrieval",
+              "Context assembly",
+              "Citations"
+            ],
+            "project": "Grounded answer pipeline",
+            "prerequisites": [
+              "semantic-search"
+            ]
+          },
+          {
+            "id": "document-qa",
+            "title": "Document Question Answering",
+            "minutes": 60,
+            "concepts": [
+              "Chunking",
+              "Source coordinates",
+              "Evidence spans"
+            ],
+            "project": "Document question-answering assistant",
+            "prerequisites": [
+              "rag"
+            ]
+          },
+          {
+            "id": "grounding",
+            "title": "Hallucinations and Grounding",
+            "minutes": 40,
+            "concepts": [
+              "Claim support",
+              "Abstention",
+              "Provenance"
+            ],
+            "project": "Evidence checker",
+            "prerequisites": [
+              "document-qa"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Quality and safety",
+        "topics": [
+          {
+            "id": "ai-evaluation",
+            "title": "AI Evaluation",
+            "minutes": 40,
+            "concepts": [
+              "Test sets",
+              "Rubrics",
+              "Regression analysis"
+            ],
+            "project": "Assistant evaluation scorecard",
+            "prerequisites": [
+              "grounding"
+            ]
+          },
+          {
+            "id": "ai-privacy",
+            "title": "AI Privacy and Security",
+            "minutes": 45,
+            "concepts": [
+              "Data minimization",
+              "Prompt injection",
+              "Access control"
+            ],
+            "project": "Private document assistant",
+            "prerequisites": [
+              "ai-evaluation"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "production-engineering",
+    "title": "Production Engineering",
+    "description": "Package an application, deploy changes safely and use operational signals to diagnose failures.",
+    "hours": 9.6,
+    "project": "Operated document assistant",
+    "prerequisites": [
+      "generative-ai"
+    ],
+    "modules": [
+      {
+        "title": "Infrastructure and delivery",
+        "topics": [
+          {
+            "id": "linux",
+            "title": "Linux Fundamentals",
+            "minutes": 40,
+            "concepts": [
+              "Paths",
+              "Permissions",
+              "Processes"
+            ],
+            "project": "Service runbook",
+            "prerequisites": [
+              "ai-privacy"
+            ]
+          },
+          {
+            "id": "docker",
+            "title": "Docker",
+            "minutes": 45,
+            "concepts": [
+              "Images",
+              "Containers",
+              "Volumes"
+            ],
+            "project": "Containerized API",
+            "prerequisites": [
+              "linux"
+            ]
+          },
+          {
+            "id": "ci-cd",
+            "title": "CI/CD",
+            "minutes": 50,
+            "concepts": [
+              "Build artifacts",
+              "Quality gates",
+              "Promotion"
+            ],
+            "project": "Release pipeline",
+            "prerequisites": [
+              "docker"
+            ]
+          },
+          {
+            "id": "cloud",
+            "title": "AWS or Azure Fundamentals",
+            "minutes": 55,
+            "concepts": [
+              "Compute",
+              "Storage",
+              "Identity"
+            ],
+            "project": "Cloud deployment map",
+            "prerequisites": [
+              "ci-cd"
+            ]
+          },
+          {
+            "id": "app-deployment",
+            "title": "Application Deployment",
+            "minutes": 60,
+            "concepts": [
+              "Health checks",
+              "Rollout",
+              "Rollback"
+            ],
+            "project": "Release checklist",
+            "prerequisites": [
+              "cloud"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Operations",
+        "topics": [
+          {
+            "id": "secrets",
+            "title": "Secrets Management",
+            "minutes": 40,
+            "concepts": [
+              "Runtime configuration",
+              "Rotation",
+              "Redaction"
+            ],
+            "project": "Provider credential plan",
+            "prerequisites": [
+              "app-deployment"
+            ]
+          },
+          {
+            "id": "production-logging",
+            "title": "Production Logging",
+            "minutes": 45,
+            "concepts": [
+              "Event schemas",
+              "Retention",
+              "Aggregation"
+            ],
+            "project": "Service event stream",
+            "prerequisites": [
+              "secrets"
+            ]
+          },
+          {
+            "id": "monitoring",
+            "title": "Monitoring",
+            "minutes": 50,
+            "concepts": [
+              "Rates",
+              "Latency",
+              "Alert windows"
+            ],
+            "project": "Service health dashboard",
+            "prerequisites": [
+              "production-logging"
+            ]
+          },
+          {
+            "id": "performance",
+            "title": "Performance Engineering",
+            "minutes": 55,
+            "concepts": [
+              "Profiling",
+              "Percentiles",
+              "Caching"
+            ],
+            "project": "Latency investigation",
+            "prerequisites": [
+              "monitoring"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Production safeguards",
+        "topics": [
+          {
+            "id": "api-security",
+            "title": "API Security",
+            "minutes": 40,
+            "concepts": [
+              "Object-level authorization",
+              "Rate limits",
+              "Resource bounds"
+            ],
+            "project": "API abuse test plan",
+            "prerequisites": [
+              "performance"
+            ]
+          },
+          {
+            "id": "testing",
+            "title": "Production Testing",
+            "minutes": 45,
+            "concepts": [
+              "Integration tests",
+              "Smoke tests",
+              "Fault injection"
+            ],
+            "project": "Release smoke suite",
+            "prerequisites": [
+              "api-security"
+            ]
+          },
+          {
+            "id": "cost",
+            "title": "Cost Optimization",
+            "minutes": 50,
+            "concepts": [
+              "Unit costs",
+              "Caching",
+              "Budgets"
+            ],
+            "project": "Request cost worksheet",
+            "prerequisites": [
+              "testing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "advanced-ai",
+    "title": "Advanced AI",
+    "description": "Build bounded workflows with tools, memory, human approval and repeatable evaluations.",
+    "hours": 8.6,
+    "project": "Supervised research assistant",
+    "prerequisites": [
+      "production-engineering"
+    ],
+    "modules": [
+      {
+        "title": "Agent components",
+        "topics": [
+          {
+            "id": "agents",
+            "title": "AI Agents",
+            "minutes": 40,
+            "concepts": [
+              "Observation",
+              "Action",
+              "Stop conditions"
+            ],
+            "project": "Bounded research assistant",
+            "prerequisites": [
+              "cost"
+            ]
+          },
+          {
+            "id": "tool-calling",
+            "title": "Tool Calling",
+            "minutes": 45,
+            "concepts": [
+              "Schemas",
+              "Dispatch",
+              "Argument validation"
+            ],
+            "project": "Validated lookup tool",
+            "prerequisites": [
+              "agents"
+            ]
+          },
+          {
+            "id": "orchestration",
+            "title": "Agent Orchestration",
+            "minutes": 50,
+            "concepts": [
+              "State machines",
+              "Transitions",
+              "Retry limits"
+            ],
+            "project": "Research workflow controller",
+            "prerequisites": [
+              "tool-calling"
+            ]
+          },
+          {
+            "id": "memory-state",
+            "title": "Memory and State",
+            "minutes": 55,
+            "concepts": [
+              "Session state",
+              "Durable memory",
+              "Retention"
+            ],
+            "project": "Scoped learner memory",
+            "prerequisites": [
+              "orchestration"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Workflow design",
+        "topics": [
+          {
+            "id": "automation",
+            "title": "Workflow Automation",
+            "minutes": 40,
+            "concepts": [
+              "Triggers",
+              "Idempotency",
+              "Compensation"
+            ],
+            "project": "Revision reminder job",
+            "prerequisites": [
+              "memory-state"
+            ]
+          },
+          {
+            "id": "multi-agent",
+            "title": "Multi-Agent Architectures",
+            "minutes": 45,
+            "concepts": [
+              "Roles",
+              "Handoffs",
+              "Shared state"
+            ],
+            "project": "Research and review team",
+            "prerequisites": [
+              "automation"
+            ]
+          },
+          {
+            "id": "human-approval",
+            "title": "Human-in-the-Loop Approval",
+            "minutes": 50,
+            "concepts": [
+              "Intent binding",
+              "Expiry",
+              "Authorization"
+            ],
+            "project": "Approval-gated action",
+            "prerequisites": [
+              "multi-agent"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Evaluation and architecture",
+        "topics": [
+          {
+            "id": "agent-evaluation",
+            "title": "Agent Evaluation",
+            "minutes": 40,
+            "concepts": [
+              "Task success",
+              "Trace evaluation",
+              "Side-effect checks"
+            ],
+            "project": "Agent behavior test suite",
+            "prerequisites": [
+              "human-approval"
+            ]
+          },
+          {
+            "id": "llmops",
+            "title": "LLMOps",
+            "minutes": 45,
+            "concepts": [
+              "Artifact versions",
+              "Tracing",
+              "Release gates"
+            ],
+            "project": "Model release ledger",
+            "prerequisites": [
+              "agent-evaluation"
+            ]
+          },
+          {
+            "id": "advanced-rag",
+            "title": "Advanced RAG",
+            "minutes": 50,
+            "concepts": [
+              "Hybrid retrieval",
+              "Reranking",
+              "Retrieval ablations"
+            ],
+            "project": "Hybrid passage retriever",
+            "prerequisites": [
+              "llmops"
+            ]
+          },
+          {
+            "id": "ai-architecture",
+            "title": "AI System Architecture",
+            "minutes": 55,
+            "concepts": [
+              "Component boundaries",
+              "Failure domains",
+              "Evaluation contracts"
+            ],
+            "project": "AI application architecture",
+            "prerequisites": [
+              "advanced-rag"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

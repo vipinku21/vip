@@ -1,0 +1,1877 @@
+{
+  "subqueries": {
+    "title": "Find deliveries slower than this week's average",
+    "story": "Sahil records three delivery times of 10, 20 and 30 minutes. He needs a list of deliveries taking longer than the average of those same deliveries.",
+    "steps": [
+      "First answer the smaller question: what is the average? The sum is 60 minutes for three deliveries, so the answer is 20.",
+      "Now compare each trip with 20 using duration > 20. The 30-minute trip qualifies and the 10- and 20-minute trips do not.",
+      "Put the average calculation inside the larger SQL query as a subquery. If next week's times change, the comparison uses the average calculated from that week's selected records."
+    ],
+    "outcome": "You can split a database question into a smaller fact to compute and a larger decision that uses it.",
+    "terms": [
+      [
+        "Subquery",
+        "A query written inside another SQL query."
+      ],
+      [
+        "Outer query",
+        "The surrounding query that uses the smaller query's result."
+      ],
+      [
+        "Scalar result",
+        "One value, suitable for a comparison such as duration > average."
+      ],
+      [
+        "Correlated subquery",
+        "An inner query whose answer depends on a value from the current outer row."
+      ],
+      [
+        "EXISTS",
+        "A test asking whether an inner query finds any matching row."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A branch manager wants deliveries slower than that branch's own average. A company-wide average flags the wrong trips.",
+        "action": "Compute the comparison average using rows from the same branch as the trip.",
+        "reason": "Different branches can have different normal delivery times.",
+        "check": "A branch with times 10 and 20 flags 20 even when another branch has only 100-minute trips.",
+        "tradeoff": "A correlated calculation may need an index or grouped alternative at large scale.",
+        "alternative": "Use one company-wide average and attach the branch name after filtering."
+      },
+      {
+        "situation": "A volunteer list needs people who have never attended, and the attendance table has a row with a missing volunteer ID.",
+        "action": "Use NOT EXISTS with a match on the current volunteer's ID.",
+        "reason": "The existence test asks about an actual matching row; NULL in a NOT IN list can make comparisons unknown.",
+        "check": "An absent volunteer is still found when an unrelated attendance row has NULL volunteer ID.",
+        "tradeoff": "The matching field needs suitable indexing when both lists grow.",
+        "alternative": "Use NOT IN on all attendance IDs without handling missing IDs."
+      },
+      {
+        "situation": "A report compares a fee with a subquery that returns separate averages for several branches.",
+        "action": "Select the intended branch or otherwise define one appropriate comparison value per outer row.",
+        "reason": "A scalar comparison requires one meaningful value and several group averages leave the choice ambiguous.",
+        "check": "A two-branch fixture compares each fee with the documented reference branch or its own branch as specified.",
+        "tradeoff": "Choosing the reference branch changes the business meaning of the report.",
+        "alternative": "Add LIMIT 1 without selecting which branch's average should be used."
+      }
+    ]
+  },
+  "aggregation": {
+    "title": "Summarize fruit sales by stall",
+    "story": "Reema records sales of ₹20 and ₹30 at the East stall and ₹15 at the West stall. She wants a short sheet showing each stall's revenue and number of sales.",
+    "steps": [
+      "Group the sale rows by the stall name. East receives two rows and West receives one.",
+      "Apply SUM to the amounts inside each group. East produces ₹50 and West produces ₹15. COUNT(*) gives 2 and 1 sales.",
+      "If she only wants stalls above ₹40, test each finished group total using HAVING. East remains; neither individual East sale needed to exceed ₹40."
+    ],
+    "outcome": "You can turn detailed records into group totals and apply a filter at the right stage of a report.",
+    "terms": [
+      [
+        "Aggregate",
+        "A calculation that summarizes several rows, such as a sum or average."
+      ],
+      [
+        "Group",
+        "Rows gathered because they share a chosen value, such as a stall ID."
+      ],
+      [
+        "COUNT(*)",
+        "Count rows, including rows with some missing fields."
+      ],
+      [
+        "SUM",
+        "Add the available numeric values in a group."
+      ],
+      [
+        "HAVING",
+        "Filter grouped results after their summaries have been calculated."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A report needs stalls with combined revenue over ₹40 but filters away every sale of ₹40 or less first.",
+        "action": "Group all eligible sales and apply HAVING SUM(amount) > 40.",
+        "reason": "A stall can exceed the target through several smaller sales.",
+        "check": "East with ₹20 and ₹30 qualifies, while West with ₹15 does not.",
+        "tradeoff": "Returns and cancelled sales must be handled according to the revenue definition before totaling.",
+        "alternative": "Use WHERE amount > 40 to select the contributing rows."
+      },
+      {
+        "situation": "A clinic has five appointments and only three entered phone numbers. COUNT(phone) gives three for appointment count.",
+        "action": "Use COUNT(*) for the number of appointment rows.",
+        "reason": "COUNT(column) skips NULL values while the appointment itself still exists.",
+        "check": "The report shows five appointments and, separately, three recorded phone numbers.",
+        "tradeoff": "After a join, count the intended appointment IDs if one appointment can create several result rows.",
+        "alternative": "Replace missing phone numbers with invented numbers to repair the count."
+      },
+      {
+        "situation": "One shop served 1 customer in 10 minutes and another served 9 customers averaging 20 minutes. A chain report claims a 15-minute customer average.",
+        "action": "Divide the total customer minutes, 190, by the total of 10 customers.",
+        "reason": "Averaging the two shop averages equally gives the small shop too much influence.",
+        "check": "The customer-weighted average is 19 minutes.",
+        "tradeoff": "An average describing a typical shop rather than a typical customer would use a different weighting.",
+        "alternative": "Average the two displayed shop averages regardless of their customer counts."
+      }
+    ]
+  },
+  "indexes": {
+    "title": "Find one parcel among thousands",
+    "story": "Pranav has 10,000 parcel rows and callers repeatedly ask for one tracking code, such as ZX42. Searching every row can be slow. An index records selected lookup values with a way to reach the matching rows, much like a book's index points to pages.",
+    "steps": [
+      "Without a useful lookup structure, the engine may inspect each parcel code until it finds ZX42 or runs out of rows.",
+      "Build an index on the tracking-code column. For a selective lookup the engine can use that organized structure to locate the matching row with less searching.",
+      "A newly arriving parcel now needs both its table row and its index entry updated. Compare the actual query plan and timings to see whether the quicker lookups are worth that cost."
+    ],
+    "outcome": "You can propose an index for a real lookup and verify its effect on reads, writes and storage.",
+    "terms": [
+      [
+        "Index",
+        "An extra organized structure the database can use to locate rows."
+      ],
+      [
+        "Table scan",
+        "Inspect rows in a table to find matches."
+      ],
+      [
+        "Selectivity",
+        "How small a share of all rows a filter typically matches."
+      ],
+      [
+        "Query plan",
+        "The operations the engine intends to use for a query."
+      ],
+      [
+        "Composite index",
+        "One index arranged using more than one column in a specified order."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Lookups by exact tracking code dominate the depot workload and the query plan shows a full scan.",
+        "action": "Evaluate an index on tracking code with representative lookups.",
+        "reason": "A typically unique tracking code narrows the result to a tiny share of rows.",
+        "check": "The plan uses an appropriate index and representative lookups get faster with identical results.",
+        "tradeoff": "Every incoming or edited code requires index maintenance and additional storage.",
+        "alternative": "Index only the parcel weight because every row has a weight."
+      },
+      {
+        "situation": "A warehouse frequently fetches parcels for one depot ordered by arrival time. Separate indexes still leave a costly sort.",
+        "action": "Test a composite index beginning with depot ID and then arrival time.",
+        "reason": "Within a chosen depot, the index order can already match arrival-time order.",
+        "check": "The measured plan for one depot avoids or reduces sorting and returns the same ordered rows.",
+        "tradeoff": "A search by arrival time across all depots may need a different index order.",
+        "alternative": "Choose the columns in alphabetical order without considering the filter or sort."
+      },
+      {
+        "situation": "A manager wants an index on every field of a write-heavy sensor table, including fields never searched.",
+        "action": "Add indexes according to measured query patterns and compare insertion cost.",
+        "reason": "Each maintained index creates more work on writes even when no query benefits.",
+        "check": "Benchmark typical ingestion and lookups before and after each candidate index.",
+        "tradeoff": "A rare but business-critical lookup can still justify an index despite low frequency.",
+        "alternative": "Create all candidate indexes and benchmark only a single read."
+      }
+    ]
+  },
+  "transactions": {
+    "title": "Transfer meal credits without losing them",
+    "story": "Vidya moves 3 meal credits from card A, which holds 8, to card B, which holds 2. A power interruption between the debit and the credit must not leave the canteen short of credits.",
+    "steps": [
+      "At the start the two cards together hold 10 credits. Begin a transaction, a group of changes with one final decision to keep or discard them.",
+      "Subtract 3 from A and add 3 to B inside that group. The intended balances become 5 and 5.",
+      "Commit only after both changes succeed. If either change fails, roll back the group to 8 and 2. In both valid final states the total is 10."
+    ],
+    "outcome": "You can decide which changes belong together and test that a failure leaves a valid state.",
+    "terms": [
+      [
+        "Transaction",
+        "One unit of database work whose changes are committed or rolled back together."
+      ],
+      [
+        "Commit",
+        "Finish a transaction and accept its changes."
+      ],
+      [
+        "Rollback",
+        "Discard uncommitted changes from the transaction."
+      ],
+      [
+        "Atomicity",
+        "The guarantee that a transaction's changes take effect together or are discarded together."
+      ],
+      [
+        "Isolation",
+        "Rules controlling what overlapping transactions can observe and how their changes interact."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "An injected failure occurs just after debiting card A and before crediting B.",
+        "action": "Perform both changes in a single transaction and roll it back on the failure.",
+        "reason": "Both changes are parts of one transfer and must share the same final outcome.",
+        "check": "With A at 8 and B at 2, the failed transfer leaves them at 8 and 2.",
+        "tradeoff": "Keeping transactions open longer can increase contention for other writers.",
+        "alternative": "Commit the debit immediately and hope a later job finishes the credit."
+      },
+      {
+        "situation": "Two tills each try to spend the last 5 credits on one card after both read its balance as 5.",
+        "action": "Use an atomic conditional debit that succeeds only while enough credit remains, and check the affected row count.",
+        "reason": "A separate earlier balance check can become stale before the write.",
+        "check": "In a simultaneous spend test exactly one debit succeeds and the balance ends at zero.",
+        "tradeoff": "A rejected purchase must be handled at the till and retry behavior should be explicit.",
+        "alternative": "Subtract from the value that each till read earlier without checking again."
+      },
+      {
+        "situation": "A transfer commits but the customer's screen times out and resends the same request.",
+        "action": "Give the transfer a unique request ID and record its completed result in the same transaction.",
+        "reason": "A database transaction protects one execution; the identifier connects later retries to that execution.",
+        "check": "Sending the same request ID twice transfers 3 credits only once.",
+        "tradeoff": "Request IDs and prior results need retention and rules for conflicting requests using the same ID.",
+        "alternative": "Assume a timeout means the first transfer certainly rolled back."
+      }
+    ]
+  },
+  "database-design": {
+    "title": "Keep one address for each supplier",
+    "story": "Deepa orders paper and pens from supplier 12. The same supplier address appears on both product rows. When the supplier moves, changing just the paper row leaves two conflicting current addresses.",
+    "steps": [
+      "Give the supplier its own record containing supplier ID 12 and its current address. Give paper and pens separate product records.",
+      "Store supplier ID 12 on each product record to link it to that current supplier. Read the address by joining the product to the supplier.",
+      "Changing the one supplier record now updates the address seen for both products. If an old order must show where it actually shipped, save that historical shipping address on the order as a separate fact."
+    ],
+    "outcome": "You can decide which real thing owns each fact and distinguish current reference data from historical evidence.",
+    "terms": [
+      [
+        "Entity",
+        "A kind of thing the database describes, such as a supplier or an order."
+      ],
+      [
+        "Primary key",
+        "The stable field or combination that identifies one row."
+      ],
+      [
+        "Foreign key",
+        "A field or field group that refers to a key in a related table."
+      ],
+      [
+        "Normalization",
+        "Organizing facts so each fact about a particular thing can be maintained in the appropriate place."
+      ],
+      [
+        "Many-to-many",
+        "A relationship where each item on either side can relate to several on the other."
+      ],
+      [
+        "Junction table",
+        "A table whose rows record individual links between two other kinds of record."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A supplier changes address and 19 of 20 product rows are updated. The last row still shows the old current address.",
+        "action": "Keep the supplier's current address on a supplier record and reference that supplier from products.",
+        "reason": "One fact maintained in twenty places can drift after a partial update.",
+        "check": "Changing supplier 12 once changes the current address found for all twenty linked products.",
+        "tradeoff": "Reading product and supplier details together now involves a join.",
+        "alternative": "Maintain twenty independent copies and ask staff to remember to update every one."
+      },
+      {
+        "situation": "A pupil can take several courses and each course has many pupils. A comma-separated list of names is growing in each course row.",
+        "action": "Represent each registration as a row linking a pupil ID and a course ID.",
+        "reason": "A link row can be queried individually and constrained to prevent duplicate registration.",
+        "check": "One pupil in two courses has two registration rows and each course can list its own pupils.",
+        "tradeoff": "Listing names for display requires joining the registration and pupil tables.",
+        "alternative": "Search for a pupil using a substring of the comma-separated names."
+      },
+      {
+        "situation": "Changing a customer's current address also changes the address displayed on last year's delivered invoice.",
+        "action": "Store the order's actual shipping address as a snapshot when the order is placed.",
+        "reason": "A historical delivery address and a customer's current address describe different facts in time.",
+        "check": "After a customer moves, a new order shows the new address while the paid invoice retains the old one.",
+        "tradeoff": "Historical snapshots require appropriate retention and access controls.",
+        "alternative": "Resolve all invoice addresses by looking up the customer's current address at display time."
+      }
+    ]
+  },
+  "database-fundamentals": {
+    "title": "Find the owner of a lost library card",
+    "story": "Pooja finds card 42 on a library desk. Her register has three facts per member: a card number, a name and a phone number. A database lets her look up the right record and use it again next week.",
+    "steps": [
+      "Picture a table as a register with the same labelled columns on each line. In one row, 42, Isha and 5550142 belong to the same member.",
+      "Search the card-number column for 42. Read the name and phone from that matching row to contact Isha.",
+      "Another Isha could join tomorrow with card 91. Giving each member a unique number keeps their records separate even when names match."
+    ],
+    "outcome": "You can describe which facts belong together in a record and choose a reliable way to find it again.",
+    "terms": [
+      [
+        "Database",
+        "An organized collection of stored information that software can read and change."
+      ],
+      [
+        "Table",
+        "A collection of records sharing a set of named columns."
+      ],
+      [
+        "Row",
+        "One record, such as one member."
+      ],
+      [
+        "Column",
+        "One named kind of fact, such as card number."
+      ],
+      [
+        "Primary key",
+        "A field or group of fields chosen to identify exactly one row."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A librarian deletes the contact record for the wrong Ravi because two members share the name.",
+        "action": "Locate the member by their unique card number before changing the record.",
+        "reason": "Names describe people but can repeat across rows.",
+        "check": "Editing card 42 changes just that member even if card 91 has the same name.",
+        "tradeoff": "A lost card or replaced number needs a reliable way to reconnect the account.",
+        "alternative": "Pick the first matching name returned by the register."
+      },
+      {
+        "situation": "A school stores attendance totals only in a running Python variable and loses them when the program restarts.",
+        "action": "Write attendance records to a persistent database and confirm successful saves.",
+        "reason": "Process memory is temporary while committed database records survive ordinary restarts.",
+        "check": "Record one attendance, restart and retrieve the same child's entry.",
+        "tradeoff": "Saving introduces storage, backup and error-handling responsibilities.",
+        "alternative": "Leave the application window open permanently and treat memory as the permanent register."
+      },
+      {
+        "situation": "A volunteer enters a new borrower without an email address. Staff must tell unknown addresses apart from verified ones.",
+        "action": "Represent the missing address explicitly and keep the other known member fields.",
+        "reason": "A missing value describes the absence of information, while a fabricated address looks like actual contact data.",
+        "check": "The borrower is findable and an email job skips or flags the unavailable address.",
+        "tradeoff": "A required-email policy would instead need to reject incomplete registration.",
+        "alternative": "Insert an invented deliverable-looking email to fill the empty field."
+      }
+    ]
+  },
+  "sql": {
+    "title": "Find deliveries that a driver can collect",
+    "story": "Naveen has three parcels. Parcel 8 weighs 2 kg and is ready, parcel 9 weighs 7 kg and is ready, and parcel 10 weighs 1 kg and is still being packed. His bicycle can carry a parcel of at most 3 kg.",
+    "steps": [
+      "Start with the parcel register. SELECT id asks the database to show just parcel numbers, and FROM parcels names the register to read.",
+      "Use WHERE ready = 1 AND weight <= 3. The condition after WHERE is a predicate: it decides, for each row, whether that parcel belongs in the result. Here 1 represents ready.",
+      "Parcel 8 passes both checks. Parcel 9 is too heavy. Parcel 10 is light enough but is not ready. The query returns one row containing 8.",
+      "If the driver takes a van that accepts 8 kg, changing only the weight limit admits parcel 9 as well. The stored parcels have not been edited by the search."
+    ],
+    "outcome": "You can translate a practical request into the columns to show, the rows to keep and an order for the results.",
+    "terms": [
+      [
+        "SQL",
+        "A language for asking a database to read or change organized records."
+      ],
+      [
+        "SELECT",
+        "Choose which columns or calculated values appear in the result."
+      ],
+      [
+        "FROM",
+        "Name the table that supplies the records."
+      ],
+      [
+        "WHERE",
+        "Introduce the test used to keep matching rows."
+      ],
+      [
+        "Predicate",
+        "A condition checked on a row. WHERE keeps rows whose condition is true."
+      ],
+      [
+        "ORDER BY",
+        "Specify the order in which matching rows should be returned."
+      ],
+      [
+        "NULL",
+        "A marker for a missing or unknown value. Some comparisons involving it have an unknown result."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A bike courier accidentally receives every ready parcel plus every light parcel, including unready ones.",
+        "action": "Require ready status and acceptable weight together with AND.",
+        "reason": "Both requirements describe one eligible parcel; OR would accept one requirement alone.",
+        "check": "A ready 7 kg parcel and an unready 1 kg parcel are both excluded by a 3 kg bicycle limit.",
+        "tradeoff": "A parcel with missing weight needs an explicit handling policy.",
+        "alternative": "Join the weight and readiness predicates with OR."
+      },
+      {
+        "situation": "The desk wants the latest three bookings, but LIMIT 3 returns older entries after an import.",
+        "action": "Sort by booking time descending and a stable booking ID to break ties before taking three.",
+        "reason": "A row limit controls the count; an ordering defines which records are considered first.",
+        "check": "Equal-time bookings appear in the documented ID order and the newest three are selected.",
+        "tradeoff": "Sorting can cost work unless an appropriate index supports it.",
+        "alternative": "Assume the first three physical rows are the newest bookings."
+      },
+      {
+        "situation": "A parcel's destination is unknown, yet a search using destination = NULL finds no such parcel.",
+        "action": "Use destination IS NULL to find records missing the destination.",
+        "reason": "An ordinary equality comparison with NULL yields an unknown truth value, and WHERE keeps true rows.",
+        "check": "A row containing NULL is returned while a recorded destination such as Pune is excluded.",
+        "tradeoff": "An empty text value has a different meaning and needs a separate rule if accepted.",
+        "alternative": "Replace NULL with the literal text 'NULL' in the comparison."
+      }
+    ]
+  },
+  "database-engines": {
+    "title": "Choose storage for one counter or five branches",
+    "story": "Irfan's single laptop records a snack stall's sales. His sister plans five shops that all need today's shared stock count. Both need database tables, but their access arrangements differ.",
+    "steps": [
+      "For the laptop, SQLite can keep the tables in a database file and the app can read that file directly. A sale can be recorded even when the stall is offline.",
+      "For the branches, a database server such as PostgreSQL can accept connections from several applications. Each shop sends a request to that shared service.",
+      "Ask where the data must live and who writes at the same time. Also decide how each shop handles a lost connection before choosing an engine."
+    ],
+    "outcome": "You can match a storage engine to the number and location of writers, the connectivity available and the team's operating capacity.",
+    "terms": [
+      [
+        "Engine",
+        "The software that stores, retrieves and protects database records."
+      ],
+      [
+        "SQLite",
+        "A database engine that can run inside an application with a local file."
+      ],
+      [
+        "PostgreSQL",
+        "A database system commonly used as a server that applications connect to."
+      ],
+      [
+        "Connection",
+        "An application's channel for requesting work from a database."
+      ],
+      [
+        "Concurrent writers",
+        "People or processes attempting changes during overlapping periods."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A hiking guide needs a searchable route book on one offline tablet.",
+        "action": "Store the route tables locally with SQLite and update the file through a planned sync.",
+        "reason": "An embedded engine can query the file without contacting a remote service.",
+        "check": "Airplane mode still permits finding a stored route by ID.",
+        "tradeoff": "Sharing edits from several tablets requires separate synchronization rules.",
+        "alternative": "Require a remote database connection for every route lookup."
+      },
+      {
+        "situation": "Five counters update the same inventory, and staff propose each keeping a writable copy in a synced folder.",
+        "action": "Use a shared service for authoritative writes, with transactions for stock changes.",
+        "reason": "File synchronization does not coordinate concurrent database updates from independent copies.",
+        "check": "Two simultaneous orders reduce shared stock exactly once per accepted order.",
+        "tradeoff": "Shop operation now depends on service availability or an explicit offline queue.",
+        "alternative": "Allow file sync to merge independent database file changes after each sale."
+      },
+      {
+        "situation": "A team changes from SQLite to PostgreSQL and assumes every rule behaves identically because the query text looks familiar.",
+        "action": "Test the schema, type handling and transaction behavior on the target engine before migrating.",
+        "reason": "Engines share many SQL ideas but can interpret data types and special functions differently.",
+        "check": "A migration fixture preserves counts, values and rejection of invalid test records on PostgreSQL.",
+        "tradeoff": "Maintaining compatibility tests costs time as the schema changes.",
+        "alternative": "Treat successful parsing of one SELECT as proof the full application is portable."
+      }
+    ]
+  },
+  "tables": {
+    "title": "Keep a booking code, a count and a price apart",
+    "story": "Gita reserves 2 seats under booking code '0008'. The total is ₹150.50. Although all three fields contain digits, each serves a different purpose.",
+    "steps": [
+      "Store '0008' in a text column because the printed booking code must keep its leading zeroes.",
+      "Store 2 in a whole-number seats column and require at least one seat. This lets the office add seats across bookings.",
+      "Store the price in integer paise, 15050, or in a suitable exact decimal type when supported. Put a unique rule on the booking code so a second customer cannot silently take the same booking."
+    ],
+    "outcome": "You can design a row so identifiers keep their spelling, quantities support calculations and invalid values are rejected.",
+    "terms": [
+      [
+        "Schema",
+        "The declared shape and rules of stored records."
+      ],
+      [
+        "Data type",
+        "The kind of value a column is intended to hold."
+      ],
+      [
+        "Constraint",
+        "A rule the database checks when data changes."
+      ],
+      [
+        "NOT NULL",
+        "A rule requiring a value for the column."
+      ],
+      [
+        "Unique",
+        "A rule preventing repeated key values under the database's uniqueness rules."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Exported booking code 0008 comes back as 8 after import.",
+        "action": "Use a text column and read the code as text during import.",
+        "reason": "The digits form a printed identifier whose width matters.",
+        "check": "Reading the saved booking returns exactly '0008'.",
+        "tradeoff": "Putting codes in numeric order requires defining how to compare their text or separate sequence numbers.",
+        "alternative": "Store the code as an integer and hope the import remembers the original width."
+      },
+      {
+        "situation": "A web form checks for negative seat counts, but a batch job still inserts -2.",
+        "action": "Put the range rule on the database table as well as validating in the form.",
+        "reason": "A database constraint applies to all writers using that table.",
+        "check": "Both the form and direct batch insert reject a negative count while 2 is accepted.",
+        "tradeoff": "Historical bad rows need correction before a new constraint can be enforced.",
+        "alternative": "Assume every future writer will call the same web form."
+      },
+      {
+        "situation": "A sales report accumulates rounding differences on amounts with two decimal places.",
+        "action": "Store exact money values using whole minor units or an appropriate exact decimal type.",
+        "reason": "Binary floating-point can approximate decimal fractions and repeated addition can reveal the differences.",
+        "check": "One hundred entries of 10 paise sum to exactly 1000 paise.",
+        "tradeoff": "Currencies or rates with different precision need an explicit scale and rounding policy.",
+        "alternative": "Use a floating-point total and rely on display rounding to fix stored balances."
+      }
+    ]
+  },
+  "crud": {
+    "title": "Change one order through its lifetime",
+    "story": "Bina takes an order for 2 lemon teas and gives it order number 71. The customer asks for a third cup, checks the order and later cancels before preparation.",
+    "steps": [
+      "Create a row for order 71 with quantity 2 using INSERT. Read that row with SELECT to check what was saved.",
+      "UPDATE the row whose order number equals 71 and set quantity to 3. Read the order again to confirm the changed quantity.",
+      "A demonstration order can be removed with DELETE using the same order number. If sales history must be retained, record 'cancelled' instead and retain the original order details."
+    ],
+    "outcome": "You can create, read, update and delete a particular record while protecting other customers' records.",
+    "terms": [
+      [
+        "CRUD",
+        "The four basic record operations: create, read, update and delete."
+      ],
+      [
+        "INSERT",
+        "Add a new row."
+      ],
+      [
+        "UPDATE",
+        "Change fields on matching existing rows."
+      ],
+      [
+        "DELETE",
+        "Remove matching rows."
+      ],
+      [
+        "Affected row count",
+        "How many rows the database reports an operation matched or changed, depending on the operation and engine."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two customers ordered tea, and a quantity correction applies to order 71 alone.",
+        "action": "Filter the update using the unique order number and check which row was affected.",
+        "reason": "The product name can match several orders.",
+        "check": "Order 71 moves from 2 to 3 cups while order 72's quantity remains unchanged.",
+        "tradeoff": "A correction using a stale order number must report that no matching order exists.",
+        "alternative": "Update every order whose product is tea."
+      },
+      {
+        "situation": "A customer's name contains an apostrophe and text-built SQL fails during insertion.",
+        "action": "Use a parameterized INSERT and supply the name separately from SQL syntax.",
+        "reason": "A bound parameter carries the entire name as a data value.",
+        "check": "O'Neil is stored exactly and cannot change the query's structure.",
+        "tradeoff": "Parameters represent data values; dynamic table names need a separate allowlist.",
+        "alternative": "Strip every apostrophe from customer names before inserting them."
+      },
+      {
+        "situation": "An order was cancelled but the office must retain records for dispute handling.",
+        "action": "Update its status to cancelled and keep its order identity and history.",
+        "reason": "Physical deletion removes facts needed to explain the cancellation later.",
+        "check": "Active-order screens omit order 71 while the audit view still shows it and its cancellation.",
+        "tradeoff": "Status-aware queries and a retention policy are now necessary.",
+        "alternative": "Delete the row and depend on the next invoice number to explain the gap."
+      }
+    ]
+  },
+  "joins": {
+    "title": "Show the room for each appointment",
+    "story": "Kavya has an appointments table with appointment 70 assigned to room ID 3 and appointment 71 still unassigned. Another table says room ID 3 means Blue Room. Reception needs a list including the unassigned appointment.",
+    "steps": [
+      "Start from every appointment because reception wants every booking on the list.",
+      "Match an appointment's room ID to a room table ID. The join combines appointment 70 with the Blue Room name.",
+      "Use a LEFT JOIN to keep appointment 71 even though it has no matching room. Its room name comes back missing, which reception can display as 'Awaiting room'."
+    ],
+    "outcome": "You can combine related records, explain which unmatched rows survive, and spot accidental duplication.",
+    "terms": [
+      [
+        "Join",
+        "Combine rows from tables according to a matching rule."
+      ],
+      [
+        "Join key",
+        "The value used to decide which records match across tables."
+      ],
+      [
+        "Inner join",
+        "Keep combinations with a match on both sides."
+      ],
+      [
+        "Left join",
+        "Keep every left-side row, filling missing right-side fields with NULL when there is no match."
+      ],
+      [
+        "One-to-many",
+        "One item on one side can match several items on the other."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Reception's list loses every appointment still waiting for a room.",
+        "action": "Start from appointments and use a left join to the room list.",
+        "reason": "Unassigned appointments have no matching room, yet they are part of the required roster.",
+        "check": "Appointments 70 and 71 both appear and 71 has a missing room name.",
+        "tradeoff": "A filter on right-side room fields can remove those missing rows if placed carelessly.",
+        "alternative": "Use an inner join because every displayed row should have an appointment."
+      },
+      {
+        "situation": "A report joins invoices to line items and then sums invoice totals. A ₹90 invoice with three lines contributes ₹270.",
+        "action": "Count or sum each invoice once, or aggregate line items to one row per invoice before combining.",
+        "reason": "One invoice header is repeated for every matching line item.",
+        "check": "The three-line ₹90 invoice contributes ₹90 to the header-total report.",
+        "tradeoff": "Line-level reports still need the individual rows, so choose the reporting grain first.",
+        "alternative": "Use DISTINCT on the amount alone and hope separate equal-value invoices can be merged."
+      },
+      {
+        "situation": "Two cities each have a branch named Central, and a join assigns deliveries to the wrong city.",
+        "action": "Join on the unique branch ID stored on the delivery.",
+        "reason": "The shared branch name can match multiple branch rows.",
+        "check": "A delivery for branch ID 9 gets only that branch's city even when another Central exists.",
+        "tradeoff": "Older records containing only the name need a disambiguation step.",
+        "alternative": "Normalize the spelling of Central and use the normalized name as a unique key."
+      }
+    ]
+  },
+  "file-handling": {
+    "title": "Keep an expense diary after the app closes",
+    "story": "Nila records bus fares of ₹18 and ₹22 in a text file, one amount per line. Tomorrow she needs to add ₹20 without erasing yesterday's entries.",
+    "steps": [
+      "Opening a file for reading gives the program access to the saved lines. Read '18' and '22' as text, convert each to a number and get ₹40 in total.",
+      "Open the diary in append mode and write '20' followed by a newline. Appending places the entry after the existing lines.",
+      "Close the file when the task finishes. Reading it again gives 18, 22 and 20, so the updated total is ₹60."
+    ],
+    "outcome": "You can choose how to open a file, preserve earlier records and turn stored text back into usable values.",
+    "terms": [
+      [
+        "File",
+        "Named data kept on a storage device after a program stops."
+      ],
+      [
+        "Path",
+        "The location and name used to find a file."
+      ],
+      [
+        "Append",
+        "Add data to the end of the existing contents."
+      ],
+      [
+        "Newline",
+        "A character that marks the end of a line of text."
+      ],
+      [
+        "Encoding",
+        "An agreed way to turn text characters into stored bytes."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A till opens its daily receipt file with 'w' for every new sale. Only the latest receipt survives.",
+        "action": "Open the receipt journal in append mode for each new entry.",
+        "reason": "Write mode truncates an existing file when it opens, while append mode retains its contents.",
+        "check": "After two sales, closing and reopening the journal shows two separate receipt lines.",
+        "tradeoff": "A corrected journal may need a controlled rewrite rather than another appended copy.",
+        "alternative": "Open in write mode a second time before recording the previous sale."
+      },
+      {
+        "situation": "A shop exports the name 'José' and a second program displays garbled characters.",
+        "action": "Write and read the file using the same documented encoding, such as UTF-8.",
+        "reason": "The reader must decode the stored bytes using the convention used to write them.",
+        "check": "A round trip preserves José exactly, including the accent.",
+        "tradeoff": "Existing legacy files may need decoding with their original encoding first.",
+        "alternative": "Drop every accented character from the customer list."
+      },
+      {
+        "situation": "An expense file may be several gigabytes but the office PC only needs its grand total.",
+        "action": "Read and process one line at a time inside a managed file block.",
+        "reason": "The running total needs the current amount and previous sum, so storing every line wastes memory.",
+        "check": "A large fixture produces the same total while memory stays roughly steady.",
+        "tradeoff": "A later request to sort every entry needs a different strategy.",
+        "alternative": "Read the entire file into one giant string before adding the amounts."
+      }
+    ]
+  },
+  "exceptions": {
+    "title": "Handle a mistyped ticket quantity",
+    "story": "Sita asks a visitor to enter the number of tickets. One visitor types '2' and another types 'two'. Both inputs arrive as text, and only the first can be converted directly into a whole number.",
+    "steps": [
+      "Try converting '2' with int(). The result is the number 2 and booking can continue.",
+      "Converting 'two' raises ValueError. This is a named signal that the value cannot be used for this conversion.",
+      "Catch that particular error and ask for digits. If the visitor types '0', conversion succeeds, but the booking still needs a separate rule requiring at least one ticket."
+    ],
+    "outcome": "You can help people recover from a predictable mistake and distinguish unusual failures from invalid business choices.",
+    "terms": [
+      [
+        "Exception",
+        "A signal that an instruction could not finish normally."
+      ],
+      [
+        "Raise",
+        "Send an exception from the point where the problem occurs."
+      ],
+      [
+        "Catch",
+        "Handle a particular exception so the program can respond."
+      ],
+      [
+        "ValueError",
+        "An exception indicating an unsuitable value for an otherwise meaningful operation."
+      ],
+      [
+        "Validation",
+        "Checking that an input meets the application's rules."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A bus app hides all errors and says 'enter digits' even when saving the booking failed.",
+        "action": "Catch the conversion error around the conversion alone and handle storage failures separately.",
+        "reason": "A broad catch gives the same message for unrelated failures that require different repairs.",
+        "check": "Typing 'six' requests digits; disconnecting storage reports a saving problem.",
+        "tradeoff": "Separate error paths need more messages and tests.",
+        "alternative": "Wrap the entire booking workflow in one catch-all with the same message."
+      },
+      {
+        "situation": "A quantity of zero is accepted because the form assumes successful conversion means a valid order.",
+        "action": "After conversion, test that quantity is greater than zero.",
+        "reason": "Zero is an integer even when the order policy excludes it.",
+        "check": "'0' shows a minimum-quantity message and '1' is accepted.",
+        "tradeoff": "Returns or corrections may need a different rule for negative amounts.",
+        "alternative": "Wait for int('0') to raise an exception."
+      },
+      {
+        "situation": "A scanner fails halfway through reading a file and leaves the file handle open.",
+        "action": "Manage the file with a with block so it closes when the block exits.",
+        "reason": "Cleanup runs even if reading raises an exception.",
+        "check": "An injected read failure releases the handle and the caller still receives the error.",
+        "tradeoff": "Cleanup cannot reconstruct the incomplete scan by itself.",
+        "alternative": "Close the file only after the last successful read statement."
+      }
+    ]
+  },
+  "oop": {
+    "title": "Lend two library books independently",
+    "story": "Zoya has two books with inventory IDs B12 and B19. Lending B12 should change its availability while B19 remains available. She needs a way to keep each book's facts and actions together.",
+    "steps": [
+      "Describe a book once with a class: each book has its own ID and a borrowed flag that starts False.",
+      "Create two book objects from that description. In the borrow action, change the selected object's borrowed flag to True.",
+      "Call borrow on B12. Its flag becomes True while B19's flag stays False. The return action can later set B12's flag back to False."
+    ],
+    "outcome": "You can represent several real items with their own state and a consistent set of allowed actions.",
+    "terms": [
+      [
+        "Class",
+        "A description of the data and actions a kind of object will have."
+      ],
+      [
+        "Object",
+        "One particular item created from that description."
+      ],
+      [
+        "Attribute",
+        "A named fact on an object, such as its ID or availability."
+      ],
+      [
+        "Method",
+        "An action defined on an object, such as borrowing a book."
+      ],
+      [
+        "State",
+        "The current values of an object's facts."
+      ],
+      [
+        "self",
+        "The name conventionally used for the particular object receiving a method call."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Adding a borrower to one book's history also adds the borrower to another book's history.",
+        "action": "Create a fresh history list for each book during setup.",
+        "reason": "A single shared list stores changes from every object referring to it.",
+        "check": "Borrow B12 and verify B19's history is still empty.",
+        "tradeoff": "A genuinely shared library-wide audit needs its own deliberate collection.",
+        "alternative": "Put one mutable history list on the class for every copy to use."
+      },
+      {
+        "situation": "A library app lets a second caller borrow a copy that is already out.",
+        "action": "Check availability inside the borrow operation before changing the state.",
+        "reason": "Putting the rule at the state change protects each caller using the operation.",
+        "check": "The first loan succeeds; a second attempt on the same copy reports unavailable.",
+        "tradeoff": "Simultaneous requests in a shared database need an atomic reservation too.",
+        "alternative": "Ask each screen to do its own check and expose an unrestricted flag change."
+      },
+      {
+        "situation": "Two copies of the same novel have matching titles but different due dates.",
+        "action": "Give each physical copy a distinct identity and track its loan state separately.",
+        "reason": "A title describes the work, while a due date belongs to one loaned copy.",
+        "check": "Returning copy 2 leaves copy 1's due date and borrower intact.",
+        "tradeoff": "A shared title record can still hold common author and edition details.",
+        "alternative": "Store the only due date on the shared title record."
+      }
+    ]
+  },
+  "modules": {
+    "title": "Share one delivery-fee rule between two tills",
+    "story": "Sameer keeps the free-delivery cutoff of ₹500 in both a counter app and an online checkout. When the policy changes, updating just one copy produces two different bills for the same basket.",
+    "steps": [
+      "Save the fee calculation in a Python file called fees.py. A file holding reusable Python definitions is a module.",
+      "Import that calculation into both tills and call it with a ₹510 basket. Both callers now use the same rule and return zero delivery charge.",
+      "Change the cutoff in fees.py when the policy changes and test both callers. Keep the rule separate from code that asks a cashier to type a total."
+    ],
+    "outcome": "You can organize reusable code so several parts of an application follow one shared rule.",
+    "terms": [
+      [
+        "Module",
+        "A unit of Python code that another piece of code can import, often a .py file."
+      ],
+      [
+        "Import",
+        "Make a module or one of its definitions available to your program."
+      ],
+      [
+        "Package",
+        "A group of related modules arranged under a common name."
+      ],
+      [
+        "Namespace",
+        "The names available in one place, such as fees.charge inside the fees module."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Importing the delivery rule into a test unexpectedly opens a cashier's input prompt.",
+        "action": "Put the interactive entry point behind an if __name__ == '__main__' check.",
+        "reason": "Python executes top-level statements when a module is first imported.",
+        "check": "Importing the module returns promptly; running it directly still starts the prompt.",
+        "tradeoff": "Deliberate import-time setup should be small and safe wherever import occurs.",
+        "alternative": "Call input() at the top of the shared calculation file."
+      },
+      {
+        "situation": "A staff member names a local file random.py and imports the wrong random module.",
+        "action": "Rename the local module to a distinct application-specific name.",
+        "reason": "Python may find a nearby file before the intended standard-library module.",
+        "check": "The random module used by the application exposes the expected standard functions.",
+        "tradeoff": "Renaming requires updating any callers that imported the local module by its old name.",
+        "alternative": "Copy standard-library code into the local random.py to mask the collision."
+      },
+      {
+        "situation": "The checkout and receipt modules import one another and sometimes see partly initialized names.",
+        "action": "Move the common fee rule into a third module that both depend on.",
+        "reason": "A one-directional dependency lets the shared rule finish loading before either caller uses it.",
+        "check": "A fresh process can import either entry module first without failure.",
+        "tradeoff": "The shared module should contain an actual common responsibility.",
+        "alternative": "Change the order of imports in one caller and rely on that order everywhere."
+      }
+    ]
+  },
+  "virtual-environments": {
+    "title": "Run two tools with different package versions",
+    "story": "Lina maintains a school report tool tested with formatter version 1 and a newer newsletter tool using version 2. Installing version 2 for both tools at once could change the school reports.",
+    "steps": [
+      "Create a separate Python environment for each project. Think of each environment as its own labelled shelf of add-on packages.",
+      "Install formatter version 1 on the school shelf and version 2 on the newsletter shelf. Run each project with the interpreter belonging to its shelf.",
+      "Print the interpreter location and installed version from both tools. Different paths and the expected versions confirm that one installation did not replace the other."
+    ],
+    "outcome": "You can isolate project dependencies and reproduce the package versions a working application uses.",
+    "terms": [
+      [
+        "Package",
+        "An installable collection of reusable code."
+      ],
+      [
+        "Dependency",
+        "A package or component a project relies on."
+      ],
+      [
+        "Virtual environment",
+        "A project-specific Python environment with its own installed packages."
+      ],
+      [
+        "Interpreter",
+        "The executable that runs Python code."
+      ],
+      [
+        "Activation",
+        "A shell convenience that makes commands use one environment's interpreter by default."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A package installation succeeds but the project reports that it cannot import the package.",
+        "action": "Run the package installer through the same interpreter that starts the project.",
+        "reason": "Different Python installations can have different package directories.",
+        "check": "The interpreter path used by python -m pip matches the one that successfully imports the package.",
+        "tradeoff": "Editor and terminal interpreter selections can still differ.",
+        "alternative": "Repeat installation with whichever pip command appears first on the computer."
+      },
+      {
+        "situation": "A second PC needs the same report tool, but copying a virtual environment folder fails.",
+        "action": "Create a fresh environment on the second PC and install the recorded dependency versions.",
+        "reason": "Environments can contain machine-specific executable paths and compiled packages.",
+        "check": "The second PC runs a sample report and shows the expected package versions.",
+        "tradeoff": "Platform-specific packages may need equivalent builds even with matching versions.",
+        "alternative": "Distribute only the first PC's environment directory."
+      },
+      {
+        "situation": "A developer assumes an experiment inside a virtual environment cannot edit personal files.",
+        "action": "Use an actual isolated runtime with restricted permissions for untrusted code.",
+        "reason": "A virtual environment separates Python packages and still runs with the process owner's file permissions.",
+        "check": "A controlled test in the chosen restricted runtime cannot read a forbidden file.",
+        "tradeoff": "Stronger isolation requires configuration beyond installing dependencies.",
+        "alternative": "Activate a second virtual environment and run the untrusted code normally."
+      }
+    ]
+  },
+  "git": {
+    "title": "Recover yesterday's working menu",
+    "story": "Jai edits a café menu stored in a text file. A change accidentally removes the price list. Yesterday he saved a Git commit containing the correct menu.",
+    "steps": [
+      "A commit records a named point in the project's history. Compare the current menu with yesterday's snapshot to see exactly which lines disappeared.",
+      "Restore the missing price lines, review the difference and stage the intended file. Staging chooses what the next snapshot will include.",
+      "Commit the repair. A teammate can now see the original price list, the removal and the repair as distinct events. A remote copy can share that history between machines."
+    ],
+    "outcome": "You can review what changed, save a coherent version and recover a specific mistake.",
+    "terms": [
+      [
+        "Repository",
+        "A project together with its tracked history."
+      ],
+      [
+        "Commit",
+        "A saved snapshot and a message explaining a set of changes."
+      ],
+      [
+        "Staging area",
+        "The selected contents that will go into the next commit."
+      ],
+      [
+        "Branch",
+        "A movable name for a line of development."
+      ],
+      [
+        "Remote",
+        "A named connection to another repository, often hosted on a service such as GitHub."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A cook changes the menu and also creates a file containing a real supplier password before committing.",
+        "action": "Stage only the intended menu change and keep the credential outside tracked files.",
+        "reason": "A commit can preserve sensitive contents in history even after later edits.",
+        "check": "The staged difference contains the menu change and no password file.",
+        "tradeoff": "An already exposed credential needs rotation even if it is removed from a later commit.",
+        "alternative": "Stage every file and delete the credential from the menu folder tomorrow."
+      },
+      {
+        "situation": "Two teammates edit the same price line differently and Git reports a merge conflict.",
+        "action": "Review both proposed prices, agree on the actual policy and record the resolved line.",
+        "reason": "Git can identify competing edits but cannot decide the right selling price.",
+        "check": "The final menu has the agreed single price and no conflict markers.",
+        "tradeoff": "Resolving the text still requires checking that the business rule is correct.",
+        "alternative": "Always choose the newest timestamp without reviewing the values."
+      },
+      {
+        "situation": "The team wants to undo a mistaken commit that everyone already pulled.",
+        "action": "Create a new commit reversing the unwanted change on the shared branch.",
+        "reason": "A reversal preserves the history other teammates already have.",
+        "check": "Pulling the correction restores the expected behavior without rewriting older shared commits.",
+        "tradeoff": "Later edits depending on the mistaken change may require a tailored correction.",
+        "alternative": "Overwrite the shared history and require colleagues to discard their local copies."
+      }
+    ]
+  },
+  "dsa": {
+    "title": "Serve customers fairly and undo typing mistakes",
+    "story": "Uma has two jobs at her help desk. Visitors with tickets 17 and 18 must be served in arrival order. In a note, the last character she typed should be the first one removed by Undo.",
+    "steps": [
+      "For the visitors, add 17 and then 18 to the end of a queue. Remove from the front, so 17 is served first.",
+      "For the note, add each edit to the top of a stack. Removing the top undoes the most recent edit first.",
+      "The items alone do not determine the answer. The rule governing insertion and removal determines which person or edit is picked next."
+    ],
+    "outcome": "You can choose a way of organizing data by the action the application performs most often.",
+    "terms": [
+      [
+        "Data structure",
+        "A way of arranging values so particular operations are convenient."
+      ],
+      [
+        "Algorithm",
+        "An ordered procedure for solving a task."
+      ],
+      [
+        "Queue",
+        "A collection in which the first arrival is the first to leave."
+      ],
+      [
+        "Stack",
+        "A collection in which the most recent addition is the first to leave."
+      ],
+      [
+        "Search",
+        "A procedure for finding whether or where a requested value occurs."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A help desk handles ordinary visitors in the reverse of their arrival order.",
+        "action": "Use a queue that adds at the back and serves from the front.",
+        "reason": "First-in, first-out preserves the announced waiting order.",
+        "check": "Tickets 17, 18 and 19 are served as 17, 18, 19.",
+        "tradeoff": "An emergency-priority desk requires an additional priority rule.",
+        "alternative": "Push each arrival onto the top of a stack and pop the top."
+      },
+      {
+        "situation": "A text editor undoes the first typed word when the writer presses Undo once.",
+        "action": "Store edit actions on a stack and reverse the latest action.",
+        "reason": "Undo must unwind changes in the opposite order from creation.",
+        "check": "After adding A then B, one Undo removes B while A remains.",
+        "tradeoff": "Redo needs a separate record of actions that were undone.",
+        "alternative": "Remove the oldest recorded edit from the front of a queue."
+      },
+      {
+        "situation": "A ticket scanner must answer whether an ID appeared before, thousands of times a minute.",
+        "action": "Maintain a set of previously accepted IDs for membership checks.",
+        "reason": "The scanner needs a yes/no lookup without visiting every earlier ticket on average.",
+        "check": "A second scan of the same ID is detected even after many other arrivals.",
+        "tradeoff": "The set needs memory for the stored IDs and does not give arrival order.",
+        "alternative": "Sort the entire scan history again for each incoming ticket."
+      }
+    ]
+  },
+  "complexity": {
+    "title": "Estimate how a lost-parcel search grows",
+    "story": "Arun searches an unsorted tray containing 20 parcel labels. A missing label makes him read all 20. The depot wants to know what happens when the tray grows to 2,000 labels.",
+    "steps": [
+      "A one-by-one search has 20 checks in the missing-label example. Multiplying the tray size by 100 can multiply that work by 100.",
+      "If labels are already sorted, compare the middle label and discard the half that cannot contain the target. Each check roughly halves the remaining choices.",
+      "The sorted search needs far fewer checks per lookup, but somebody has to sort the labels and maintain their order. Which method helps depends on how often labels change and how often staff search."
+    ],
+    "outcome": "You can compare how work and memory grow as the input gets larger and describe the conditions behind a speed claim.",
+    "terms": [
+      [
+        "Input size",
+        "The amount of data the procedure receives, such as the number of labels."
+      ],
+      [
+        "Time complexity",
+        "How the amount of work tends to grow as the input grows."
+      ],
+      [
+        "Space complexity",
+        "How storage needs grow with the input size."
+      ],
+      [
+        "Linear",
+        "Work proportional to the number of items, often written O(n)."
+      ],
+      [
+        "Logarithmic",
+        "Work growing by a small additional step when the input doubles, often written O(log n)."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A trainer says a scan always needs just one comparison because the demo label was first.",
+        "action": "Measure a missing or last-position label as a worst-case check.",
+        "reason": "A first-position hit reveals the best case while other positions require more comparisons.",
+        "check": "With 100 labels a missing target takes 100 equality checks in a straightforward scan.",
+        "tradeoff": "Worst-case bounds do not by themselves describe the typical workload.",
+        "alternative": "Use only the successful first-position example to estimate every search."
+      },
+      {
+        "situation": "A team uses binary search on delivery IDs stored in arrival order and misses IDs that are present.",
+        "action": "Maintain sorted order on the searched key before using binary search.",
+        "reason": "Discarding a half is justified only when the order rules out every value there.",
+        "check": "A target located on the previously discarded side is found once the IDs are sorted.",
+        "tradeoff": "Sorting has an initial cost and inserts must preserve the order.",
+        "alternative": "Keep halving the unsorted list because it still halves the number of candidates."
+      },
+      {
+        "situation": "A duplicate detector checks every pair of invoice IDs and slows sharply as files grow.",
+        "action": "Visit IDs once and keep a set of previously seen IDs.",
+        "reason": "Repeated membership checks avoid comparing each new ID with each earlier one individually on average.",
+        "check": "Doubling a typical file roughly doubles the number of set checks, and known duplicates are still detected.",
+        "tradeoff": "The seen-ID set grows in memory with the number of distinct invoices.",
+        "alternative": "Keep the nested pair comparisons and estimate runtime from the smallest file."
+      }
+    ]
+  },
+  "loops": {
+    "title": "Total a week of water deliveries",
+    "story": "Ravi delivers 4, 0 and 7 cans on three mornings. He wants one total even when the number of mornings changes.",
+    "steps": [
+      "Begin with total = 0, representing no cans counted yet.",
+      "Visit each morning's number in turn. After adding 4 the total is 4. Adding 0 keeps it at 4. Adding 7 takes it to 11.",
+      "Stop after the last morning and print 11 once. A fourth delivery can be included without writing another addition instruction."
+    ],
+    "outcome": "You can repeat one action for each item and keep track of a running result.",
+    "terms": [
+      [
+        "Loop",
+        "Instructions that repeat."
+      ],
+      [
+        "Iteration",
+        "One pass through those instructions."
+      ],
+      [
+        "Accumulator",
+        "A value carrying the total from one pass to the next."
+      ],
+      [
+        "Break",
+        "An instruction to leave a loop early."
+      ],
+      [
+        "Iterable",
+        "Something whose items can be visited one at a time."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A charity adds three donations but reports only the final donation.",
+        "action": "Set the running total to zero before the loop begins.",
+        "reason": "Starting from zero inside every pass discards earlier contributions.",
+        "check": "Donations of 2, 5 and 3 give 10.",
+        "tradeoff": "A separate total per collection day requires resetting at the day boundary.",
+        "alternative": "Reset the total whenever a new donation is read."
+      },
+      {
+        "situation": "A receptionist wants the first available slot among 09:00, 09:30 and 10:00. The last two are available.",
+        "action": "Stop looking immediately after selecting 09:30.",
+        "reason": "Later available slots would overwrite the first choice.",
+        "check": "The booking selects 09:30 and leaves 10:00 untouched.",
+        "tradeoff": "Early exit suits a first match; finding all available slots needs the full scan.",
+        "alternative": "Keep replacing the selection each time another open slot appears."
+      },
+      {
+        "situation": "A fuel meter repeatedly displays 3 litres even though a countdown is supposed to reach zero.",
+        "action": "Update the remaining litres during each pass and stop when the count reaches zero.",
+        "reason": "The test can change its answer only if the remaining value changes.",
+        "check": "Starting at 3 prints 3, 2, 1 and finishes.",
+        "tradeoff": "A variable-sized withdrawal also needs protection against going below zero.",
+        "alternative": "Keep testing the initial value of 3 on every pass."
+      }
+    ]
+  },
+  "lists": {
+    "title": "Correct a café's ordered queue",
+    "story": "Noor writes the waiting names as ['Ira', 'Ben', 'Ira']. Two different customers happen to share a name. Ben cancels and Jo joins at the back.",
+    "steps": [
+      "A list keeps all three places in the order they arrived. Position 0 holds the first Ira.",
+      "Remove Ben's entry. The two Ira entries now stand next to each other.",
+      "Append Jo to the end. Reading the queue from front to back gives Ira, Ira, Jo."
+    ],
+    "outcome": "You can manage changing collections where position and repeated values carry meaning.",
+    "terms": [
+      [
+        "List",
+        "An ordered collection whose entries can change."
+      ],
+      [
+        "Element",
+        "One item in a collection."
+      ],
+      [
+        "Index",
+        "The numbered position of an element, starting from zero."
+      ],
+      [
+        "Append",
+        "Add one item at the end."
+      ],
+      [
+        "Copy",
+        "A separate list that can be rearranged without rearranging the original list."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A queue summary reports one Ira after two customers named Ira have paid.",
+        "action": "Preserve each visit as a separate list entry with its ticket number.",
+        "reason": "Matching names do not make two visits the same booking.",
+        "check": "Tickets 15 and 18 both appear even with the same name.",
+        "tradeoff": "Ticket numbers require issuing and tracking an identifier.",
+        "alternative": "Convert the waiting names to a set before displaying the queue."
+      },
+      {
+        "situation": "A kitchen wants an alphabetical display while the cashier still needs arrival order.",
+        "action": "Create a sorted copy for the display.",
+        "reason": "Reordering the one shared list changes what the cashier sees.",
+        "check": "The display reads Amy, Zoe while the cashier still sees Zoe first.",
+        "tradeoff": "The extra list uses space and needs refreshing after edits.",
+        "alternative": "Sort the cashier's original list in place."
+      },
+      {
+        "situation": "A shopping list contains milk twice and the customer removes one carton.",
+        "action": "Remove one matching entry from the list.",
+        "reason": "The remaining occurrence still represents a requested carton.",
+        "check": "Starting with milk, eggs, milk leaves eggs, milk after one removal.",
+        "tradeoff": "A larger inventory might store item quantities instead of repeating names.",
+        "alternative": "Filter every occurrence of milk out of the list."
+      }
+    ]
+  },
+  "tuples": {
+    "title": "Keep the hall and seat together",
+    "story": "Anika enters a cinema booking for Hall B, Seat 14. The number 14 alone could point to several seats because every hall numbers its own rows.",
+    "steps": [
+      "Pair the values as ('B', 14). The first position means hall and the second means seat.",
+      "Unpack the pair into hall and seat to print 'Hall B, Seat 14'. Each name receives one position.",
+      "A seat change creates a new pair, perhaps ('B', 15). The original pair can remain on the earlier booking receipt."
+    ],
+    "outcome": "You can group a fixed set of related values and use each position consistently.",
+    "terms": [
+      [
+        "Tuple",
+        "An ordered group whose positions cannot be assigned new values after creation."
+      ],
+      [
+        "Pair",
+        "A group of two values, such as hall and seat."
+      ],
+      [
+        "Unpack",
+        "Assign the members of a group to separate names in one step."
+      ],
+      [
+        "Hashable",
+        "Suitable for use as a lookup key because its identifying value stays stable."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A theatre lookup mixes Hall A Seat 7 with Hall B Seat 7.",
+        "action": "Use the pair (hall, seat) as the seating lookup key.",
+        "reason": "Both pieces together identify a seat within the theatre.",
+        "check": "The two bookings remain separate when the seat numbers match.",
+        "tradeoff": "If row letters repeat across floors, the key needs the floor too.",
+        "alternative": "Use only the seat number as the key."
+      },
+      {
+        "situation": "A one-stop route stored as ('Delhi') is read one letter at a time.",
+        "action": "Write ('Delhi',) for a one-item tuple.",
+        "reason": "The comma marks a tuple containing one city; parentheses alone only group the string.",
+        "check": "The route contains one item with the complete name Delhi.",
+        "tradeoff": "An expanding route may be easier to manage as a list.",
+        "alternative": "Add another pair of parentheses around the city name."
+      },
+      {
+        "situation": "A coordinate pair holds a mutable list of notes. Editing that list changes the archived notes.",
+        "action": "Store a separate immutable snapshot of the note values when the pair is archived.",
+        "reason": "A tuple fixes its slots, but a list referenced by one slot can still change.",
+        "check": "Editing the working notes leaves the archived note sequence unchanged.",
+        "tradeoff": "Making snapshots costs time and space for large nested records.",
+        "alternative": "Assume placing the list in a tuple freezes every item inside it."
+      }
+    ]
+  },
+  "sets": {
+    "title": "Count distinct attendees at a workshop",
+    "story": "Hari scans badges A7, B2 and A7. The last scan belongs to someone who stepped outside and came back. The organiser asks how many distinct badges attended.",
+    "steps": [
+      "Start with an empty collection that keeps only distinct values. Add A7 and B2 to get two members.",
+      "Add A7 again. It is already a member, so the collection still has two members.",
+      "Ask whether B2 is present to confirm attendance. Keep the original scan list separately if the organiser also wants entry times."
+    ],
+    "outcome": "You can count unique items and compare groups while deciding when duplicate history matters.",
+    "terms": [
+      [
+        "Set",
+        "A collection containing each distinct value at most once."
+      ],
+      [
+        "Membership",
+        "Whether a value belongs to a collection."
+      ],
+      [
+        "Intersection",
+        "Values present in both groups."
+      ],
+      [
+        "Union",
+        "Every distinct value found in either group."
+      ],
+      [
+        "Difference",
+        "Values found in the first group and absent from the second."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The organiser needs people attending both the morning and afternoon classes.",
+        "action": "Intersect the two sets of badge IDs.",
+        "reason": "Intersection keeps only IDs present in each class.",
+        "check": "Morning {A,B} and afternoon {B,C} give {B}.",
+        "tradeoff": "The result gives membership; it cannot tell how long B stayed.",
+        "alternative": "Combine the two classes by union."
+      },
+      {
+        "situation": "Three different people share the name Sam at a conference.",
+        "action": "Deduplicate by badge ID rather than first name.",
+        "reason": "A name can correspond to multiple attendees while a badge is issued to one attendee.",
+        "check": "Three distinct badge IDs named Sam count as three people.",
+        "tradeoff": "Reissued badges require a link back to the original attendee.",
+        "alternative": "Count the distinct first names on the attendance sheet."
+      },
+      {
+        "situation": "A volunteer prints the first five arrivals by iterating through the distinct badge set.",
+        "action": "Keep an ordered arrival list alongside the membership set.",
+        "reason": "Set membership does not record arrival position.",
+        "check": "With scans B, A, B, C the first-visit list reads B, A, C.",
+        "tradeoff": "Two structures must be updated together on each first scan.",
+        "alternative": "Rely on the current display order of the set."
+      }
+    ]
+  },
+  "dictionaries": {
+    "title": "Look up a customer's open balance",
+    "story": "Farah runs a lunch counter. Customer C8 owes ₹70 and customer C3 owes ₹0. She needs to distinguish a fully paid customer from a person who has never opened an account.",
+    "steps": [
+      "Store the balances as {'C8': 70, 'C3': 0}. Each identifier points to its own amount.",
+      "Look up C3. The entry exists and its value is 0, so Farah can say the bill is settled.",
+      "Check whether C5 is a key before reporting a balance. Its absence means there is no account in this record."
+    ],
+    "outcome": "You can find a value by a stable identifier and tell an absent record from a valid zero.",
+    "terms": [
+      [
+        "Dictionary",
+        "A collection that associates each key with a value."
+      ],
+      [
+        "Key",
+        "The identifying piece used for a lookup."
+      ],
+      [
+        "Value",
+        "The information stored under a key."
+      ],
+      [
+        "Lookup",
+        "Finding the value associated with a given key."
+      ],
+      [
+        "Default",
+        "A fallback result used when a requested key is missing."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "Two customers named Priya have different phone numbers and one keeps disappearing from the contact book.",
+        "action": "Key contacts by their unique customer IDs.",
+        "reason": "Assigning a second value under the same key replaces the first value.",
+        "check": "Both Priyas can be retrieved by their different IDs.",
+        "tradeoff": "A name search now needs an additional lookup or scan.",
+        "alternative": "Use the first name as the only key."
+      },
+      {
+        "situation": "A shop's stock lookup reports a sold-out pen as an unknown product.",
+        "action": "Test whether the product key exists before examining its quantity.",
+        "reason": "Zero is a valid stock count even though it behaves as false in a simple condition.",
+        "check": "An existing pen with quantity 0 shows sold out; an absent ruler shows unknown.",
+        "tradeoff": "Stock must have an explicit policy for missing or uncounted values.",
+        "alternative": "Treat every value that behaves as false as a missing product."
+      },
+      {
+        "situation": "A survey counter sees its first response for 'cycle' and fails when it tries to add one to an absent count.",
+        "action": "Read the current count with a default of zero and then add one.",
+        "reason": "Zero represents no previous votes for this category.",
+        "check": "The first cycle vote gives 1 and the second gives 2.",
+        "tradeoff": "A default of zero is appropriate only where absence really means no observations.",
+        "alternative": "Preload just the categories that appeared in yesterday's survey."
+      }
+    ]
+  },
+  "functions": {
+    "title": "Calculate a shared taxi fare twice",
+    "story": "Meena shares ₹300 equally among 3 travellers today. Tomorrow ₹560 must be split among 4. She wants one calculation she can reuse on both trips.",
+    "steps": [
+      "Give the calculation a name, such as share, with two inputs called fare and people.",
+      "For share(300, 3), divide the fare by the number of people and return 100. Returning passes the result back to the caller.",
+      "Call the same function with 560 and 4. It returns 140. The caller can display the answer or use it in another calculation."
+    ],
+    "outcome": "You can package one rule with named inputs and a reusable result.",
+    "terms": [
+      [
+        "Function",
+        "A named block of instructions you can call when needed."
+      ],
+      [
+        "Parameter",
+        "A name standing for an input inside a function."
+      ],
+      [
+        "Argument",
+        "The actual value supplied on a particular call."
+      ],
+      [
+        "Return value",
+        "The result handed back to the caller."
+      ],
+      [
+        "Caller",
+        "The piece of code asking a function to do its job."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "The share function prints 100, but multiplying its result to settle two seats fails.",
+        "action": "Return the calculated share and let the caller print it if needed.",
+        "reason": "A displayed number does not automatically become the function's return value.",
+        "check": "Twice the result of share(300, 3) gives 200.",
+        "tradeoff": "Existing callers expecting console output need to handle display themselves.",
+        "alternative": "Print the number a second time before using it in arithmetic."
+      },
+      {
+        "situation": "A booking arrives with zero travellers and the fare function tries to divide by zero.",
+        "action": "Reject a nonpositive traveller count before division.",
+        "reason": "An equal share needs at least one recipient.",
+        "check": "300 split among 0 produces a clear input error; 300 split among 3 returns 100.",
+        "tradeoff": "The caller needs a way to show or correct the rejected input.",
+        "alternative": "Return the whole fare as the share for zero travellers."
+      },
+      {
+        "situation": "A café receipt function always adds the last table's tip rate even when a different rate is entered.",
+        "action": "Pass the tip rate into the function with each bill.",
+        "reason": "Explicit input makes the calculation depend on the bill's chosen rate.",
+        "check": "A ₹100 bill gives ₹110 at 10% and ₹105 at 5% regardless of call order.",
+        "tradeoff": "More explicit inputs mean each caller must supply the relevant policy.",
+        "alternative": "Read yesterday's tip rate from a shared variable."
+      }
+    ]
+  },
+  "recursion": {
+    "title": "Count envelopes inside nested folders",
+    "story": "Imran opens a box containing one envelope and a folder with two more envelopes. Folders can contain other folders, so he cannot assume a fixed number of levels.",
+    "steps": [
+      "A single envelope contributes 1. An empty folder contributes 0. These small answers are immediately available.",
+      "For a folder, use the same counting rule on each child and add the answers. The inner folder with two envelopes returns 2.",
+      "The outer box adds its single envelope to the inner folder's 2 and returns 3. Each call handles a smaller piece of the original box."
+    ],
+    "outcome": "You can solve a nested problem by combining smaller answers and checking how the descent ends.",
+    "terms": [
+      [
+        "Recursion",
+        "Solving part of a problem by using the same rule again on a smaller part."
+      ],
+      [
+        "Base case",
+        "A situation whose answer is known without another call."
+      ],
+      [
+        "Recursive call",
+        "Applying the function to another part from inside itself."
+      ],
+      [
+        "Call stack",
+        "The waiting calls that must resume once their smaller jobs finish."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A nested-folder counter keeps reopening the exact folder it is already counting.",
+        "action": "Pass each child folder to the next call.",
+        "reason": "The descent must move toward files or empty folders for calls to finish.",
+        "check": "A folder containing one empty subfolder returns zero and stops.",
+        "tradeoff": "Symbolic links or references can lead back to an earlier folder and need cycle handling.",
+        "alternative": "Call the function again on the same parent to refresh its contents."
+      },
+      {
+        "situation": "Counting a family tree a few levels deep works, but a line of thousands of descendants hits a recursion limit.",
+        "action": "Use an explicit stack of people still to visit.",
+        "reason": "A separate work list avoids one waiting Python function call per generation.",
+        "check": "The same chain of thousands can be counted without a recursion-depth error.",
+        "tradeoff": "Managing the work list makes visit order the programmer's responsibility.",
+        "alternative": "Keep raising the recursion limit for every larger family."
+      },
+      {
+        "situation": "A manager records two employees who each point to the other as supervisor. Traversal never finishes.",
+        "action": "Track IDs on the current path and report a repeated ancestor as a cycle.",
+        "reason": "Following the same person again on that path can never reach the top.",
+        "check": "The pair A→B→A is reported as a cycle, while A→B→C ending at C succeeds.",
+        "tradeoff": "Entries shared across different branches may be legitimate, so the intended structure matters.",
+        "alternative": "Assume every nonempty manager ID eventually leads to the top."
+      }
+    ]
+  },
+  "comprehensions": {
+    "title": "Prepare the café's low-stock list",
+    "story": "Tara counts tea 4, cups 18 and sugar 2. Her shelf reminder should show only names whose quantity is below 5, in the order she checked them.",
+    "steps": [
+      "Visit each name and its quantity. Tea passes 4 < 5; cups fails 18 < 5; sugar passes 2 < 5.",
+      "For each passing item, keep the name. The reminder now reads tea, sugar.",
+      "A list comprehension writes these three ideas together: [name for name, qty in stock if qty < 5]. Read it as 'keep the name for each stock entry whose quantity is below five'."
+    ],
+    "outcome": "You can turn a larger collection into a filtered or transformed list using a rule you can explain aloud.",
+    "terms": [
+      [
+        "Comprehension",
+        "A compact expression that builds a collection by visiting inputs."
+      ],
+      [
+        "Filter",
+        "A test that decides whether an item is included."
+      ],
+      [
+        "Transformation",
+        "Changing an included item into the output value you need."
+      ],
+      [
+        "Source collection",
+        "The original items being visited."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A trainer wants doubled practice minutes for completed sessions only. A 0-minute session appears as a false marker in the result.",
+        "action": "Filter out incomplete sessions before emitting the doubled value.",
+        "reason": "A filter skips an item entirely; an expression producing False still adds an item.",
+        "check": "Minutes [5,0,3] give [10,6] under the positive-minutes rule.",
+        "tradeoff": "Filtering loses the original positions of skipped sessions.",
+        "alternative": "Emit a Boolean for every session instead of excluding incomplete ones."
+      },
+      {
+        "situation": "A kitchen needs one reorder entry per ingredient even if it appears twice in a source list.",
+        "action": "Build a set of matching ingredient IDs when order is irrelevant.",
+        "reason": "Set membership collapses repeated IDs after filtering.",
+        "check": "Two qualifying entries for rice create one reorder ID.",
+        "tradeoff": "A set discards the source ordering and does not preserve counts.",
+        "alternative": "Use a list comprehension and assume it removes duplicates."
+      },
+      {
+        "situation": "A volunteer packs a comprehension with nested checks, logging calls and special error handling. A missed record is difficult to trace.",
+        "action": "Use an explicit loop with separate validation, logging and append steps.",
+        "reason": "Named steps make each decision and side effect inspectable.",
+        "check": "A malformed record gets a specific log entry and the next valid record is retained.",
+        "tradeoff": "The explicit loop is longer; a simple single transformation can remain compact.",
+        "alternative": "Add another nested conditional expression into the same line."
+      }
+    ]
+  },
+  "python-fundamentals": {
+    "title": "Print a bill for the tea stall",
+    "story": "Mira sells three cups of tea at 12 rupees each. She wants the till to show the amount due so the next cashier can repeat the calculation tomorrow.",
+    "steps": [
+      "Write 3 * 12. The star means multiplication. Python works out 36 when it reaches that instruction.",
+      "Write print(3 * 12). The parentheses contain the value to display, so the till shows 36.",
+      "Change 3 to 4 for the next customer and run the instructions again. This time the display shows 48. You chose the calculation once and supplied a new quantity."
+    ],
+    "outcome": "You can turn a repeatable desk calculation into a short program and verify what someone sees.",
+    "terms": [
+      [
+        "Program",
+        "A written sequence of instructions a computer can carry out."
+      ],
+      [
+        "Python",
+        "A language for writing those instructions with agreed words and symbols."
+      ],
+      [
+        "Interpreter",
+        "The program that reads your Python instructions and carries them out."
+      ],
+      [
+        "Expression",
+        "A piece of code that works out a value, such as 3 * 12."
+      ],
+      [
+        "Output",
+        "The result the program shows or sends somewhere, such as 36 on the till."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A baker's file contains only 6 * 8. Running it from the till finishes with an empty display.",
+        "action": "Print the result of multiplying the six loaves by eight.",
+        "reason": "A calculation in a script can produce a value without displaying it.",
+        "check": "The till shows 48 once when the file runs.",
+        "tradeoff": "Printing suits a cashier; another program needing 48 would need the value passed to it.",
+        "alternative": "Keep the expression alone because a calculator window displays its results."
+      },
+      {
+        "situation": "A kiosk tries to display Mango and stops because the name Mango is undefined.",
+        "action": "Put quotation marks around Mango in the display instruction.",
+        "reason": "Quotes tell Python to treat the characters as literal text.",
+        "check": "The screen shows Mango without the quotation marks.",
+        "tradeoff": "Quoted text stays exactly as written even if the day's fruit changes.",
+        "alternative": "Create an unrelated variable solely to silence the error."
+      },
+      {
+        "situation": "A volunteer updates Friday's poster by editing a Python file but still sees Thursday's message on screen.",
+        "action": "Save the edited file and run that same file again.",
+        "reason": "The earlier run already finished with the previous instructions.",
+        "check": "A fresh run prints Friday and the file's saved text also contains Friday.",
+        "tradeoff": "A continuously changing sign needs a running update mechanism.",
+        "alternative": "Edit the old message in the output window and expect future runs to use it."
+      }
+    ]
+  },
+  "variables": {
+    "title": "Keep a volunteer's badge number intact",
+    "story": "Asha issues a badge numbered 007 to a helper who has worked 2 years. The badge scanner needs all three characters, while Asha wants to calculate the helper's experience next year.",
+    "steps": [
+      "Give the badge text a name with badge = '007'. The quotes preserve the two leading zeroes.",
+      "Store years = 2. This value is a whole number, so years + 1 gives 3.",
+      "Print badge beside years + 1. The badge still reads 007 and the experience reads 3. Choosing the kind of value follows what you need to do with it."
+    ],
+    "outcome": "You can choose a suitable representation for an identifier, a count or a yes/no decision.",
+    "terms": [
+      [
+        "Variable",
+        "A name you choose so you can refer to a value again."
+      ],
+      [
+        "Assignment",
+        "Giving a name a value with =, as in years = 2."
+      ],
+      [
+        "Type",
+        "The kind of value that determines which operations make sense."
+      ],
+      [
+        "Integer",
+        "A whole number you can count or do arithmetic with."
+      ],
+      [
+        "String",
+        "Text kept as a sequence of characters, including any leading zeroes."
+      ],
+      [
+        "Boolean",
+        "A value answering a yes/no question, written True or False."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A library imports member card 0042 and prints 42 on the replacement card.",
+        "action": "Keep the original member ID as text throughout the import.",
+        "reason": "Converting the ID to a number discards its leading zeroes.",
+        "check": "Member 0042 receives a replacement printed as 0042.",
+        "tradeoff": "Text IDs require a separate rule if someone wants numeric sorting.",
+        "alternative": "Convert every digit-only field to an integer on arrival."
+      },
+      {
+        "situation": "A sign-up form returns the text '12' for one session and '3' for another. Their total displays as 123.",
+        "action": "Convert both validated entries to integers before adding them.",
+        "reason": "Adding text joins the characters; adding integers calculates a total.",
+        "check": "The two valid entries produce 15, and an entry such as 'three' gets a clear correction request.",
+        "tradeoff": "Conversion requires deciding how to handle blanks or invalid entries.",
+        "alternative": "Put a plus sign between the two original text entries."
+      },
+      {
+        "situation": "An attendance form stores the word 'False', yet the person is counted as present.",
+        "action": "Map the allowed yes and no responses to actual Boolean values.",
+        "reason": "Any nonempty text has a true truth value in a simple Python condition.",
+        "check": "The response 'False' maps to False, while an unknown response is flagged.",
+        "tradeoff": "A map needs a published set of accepted spellings.",
+        "alternative": "Use bool('False') to obtain the answer."
+      }
+    ]
+  },
+  "strings": {
+    "title": "Find a parcel without changing its label",
+    "story": "Anu types '  ab-007  ' into a parcel search box. The printed label says 'AB-007'. A string is text, so the zeroes, the hyphen and even the outside spaces are part of what the computer compares.",
+    "steps": [
+      "Call strip() on the typed text to get 'ab-007'. This removes spaces at the ends and keeps the hyphen and zeroes.",
+      "Call upper() on the cleaned text to get 'AB-007'. Compare this search value with the stored code; the two now match.",
+      "Read code[-3:] on the cleaned code. The minus sign counts back from the end, so the slice gives '007'. Keeping this result as text preserves the label number.",
+      "Keep the original entry separately if support needs to see exactly what Anu typed. The methods produced new text values. They left the original entry available."
+    ],
+    "outcome": "You can clean a search entry, compare it reliably, and preserve identifiers exactly as people see them.",
+    "terms": [
+      [
+        "Character",
+        "One element of Python text, such as A, 0 or a space; a displayed symbol can contain several such elements."
+      ],
+      [
+        "String literal",
+        "Text written directly in code between quotation marks."
+      ],
+      [
+        "Index",
+        "A position in a string. The first position is 0 and the last can be addressed as -1."
+      ],
+      [
+        "Slice",
+        "A stretch of text taken from a start position up to an excluded end position."
+      ],
+      [
+        "Method",
+        "An operation attached to a value, such as strip() on a piece of text."
+      ],
+      [
+        "Immutable",
+        "A string's characters stay fixed after creation. An edit produces another string."
+      ],
+      [
+        "Formatting",
+        "Placing values into text, for example putting a tracking code inside a delivery message."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A customer named ' Ana  María ' asks for a tidy greeting but wants the original account entry retained.",
+        "action": "Create a display value by joining the words with one space and keep the original entry.",
+        "reason": "Splitting on whitespace collects the words; joining them chooses the spacing in the greeting.",
+        "check": "The greeting reads 'Hello, Ana María!' and the original account entry still contains the original spaces.",
+        "tradeoff": "Some names contain intentional spacing, so the cleaned version serves this greeting only.",
+        "alternative": "Overwrite the account name with the cleaned greeting."
+      },
+      {
+        "situation": "A shelf label 'BX-009' becomes 'BX-9' when the receipt is printed.",
+        "action": "Extract the suffix as text and insert those characters into the receipt.",
+        "reason": "The suffix identifies a box; treating it as a quantity loses significant zeroes.",
+        "check": "A scan of BX-009 matches the printed receipt character for character.",
+        "tradeoff": "If the warehouse later needs the numeric sequence, convert a separate copy.",
+        "alternative": "Convert the suffix to an integer before composing the receipt."
+      },
+      {
+        "situation": "An address book needs a case-insensitive search for 'Straße' using the typed word 'STRASSE'.",
+        "action": "Build separate comparison keys using casefold() for both names.",
+        "reason": "Case folding can map the German sharp s to ss for a caseless comparison.",
+        "check": "Both search keys compare equal and the displayed spelling remains Straße.",
+        "tradeoff": "Case folding handles case; accent-insensitive or locale-specific matching needs a separate policy.",
+        "alternative": "Compare the original address book value with the uppercase search text."
+      }
+    ]
+  },
+  "numbers": {
+    "title": "Pack full boxes and count what is left",
+    "story": "Dev has 53 mangoes and boxes that hold 6 each. He needs to tell the driver exactly how many sealed boxes and loose mangoes to collect.",
+    "steps": [
+      "Ask how many full groups of 6 fit in 53. Eight groups use 48 mangoes; a ninth group would require 54.",
+      "Python writes the full-box calculation as 53 // 6. The answer is 8.",
+      "The remainder is 53 % 6, which gives 5. Check the packing slip by combining 8 × 6 + 5 and recovering 53."
+    ],
+    "outcome": "You can choose the operation that gives a whole-group count, a leftover count or a fractional measurement.",
+    "terms": [
+      [
+        "Operator",
+        "A sign telling the computer which calculation to perform."
+      ],
+      [
+        "Quotient",
+        "The result of division; for full boxes the whole-number quotient counts complete groups."
+      ],
+      [
+        "Remainder",
+        "The part left after making whole groups."
+      ],
+      [
+        "Float",
+        "A number stored with a fractional part and limited precision."
+      ],
+      [
+        "Precedence",
+        "The rules deciding which operation happens first when several share a line."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A bus planner seats 41 people on eight-seat vans and books only five vans.",
+        "action": "Count a final extra van when the passenger count has a nonzero remainder.",
+        "reason": "Five full vans hold 40 people, leaving one passenger without a seat.",
+        "check": "Forty people need five vans and 41 people need six.",
+        "tradeoff": "The rounding rule depends on needing space for every passenger.",
+        "alternative": "Use the whole-group quotient alone for the vehicle count."
+      },
+      {
+        "situation": "Three 10-paise charges printed by a billing tool display a tiny unexpected decimal tail.",
+        "action": "Keep integer paise for the calculation and format the total as rupees at display time.",
+        "reason": "Whole units avoid the binary rounding involved in many decimal fractions.",
+        "check": "Ten paise added three times gives 30 paise and displays as ₹0.30.",
+        "tradeoff": "Amounts smaller than a paise need an explicit rounding policy.",
+        "alternative": "Compare floating-point money totals for exact equality after every addition."
+      },
+      {
+        "situation": "A worker wants the average of 10 and 20 minutes but types 10 + 20 / 2.",
+        "action": "Put the addition in parentheses before dividing by two.",
+        "reason": "Division runs before addition unless grouping changes the order.",
+        "check": "The revised calculation reports 15 minutes.",
+        "tradeoff": "Extra parentheses help readers most when the intended grouping could be ambiguous.",
+        "alternative": "Divide only the second time by the number of entries."
+      }
+    ]
+  },
+  "conditions": {
+    "title": "Decide who receives the children's ticket",
+    "story": "Leela at a museum sells a children's ticket to anyone younger than 12. A predicate is a question about a value with a yes-or-no answer. Here the question is 'Is this visitor's age below 12?' You can answer it before learning any Python.",
+    "steps": [
+      "Take age 11. The comparison 11 < 12 asks whether 11 is smaller than 12. Its answer in Python is True, meaning yes.",
+      "Try age 12. The same predicate, age < 12, now gives False. The boundary matters because 'younger than 12' excludes the twelfth birthday.",
+      "A different predicate, age == 12, asks whether the two numbers have the same value. At age 12 that answer is True. The double equals sign tests equality; a single equals sign assigns a value to a name.",
+      "Use if to choose the children's ticket when age < 12 is True. Use else for the remaining visitors. The comparison answers a question and the branch uses that answer to choose what happens."
+    ],
+    "outcome": "You can translate an everyday rule into a yes/no test, check its boundary, and explain the decision to a customer.",
+    "terms": [
+      [
+        "Predicate",
+        "A test about a value that answers yes or no, such as 'Is the age under 12?'"
+      ],
+      [
+        "Boolean",
+        "The computer's two possible truth values, True for yes and False for no."
+      ],
+      [
+        "Comparison",
+        "A question about how values relate, such as smaller than (<) or equal to (==)."
+      ],
+      [
+        "Boundary",
+        "A value where a decision changes, such as age 12 in the ticket rule."
+      ],
+      [
+        "Branch",
+        "One path of instructions selected because a condition has a particular truth value."
+      ],
+      [
+        "and",
+        "A way to require two conditions to both be true for the combined test to pass."
+      ]
+    ],
+    "decisions": [
+      {
+        "situation": "A shop promises free delivery on orders of ₹500 or more, but an exact ₹500 order is charged.",
+        "action": "Test total >= 500 for free delivery.",
+        "reason": "The equals part includes the advertised boundary value.",
+        "check": "₹499 attracts a fee, while ₹500 and ₹501 qualify for free delivery.",
+        "tradeoff": "The policy must specify whether the comparison uses the total before or after discounts.",
+        "alternative": "Use total > 500 and assume customers rarely spend exactly ₹500."
+      },
+      {
+        "situation": "A cinema grants a student discount only for a valid student card and a weekday screening. A Saturday student currently gets the discount.",
+        "action": "Join the valid-card and weekday checks with and.",
+        "reason": "The advertised discount requires both facts to hold for the same screening.",
+        "check": "A weekday student qualifies; a Saturday student and a weekday nonstudent both pay the regular price.",
+        "tradeoff": "A future weekend promotion needs its own explicit rule.",
+        "alternative": "Combine the two requirements with or."
+      },
+      {
+        "situation": "A donation desk gives a gold badge at ₹1,000 and a silver badge at ₹500. A ₹1,200 donor receives silver.",
+        "action": "Check the gold threshold first, then test the silver threshold in the next branch.",
+        "reason": "A donation above ₹1,000 also passes the ₹500 check, and the first matching branch wins.",
+        "check": "₹1,200 yields gold, ₹700 yields silver and ₹499 receives neither badge.",
+        "tradeoff": "Overlapping thresholds need an agreed priority whenever the badge scheme changes.",
+        "alternative": "Check the silver threshold first because it is the smaller number."
+      }
+    ]
+  }
+}
