@@ -62,6 +62,7 @@ def main():
     venv = root / "venv"
     if not (venv / "bin/python").exists():
         subprocess.run([sys.executable, "-m", "venv", str(venv)], check=True)
+    subprocess.run([str(venv / "bin/python"), "-m", "pip", "install", "--upgrade", "--no-cache-dir", "pip"], check=True)
     subprocess.run([str(venv / "bin/python"), "-m", "pip", "install", "--no-cache-dir",
                     "-r", str(release / "backend/requirements.txt")], check=True)
     settings = shared / "pilot.env"
