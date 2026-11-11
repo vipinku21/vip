@@ -1,0 +1,13 @@
+{
+  "name": "AI Career Lab pilot",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "postCreateCommand": "cd ai-career-lab && python -m venv backend/.venv && backend/.venv/bin/python -m pip install -r backend/requirements.txt && npm --prefix frontend ci --no-audit --no-fund && npm --prefix frontend run build",
+  "postStartCommand": "ai-career-lab/backend/.venv/bin/python ai-career-lab/deploy/codespace.py",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "AI Career Lab", "onAutoForward": "notify" }
+  }
+}

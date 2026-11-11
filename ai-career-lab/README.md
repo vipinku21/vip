@@ -10,6 +10,14 @@ Open **Pilot access**, enter a tester’s email, then share their single-use lin
 
 In **Résumé interviewer**, enter a target role and supply résumé text or selected project descriptions. The interviewer asks six questions, follows up on earlier answers, and offers feedback. The learner can resume or clear their interview. Voice playback and editable dictation depend on browser support and microphone permission. A browser’s speech provider may process audio. Guided interviews work without a model subscription. Optional model-generated questions require the learner’s separate consent.
 
+## Test directly on GitHub
+
+Open [AI Career Lab in GitHub Codespaces](https://codespaces.new/vipinku21/vip/tree/main). Choose **AI Career Lab pilot** and the **2-core** machine, then create or resume the codespace. GitHub installs and starts the app automatically.
+
+1. In **Ports**, open **AI Career Lab** on port **8000**. On the first visit, open `ai-career-lab/backend/data/admin-setup.txt` in the codespace file explorer. Use that key to create your admin account.
+2. To invite testers, right-click **8000** in **Ports** and choose **Port Visibility → Public**. In the app, use **Pilot access** to create and privately share a link for each tester. Check port visibility again when you restart the codespace.
+3. Stop the codespace at the end of the session. Testers can access the app while it runs. Reopen the same codespace to keep learner data. Deleting the codespace also deletes the database. Personal accounts include a monthly allowance; usage stops at the limit when no payment method is on file. [GitHub Codespaces billing](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces)
+
 ## Free hosted pilot from GitHub
 
 Use the alwaysdata Free personal-use plan for this noncommercial pilot. A single Python process serves the browser app and keeps accounts, progress and interviews in persistent SQLite storage. GitHub hosts the source and ready-to-run release. [Free hosting plan](https://www.alwaysdata.com/en/offers/) · [Python hosting configuration](https://help.alwaysdata.com/en/docs/web-hosting/languages/python/configuration/)
